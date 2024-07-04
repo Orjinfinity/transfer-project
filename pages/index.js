@@ -1,6 +1,10 @@
 import Head from "next/head";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { setHours, setMinutes } from "date-fns";
+
 import {
   Layout,
   View,
@@ -39,8 +43,61 @@ import Wallet from "../assets/icons/wallet.svg";
 import UserTick from "../assets/icons/user-tick.svg";
 import Support from "../assets/icons/24-support.svg";
 import Messages from "../assets/icons/messages-2.svg";
+import UserForm from "../assets/icons/user-form.svg";
+import LocationForm from "../assets/icons/location-form.svg";
+import PlusForm from "../assets/icons/plus-form.svg";
+import CalendarForm from "../assets/icons/calendar-form.svg";
+import AirPlaneForm from "../assets/icons/airplane-form.svg";
+import CustomSelect from "components/select/Select";
+
+const DateInput = (props) => {
+  return (
+    <View
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      onClick={props.onClick}
+    >
+      <CalendarForm />
+      <View display="flex" alignItems="start" ml="20px" flexDirection="column">
+        <View>{props.title}</View>
+        <View fontSize="14px" color="#B6B6B6">
+          {props.value || props.placeholder}
+        </View>
+      </View>
+    </View>
+  );
+};
 
 export default function Home() {
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(""); // Seçilen seçeneği saklamak için state
+
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value); // Seçilen değeri güncelle
+    console.log("Selected option:", event.target.value); // Seçilen değeri konsola yazdır
+  };
+
+  const handleLocationClick = () => {
+    setIsSelectOpen(!isSelectOpen); // LocationForm'a tıklanınca select'i aç/kapat
+  };
+
+  const [startDate, setStartDate] = useState("");
+
+  const [endDate, setEndDate] = useState("");
+
+  const handleCalendarClick = () => {
+    setShowDatePicker(!showDatePicker);
+  };
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const filteredPassedDate = (date) => {
+    const currentDate = startDate;
+    const selectedDate = new Date(date);
+
+    return currentDate < selectedDate;
+  };
+
   return (
     <>
       <Head>
@@ -55,7 +112,10 @@ export default function Home() {
         <meta name="twitter:image" content="/logo.png" />
       </Head>
       <Layout>
-        <BreadCrumb backgroundImage={`url(${Background.src})`} height="calc(100vh - 80px)">
+        <BreadCrumb
+          backgroundImage={`url(${Background.src})`}
+          height="calc(100vh - 80px)"
+        >
           <Title mt="100px" fontSize="60px">
             Who we are?
           </Title>
@@ -69,6 +129,147 @@ export default function Home() {
           >
             At Victoria Transfer, we pride ourselves on exceeding expectations
             with every journey
+          </View>
+
+          <View
+            backgroundColor="white"
+            margin="0 auto"
+            padding="20px"
+            borderRadius="10px"
+            width="1100px"
+            mt="30px"
+          >
+            <View
+              display="grid"
+              gridGap="10px"
+              gridTemplateColumns="auto auto auto auto auto auto"
+            >
+              <View display="flex" alignItems="center" justifyContent="center">
+                <AirPlaneForm />
+                <View
+                  display="flex"
+                  alignItems="start"
+                  ml="20px"
+                  flexDirection="column"
+                >
+                  <View>From</View>
+                  <View fontSize="14px" color="#B6B6B6">
+                    Search
+                  </View>
+                </View>
+              </View>
+
+              <View
+                style={{ cursor: "pointer" }}
+                display="flex"
+                position="relative"
+                ml="20px"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="row"
+              >
+                <LocationForm onClick={handleLocationClick} />
+                <View>
+                  <View>To</View>
+                  <View fontSize="14px" color="#B6B6B6">
+                    Search
+                  </View>
+                </View>
+
+                <View position="absolute" padding="2px" left="0" top="150%">
+                  {isSelectOpen && (
+                    <select onChange={handleSelectChange}>
+                      <option value="">Select an option</option>
+                      <option value="option1">Option 1</option>
+                      <option value="option2">Option 2</option>
+                      <option value="option3">Option 3</option>
+                    </select>
+                  )}
+                </View>
+              </View>
+
+              <View display="flex" alignItems="center" justifyContent="center">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  showTimeSelect
+                  excludeTimes={[
+                    setHours(setMinutes(new Date(), 0), 17),
+                    setHours(setMinutes(new Date(), 30), 18),
+                    setHours(setMinutes(new Date(), 30), 19),
+                    setHours(setMinutes(new Date(), 30), 17),
+                  ]}
+                  dateFormat="dd:MM:yyyy h:mm"
+                  popperPlacement="bottom-start"
+                  placeholderText="Add Pickup Date"
+                  title="Pickup Date"
+                  customInput={<DateInput />}
+                />
+              </View>
+
+              <View display="flex" alignItems="center" justifyContent="center">
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  showTimeSelect
+                  excludeTimes={[
+                    setHours(setMinutes(new Date(), 0), 17),
+                    setHours(setMinutes(new Date(), 30), 18),
+                    setHours(setMinutes(new Date(), 30), 19),
+                    setHours(setMinutes(new Date(), 30), 17),
+                  ]}
+                  dateFormat="dd:MM:yyyy h:mm"
+                  popperPlacement="bottom-start"
+                  placeholderText="Add Return Date"
+                  title="Return Date"
+                  filterDate={filteredPassedDate}
+                  customInput={<DateInput />}
+                />
+              </View>
+
+              <View display="flex" alignItems="center" justifyContent="center">
+                <UserForm />
+                <View
+                  display="flex"
+                  alignItems="start"
+                  ml="20px"
+                  flexDirection="column"
+                >
+                  <View>Passengers</View>
+                  <View
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    fontSize="14px"
+                    color="#B6B6B6"
+                  >
+                    0 <PlusForm />
+                  </View>
+                </View>
+              </View>
+
+              <Button>Search</Button>
+            </View>
+
+            {/* <View>
+              <UserForm />
+              <CalendarForm onClick={handleCalendarClick} />
+              {showDatePicker && (
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  showTimeSelect
+                  excludeTimes={[
+                    setHours(setMinutes(new Date(), 0), 17),
+                    setHours(setMinutes(new Date(), 30), 18),
+                    setHours(setMinutes(new Date(), 30), 19),
+                    setHours(setMinutes(new Date(), 30), 17),
+                  ]}
+                  dateFormat="MMMM d, yyyy h:mm aa"
+                  popperPlacement="bottom-start"
+                />
+              )}
+            </View> */}
           </View>
         </BreadCrumb>
         <Section
@@ -389,7 +590,6 @@ export default function Home() {
           </Container>
         </Section>
 
-
         <Section
           my="55px"
           style={{
@@ -404,132 +604,131 @@ export default function Home() {
                 What peole say about us?
               </View>
             </View>
-
           </Container>
 
           <Slider
-          additionalTransfrom={0}
-          arrows
-          autoPlaySpeed={3000}
-          centerMode={true}
-          className=""
-          containerClass="container-with-dots"
-          itemClass="customer-carousel-item"
-          dotListClass=""
-          draggable
-          focusOnSelect={false}
-          infinite
-          keyBoardControl
-          minimumTouchDrag={80}
-          pauseOnHover
-          renderArrowsWhenDisabled={false}
-          renderButtonGroupOutside={false}
-          renderDotsOutside={false}
-          responsive={{
-            desktop: {
-              breakpoint: { max: 3000, min: 1024 },
-              items: 1,
-              slidesToSlide: 1,
-            },
-            tablet: {
-              breakpoint: { max: 1024, min: 464 },
-              items: 1,
-              slidesToSlide: 1,
-            },
-            mobile: {
-              breakpoint: { max: 464, min: 0 },
-              items: 1,
-              slidesToSlide: 1,
-            },
-          }}
-        >
-          <CustomerCard py="13.5px">
-            <Image src="/customer-img.png" />
-            <View minWidth="400px" px="40px" py="26px">
-              <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                5.0
-                <View fontSize="24px" as="span">
-                  stars
+            additionalTransfrom={0}
+            arrows
+            autoPlaySpeed={3000}
+            centerMode={true}
+            className=""
+            containerClass="container-with-dots"
+            itemClass="customer-carousel-item"
+            dotListClass=""
+            draggable
+            focusOnSelect={false}
+            infinite
+            keyBoardControl
+            minimumTouchDrag={80}
+            pauseOnHover
+            renderArrowsWhenDisabled={false}
+            renderButtonGroupOutside={false}
+            renderDotsOutside={false}
+            responsive={{
+              desktop: {
+                breakpoint: { max: 3000, min: 1024 },
+                items: 1,
+                slidesToSlide: 1,
+              },
+              tablet: {
+                breakpoint: { max: 1024, min: 464 },
+                items: 1,
+                slidesToSlide: 1,
+              },
+              mobile: {
+                breakpoint: { max: 464, min: 0 },
+                items: 1,
+                slidesToSlide: 1,
+              },
+            }}
+          >
+            <CustomerCard py="13.5px">
+              <Image src="/customer-img.png" />
+              <View minWidth="400px" px="40px" py="26px">
+                <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
+                  5.0
+                  <View fontSize="24px" as="span">
+                    stars
+                  </View>
                 </View>
-              </View>
-              <Star />
-              <View maxWidth="317px" mt="48px" mb="80px">
-                <View as="p" fontSize="18px">
-                  “I feel very secure when using Victoria Travel services. Your
-                  customer care team is very enthusiastic and the driver is
-                  always on time.”
+                <Star />
+                <View maxWidth="317px" mt="48px" mb="80px">
+                  <View as="p" fontSize="18px">
+                    “I feel very secure when using Victoria Travel services.
+                    Your customer care team is very enthusiastic and the driver
+                    is always on time.”
+                  </View>
                 </View>
-              </View>
 
-              <View>
-                <View as="h6" fontSize="24px">
-                  Charlie Johnson
-                </View>
-                <View as="span" color="#838383">
-                  From New York, US
+                <View>
+                  <View as="h6" fontSize="24px">
+                    Charlie Johnson
+                  </View>
+                  <View as="span" color="#838383">
+                    From New York, US
+                  </View>
                 </View>
               </View>
-            </View>
-          </CustomerCard>
+            </CustomerCard>
 
-          <CustomerCard py="13.5px">
-            <Image src="/customer-img.png" />
-            <View minWidth="400px" px="40px" py="26px">
-              <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                5.0
-                <View fontSize="24px" as="span">
-                  stars
+            <CustomerCard py="13.5px">
+              <Image src="/customer-img.png" />
+              <View minWidth="400px" px="40px" py="26px">
+                <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
+                  5.0
+                  <View fontSize="24px" as="span">
+                    stars
+                  </View>
                 </View>
-              </View>
-              <Star />
-              <View maxWidth="317px" mt="48px" mb="80px">
-                <View as="p" fontSize="18px">
-                  “I feel very secure when using Victoria Travel services. Your
-                  customer care team is very enthusiastic and the driver is
-                  always on time.”
+                <Star />
+                <View maxWidth="317px" mt="48px" mb="80px">
+                  <View as="p" fontSize="18px">
+                    “I feel very secure when using Victoria Travel services.
+                    Your customer care team is very enthusiastic and the driver
+                    is always on time.”
+                  </View>
                 </View>
-              </View>
 
-              <View>
-                <View as="h6" fontSize="24px">
-                  Charlie Johnson
-                </View>
-                <View as="span" color="#838383">
-                  From New York, US
+                <View>
+                  <View as="h6" fontSize="24px">
+                    Charlie Johnson
+                  </View>
+                  <View as="span" color="#838383">
+                    From New York, US
+                  </View>
                 </View>
               </View>
-            </View>
-          </CustomerCard>
+            </CustomerCard>
 
-          <CustomerCard py="13.5px">
-            <Image src="/customer-img.png" />
-            <View minWidth="400px" px="40px" py="26px">
-              <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                5.0
-                <View fontSize="24px" as="span">
-                  stars
+            <CustomerCard py="13.5px">
+              <Image src="/customer-img.png" />
+              <View minWidth="400px" px="40px" py="26px">
+                <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
+                  5.0
+                  <View fontSize="24px" as="span">
+                    stars
+                  </View>
                 </View>
-              </View>
-              <Star />
-              <View maxWidth="317px" mt="48px" mb="80px">
-                <View as="p" fontSize="18px">
-                  “I feel very secure when using Victoria Travel services. Your
-                  customer care team is very enthusiastic and the driver is
-                  always on time.”
+                <Star />
+                <View maxWidth="317px" mt="48px" mb="80px">
+                  <View as="p" fontSize="18px">
+                    “I feel very secure when using Victoria Travel services.
+                    Your customer care team is very enthusiastic and the driver
+                    is always on time.”
+                  </View>
                 </View>
-              </View>
 
-              <View>
-                <View as="h6" fontSize="24px">
-                  Charlie Johnson
-                </View>
-                <View as="span" color="#838383">
-                  From New York, US
+                <View>
+                  <View as="h6" fontSize="24px">
+                    Charlie Johnson
+                  </View>
+                  <View as="span" color="#838383">
+                    From New York, US
+                  </View>
                 </View>
               </View>
-            </View>
-          </CustomerCard>
-        </Slider>
+            </CustomerCard>
+          </Slider>
         </Section>
 
         <Section
@@ -651,67 +850,140 @@ export default function Home() {
             </View>
           </Container>
         </Section>
- 
+
         <Section
           my="55px"
           style={{
             backgroundSize: "cover",
-            backgroundColor:"#fff",
-            display:"flex"
+            backgroundColor: "#fff",
+            display: "flex",
           }}
         >
-           <View>
-                  <Image width="758px" src="/chouseus.png" />
-              </View>
-         
-            <Container> 
-             
+          <View>
+            <Image width="758px" src="/chouseus.png" />
+          </View>
+
+          <Container>
+            <View>
               <View>
-              <View >
-              <Tag>WHY CHOOSE US</Tag>
-              <View mt="30px" as="h2" fontSize="38px" maxWidth="576px">
-              We offer the best experience with our booking deals
-              </View>
-              </View>
-
-              <View display="flex" mt="35px">
-                  <View mr="24px" width="64px" height="64px" p="20px" borderRadius="16px" backgroundColor="#ECF5FF"><Wallet/></View>
-                        <View maxWidth="322px">
-                            <View as="h5" lineHeight="1" mb="20px" fontSize="20px" color="#000">Best price guaranteed</View>
-                            <View as="p" fontSize="16px" color="#6D6D6D">Find a lower price? We’ll refund you 100%
-      of the difference.</View>
-                        </View>
+                <Tag>WHY CHOOSE US</Tag>
+                <View mt="30px" as="h2" fontSize="38px" maxWidth="576px">
+                  We offer the best experience with our booking deals
+                </View>
               </View>
 
               <View display="flex" mt="35px">
-                  <View mr="24px" width="64px" height="64px" p="20px" borderRadius="16px" backgroundColor="#ECF5FF"><UserTick/></View>
-                        <View maxWidth="322px">
-                            <View as="h5" lineHeight="1" mb="20px" fontSize="20px" color="#000">Experience driver</View>
-                            <View as="p" fontSize="16px" color="#6D6D6D">Don’t have driver? Don’t worry, we have many
-experienced driver for you.</View>
-                        </View>
+                <View
+                  mr="24px"
+                  width="64px"
+                  height="64px"
+                  p="20px"
+                  borderRadius="16px"
+                  backgroundColor="#ECF5FF"
+                >
+                  <Wallet />
+                </View>
+                <View maxWidth="322px">
+                  <View
+                    as="h5"
+                    lineHeight="1"
+                    mb="20px"
+                    fontSize="20px"
+                    color="#000"
+                  >
+                    Best price guaranteed
+                  </View>
+                  <View as="p" fontSize="16px" color="#6D6D6D">
+                    Find a lower price? We’ll refund you 100% of the difference.
+                  </View>
+                </View>
               </View>
 
               <View display="flex" mt="35px">
-                  <View mr="24px" width="64px" height="64px" p="20px" borderRadius="16px" backgroundColor="#ECF5FF"><Support/></View>
-                        <View maxWidth="322px">
-                            <View as="h5" lineHeight="1" mb="20px" fontSize="20px" color="#000">24 hour car delivery</View>
-                            <View as="p" fontSize="16px" color="#6D6D6D">Book your car anytime and we will deliver it
-directly to you.</View>
-                        </View>
+                <View
+                  mr="24px"
+                  width="64px"
+                  height="64px"
+                  p="20px"
+                  borderRadius="16px"
+                  backgroundColor="#ECF5FF"
+                >
+                  <UserTick />
+                </View>
+                <View maxWidth="322px">
+                  <View
+                    as="h5"
+                    lineHeight="1"
+                    mb="20px"
+                    fontSize="20px"
+                    color="#000"
+                  >
+                    Experience driver
+                  </View>
+                  <View as="p" fontSize="16px" color="#6D6D6D">
+                    Don’t have driver? Don’t worry, we have many experienced
+                    driver for you.
+                  </View>
+                </View>
               </View>
 
               <View display="flex" mt="35px">
-                  <View mr="24px" width="64px" height="64px" p="20px" borderRadius="16px" backgroundColor="#ECF5FF"><Messages/></View>
-                        <View maxWidth="322px">
-                            <View as="h5" lineHeight="1" mb="20px" fontSize="20px" color="#000">24/7 technical support</View>
-                            <View as="p" fontSize="16px" color="#6D6D6D">Have a question? Contact Rentcars support
-any time when you have problem.</View>
-                        </View>
+                <View
+                  mr="24px"
+                  width="64px"
+                  height="64px"
+                  p="20px"
+                  borderRadius="16px"
+                  backgroundColor="#ECF5FF"
+                >
+                  <Support />
+                </View>
+                <View maxWidth="322px">
+                  <View
+                    as="h5"
+                    lineHeight="1"
+                    mb="20px"
+                    fontSize="20px"
+                    color="#000"
+                  >
+                    24 hour car delivery
+                  </View>
+                  <View as="p" fontSize="16px" color="#6D6D6D">
+                    Book your car anytime and we will deliver it directly to
+                    you.
+                  </View>
+                </View>
               </View>
+
+              <View display="flex" mt="35px">
+                <View
+                  mr="24px"
+                  width="64px"
+                  height="64px"
+                  p="20px"
+                  borderRadius="16px"
+                  backgroundColor="#ECF5FF"
+                >
+                  <Messages />
+                </View>
+                <View maxWidth="322px">
+                  <View
+                    as="h5"
+                    lineHeight="1"
+                    mb="20px"
+                    fontSize="20px"
+                    color="#000"
+                  >
+                    24/7 technical support
+                  </View>
+                  <View as="p" fontSize="16px" color="#6D6D6D">
+                    Have a question? Contact Rentcars support any time when you
+                    have problem.
+                  </View>
+                </View>
               </View>
-              </Container>
-     
+            </View>
+          </Container>
         </Section>
       </Layout>
     </>

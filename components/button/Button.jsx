@@ -29,20 +29,19 @@ const buttonVariants = ({ theme }) =>
 
 const Button = styled.a`
   padding: 12px 15px;
-  width:100%;
+  width: 100%;
   font-size: 20px;
   border: none;
   display: inline-flex;
   text-align: center;
   align-items: center;
   justify-content: center;
-  background-color: #003F7D;
+  background-color: #003f7d;
   border-radius: 16px;
   color: #fff;
   position: relative;
   cursor: pointer;
 
-   
   ${flexbox}
   ${space}
   ${buttonVariants}
