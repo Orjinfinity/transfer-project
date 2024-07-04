@@ -1,6 +1,17 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { variant, space, flexbox } from "styled-system";
+import {
+  variant,
+  space,
+  color,
+  typography,
+  flexbox,
+  layout,
+  position,
+  border,
+  shadow,
+  background,
+} from "styled-system";
 
 const buttonVariants = ({ theme }) =>
   variant({
@@ -42,8 +53,15 @@ const Button = styled.a`
   position: relative;
   cursor: pointer;
 
-  ${flexbox}
   ${space}
+  ${color}
+  ${typography}
+  ${flexbox}
+  ${layout}
+  ${position}
+  ${border}
+  ${shadow}
+  ${background}
   ${buttonVariants}
 `;
 

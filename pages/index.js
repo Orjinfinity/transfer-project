@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes } from "date-fns";
@@ -70,6 +71,7 @@ const DateInput = (props) => {
 };
 
 export default function Home() {
+  const router = useRouter();
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(""); // Seçilen seçeneği saklamak için state
 
@@ -98,6 +100,10 @@ export default function Home() {
     return currentDate < selectedDate;
   };
 
+  const handleSearch = () => {
+    router.push("/transfer-sorgu")
+  }
+
   return (
     <>
       <Head>
@@ -117,18 +123,20 @@ export default function Home() {
           height="calc(100vh - 80px)"
         >
           <Title mt="100px" fontSize="60px">
-            Who we are?
+          Find and book your transfer in Antalya easily
           </Title>
           <View
             as="p"
-            maxWidth="642px"
             m="0 auto"
             mt="68px"
-            fontSize="24px"
-            color="#fff"
+            fontSize=".7em"
+            color="#000"
+            fontWeight="bold"
+            backgroundColor="#fff"
+            borderRadius="10px"
+            p="6px"
           >
-            At Victoria Transfer, we pride ourselves on exceeding expectations
-            with every journey
+        If you buy the return transfer now, your return will be rewarded 10% discount
           </View>
 
           <View
@@ -248,7 +256,7 @@ export default function Home() {
                 </View>
               </View>
 
-              <Button>Search</Button>
+              <Button onClick={handleSearch}>Search</Button>
             </View>
 
             {/* <View>
@@ -610,12 +618,12 @@ export default function Home() {
             additionalTransfrom={0}
             arrows
             autoPlaySpeed={3000}
-            centerMode={true}
             className=""
             containerClass="container-with-dots"
             itemClass="customer-carousel-item"
             dotListClass=""
             draggable
+            centerMode
             focusOnSelect={false}
             infinite
             keyBoardControl
@@ -626,25 +634,33 @@ export default function Home() {
             renderDotsOutside={false}
             responsive={{
               desktop: {
-                breakpoint: { max: 3000, min: 1024 },
+                breakpoint: {
+                  max: 3000,
+                  min: 1024
+                },
                 items: 1,
-                slidesToSlide: 1,
-              },
-              tablet: {
-                breakpoint: { max: 1024, min: 464 },
-                items: 1,
-                slidesToSlide: 1,
               },
               mobile: {
-                breakpoint: { max: 464, min: 0 },
+                centerMode: false,
+                breakpoint: {
+                  max: 464,
+                  min: 0
+                },
                 items: 1,
-                slidesToSlide: 1,
               },
+              tablet: {
+                centerMode: false,
+                breakpoint: {
+                  max: 1024,
+                  min: 464
+                },
+                items: 1,
+              }
             }}
           >
             <CustomerCard py="13.5px">
-              <Image src="/customer-img.png" />
-              <View minWidth="400px" px="40px" py="26px">
+              <Image src="/customer-img.png" maxWidth="50%" width="auto" />
+              <View px="40px" py="26px" >
                 <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
                   5.0
                   <View fontSize="24px" as="span">
@@ -672,8 +688,8 @@ export default function Home() {
             </CustomerCard>
 
             <CustomerCard py="13.5px">
-              <Image src="/customer-img.png" />
-              <View minWidth="400px" px="40px" py="26px">
+              <Image src="/customer-img.png" maxWidth="50%" width="auto" />
+              <View px="40px" py="26px" >
                 <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
                   5.0
                   <View fontSize="24px" as="span">
@@ -701,8 +717,8 @@ export default function Home() {
             </CustomerCard>
 
             <CustomerCard py="13.5px">
-              <Image src="/customer-img.png" />
-              <View minWidth="400px" px="40px" py="26px">
+            <Image src="/customer-img.png" maxWidth="50%" width="auto" />
+              <View px="40px" py="26px" >
                 <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
                   5.0
                   <View fontSize="24px" as="span">
