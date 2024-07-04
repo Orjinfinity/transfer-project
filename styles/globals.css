@@ -1,0 +1,181 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+img {
+  width: 100%;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+  /* word-break: break-all; */
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+.padding-40px {
+  padding: 20px;
+}
+
+.padding-10px {
+  padding: 10px;
+}
+
+.highlight {
+  position: relative;
+}
+
+.highlight::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  margin-top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background-color: #1087ff;
+  border-radius: 50%;
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    color-scheme: light;
+  }
+  body {
+    color: black;
+    background: white;
+  }
+}
+
+.city {
+  fill: #cccccc;
+  fill-opacity: 1;
+  stroke: white;
+  stroke-opacity: 1;
+  stroke-width: 0.5;
+  -webkit-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+}
+
+.city:hover {
+  fill: #a9a9a9;
+}
+
+.city.active {
+  fill: #f39c12;
+}
+
+.city.active2 {
+  fill: #264692;
+}
+
+.show-city-name {
+  background-color: #f39c12;
+  border-radius: 10px;
+  color: #fff;
+  position: absolute;
+  padding: 15px 25px;
+  opacity: 0;
+  visibility: hidden;
+  font-size: 16px;
+}
+
+.show-city-name--active {
+  opacity: 1;
+  visibility: visible;
+}
+
+li {
+  list-style-type: none;
+}
+
+ul.lead-list {
+  padding: 20px;
+}
+
+ul.lead-list li {
+  border-bottom: 2px solid #f39c12;
+}
+
+ul.lead-list li + li {
+  margin-top: 20px;
+}
+
+.details td {
+  border: 1px outset hsl(30, 75%, 60%);
+  padding: 5px 10px;
+}
+
+.details p {
+  margin: 20px 0px;
+  font-weight: bold;
+}
+
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: 10px;
+  top: 10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.popup-content {
+  margin: auto;
+  background: rgb(255, 255, 255);
+  width: 95%;
+  padding: 5px;
+  max-height: 95%;
+  overflow-y: auto;
+}
+
+@media screen and (min-width: 576px) {
+  .popup-content {
+    width: 50%;
+  }
+}
+
+.popup-arrow {
+  color: rgb(255, 255, 255);
+}
+
+[role="tooltip"].popup-content {
+  width: 200px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+[data-popup="tooltip"].popup-overlay {
+  background: transparent;
+}
+
+.hamburger_svg__hamburger-icon:hover svg path {
+  stroke: #e0c47d;
+  transition: fill 0.3s; /* Add smooth transition */
+}
+
+.customer-carousel-item {
+  padding: 40px;
+}
