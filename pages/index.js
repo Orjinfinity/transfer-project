@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes } from "date-fns";
+import { useSWR } from "swr";
+
+import { fetchVehicles } from "../service";
 
 import {
   Layout,
@@ -70,7 +73,8 @@ const DateInput = (props) => {
   );
 };
 
-export default function Home() {
+export default function Home({ vehicles }) {
+  console.log("Vehicles:", vehicles);
   const router = useRouter();
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(""); // Seçilen seçeneği saklamak için state
@@ -101,8 +105,8 @@ export default function Home() {
   };
 
   const handleSearch = () => {
-    router.push("/transfer-sorgu")
-  }
+    router.push("/transfer-sorgu");
+  };
 
   return (
     <>
@@ -123,7 +127,7 @@ export default function Home() {
           height="calc(100vh - 80px)"
         >
           <Title mt="100px" fontSize="60px">
-          Find and book your transfer in Antalya easily
+            Find and book your transfer in Antalya easily
           </Title>
           <View
             as="p"
@@ -136,7 +140,8 @@ export default function Home() {
             borderRadius="10px"
             p="6px"
           >
-        If you buy the return transfer now, your return will be rewarded 10% discount
+            If you buy the return transfer now, your return will be rewarded 10%
+            discount
           </View>
 
           <View
@@ -614,136 +619,97 @@ export default function Home() {
             </View>
           </Container>
 
-          <Slider
-            additionalTransfrom={0}
-            arrows
-            autoPlaySpeed={3000}
-            className=""
-            containerClass="container-with-dots"
-            itemClass="customer-carousel-item"
-            dotListClass=""
-            draggable
-            centerMode
-            focusOnSelect={false}
-            infinite
-            keyBoardControl
-            minimumTouchDrag={80}
-            pauseOnHover
-            renderArrowsWhenDisabled={false}
-            renderButtonGroupOutside={false}
-            renderDotsOutside={false}
-            responsive={{
-              desktop: {
-                breakpoint: {
-                  max: 3000,
-                  min: 1024
-                },
-                items: 1,
-              },
-              mobile: {
-                centerMode: false,
-                breakpoint: {
-                  max: 464,
-                  min: 0
-                },
-                items: 1,
-              },
-              tablet: {
-                centerMode: false,
-                breakpoint: {
-                  max: 1024,
-                  min: 464
-                },
-                items: 1,
-              }
-            }}
-          >
-            <CustomerCard py="13.5px">
-              <Image src="/customer-img.png" maxWidth="50%" width="auto" />
-              <View px="40px" py="26px" >
-                <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                  5.0
-                  <View fontSize="24px" as="span">
-                    stars
+          <Slider>
+            <Slider.Item>
+              <CustomerCard py="13.5px">
+                <Image src="/customer-img.png" maxWidth="50%" width="auto" />
+                <View px="40px" py="26px">
+                  <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
+                    5.0
+                    <View fontSize="24px" as="span">
+                      stars
+                    </View>
                   </View>
-                </View>
-                <Star />
-                <View maxWidth="317px" mt="48px" mb="80px">
-                  <View as="p" fontSize="18px">
-                    “I feel very secure when using Victoria Travel services.
-                    Your customer care team is very enthusiastic and the driver
-                    is always on time.”
+                  <Star />
+                  <View maxWidth="317px" mt="48px" mb="80px">
+                    <View as="p" fontSize="18px">
+                      “I feel very secure when using Victoria Travel services.
+                      Your customer care team is very enthusiastic and the
+                      driver is always on time.”
+                    </View>
                   </View>
-                </View>
 
-                <View>
-                  <View as="h6" fontSize="24px">
-                    Charlie Johnson
-                  </View>
-                  <View as="span" color="#838383">
-                    From New York, US
+                  <View>
+                    <View as="h6" fontSize="24px">
+                      Charlie Johnson
+                    </View>
+                    <View as="span" color="#838383">
+                      From New York, US
+                    </View>
                   </View>
                 </View>
-              </View>
-            </CustomerCard>
+              </CustomerCard>
+            </Slider.Item>
+            <Slider.Item>
+              <CustomerCard py="13.5px">
+                <Image src="/customer-img.png" maxWidth="50%" width="auto" />
+                <View px="40px" py="26px">
+                  <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
+                    5.0
+                    <View fontSize="24px" as="span">
+                      stars
+                    </View>
+                  </View>
+                  <Star />
+                  <View maxWidth="317px" mt="48px" mb="80px">
+                    <View as="p" fontSize="18px">
+                      “I feel very secure when using Victoria Travel services.
+                      Your customer care team is very enthusiastic and the
+                      driver is always on time.”
+                    </View>
+                  </View>
 
-            <CustomerCard py="13.5px">
-              <Image src="/customer-img.png" maxWidth="50%" width="auto" />
-              <View px="40px" py="26px" >
-                <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                  5.0
-                  <View fontSize="24px" as="span">
-                    stars
+                  <View>
+                    <View as="h6" fontSize="24px">
+                      Charlie Johnson
+                    </View>
+                    <View as="span" color="#838383">
+                      From New York, US
+                    </View>
                   </View>
                 </View>
-                <Star />
-                <View maxWidth="317px" mt="48px" mb="80px">
-                  <View as="p" fontSize="18px">
-                    “I feel very secure when using Victoria Travel services.
-                    Your customer care team is very enthusiastic and the driver
-                    is always on time.”
+              </CustomerCard>
+            </Slider.Item>
+            <Slider.Item>
+              <CustomerCard py="13.5px">
+                <Image src="/customer-img.png" maxWidth="50%" width="auto" />
+                <View px="40px" py="26px">
+                  <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
+                    5.0
+                    <View fontSize="24px" as="span">
+                      stars
+                    </View>
                   </View>
-                </View>
+                  <Star />
+                  <View maxWidth="317px" mt="48px" mb="80px">
+                    <View as="p" fontSize="18px">
+                      “I feel very secure when using Victoria Travel services.
+                      Your customer care team is very enthusiastic and the
+                      driver is always on time.”
+                    </View>
+                  </View>
 
-                <View>
-                  <View as="h6" fontSize="24px">
-                    Charlie Johnson
-                  </View>
-                  <View as="span" color="#838383">
-                    From New York, US
-                  </View>
-                </View>
-              </View>
-            </CustomerCard>
-
-            <CustomerCard py="13.5px">
-            <Image src="/customer-img.png" maxWidth="50%" width="auto" />
-              <View px="40px" py="26px" >
-                <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                  5.0
-                  <View fontSize="24px" as="span">
-                    stars
+                  <View>
+                    <View as="h6" fontSize="24px">
+                      Charlie Johnson
+                    </View>
+                    <View as="span" color="#838383">
+                      From New York, US
+                    </View>
                   </View>
                 </View>
-                <Star />
-                <View maxWidth="317px" mt="48px" mb="80px">
-                  <View as="p" fontSize="18px">
-                    “I feel very secure when using Victoria Travel services.
-                    Your customer care team is very enthusiastic and the driver
-                    is always on time.”
-                  </View>
-                </View>
-
-                <View>
-                  <View as="h6" fontSize="24px">
-                    Charlie Johnson
-                  </View>
-                  <View as="span" color="#838383">
-                    From New York, US
-                  </View>
-                </View>
-              </View>
-            </CustomerCard>
+              </CustomerCard>
+            </Slider.Item>
           </Slider>
         </Section>
 
@@ -1004,4 +970,14 @@ export default function Home() {
       </Layout>
     </>
   );
+}
+
+export async function getStaticProps() {
+  // const vehicles = await fetchVehicles();
+
+  return {
+    props: {
+      vehicles: [],
+    },
+  };
 }
