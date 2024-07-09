@@ -1,16 +1,16 @@
-import { useMemo, useCallback } from 'react'
-import styled from 'styled-components'
+import { useMemo, useCallback } from "react";
+import styled from "styled-components";
 
-import Icon from '../icon/Icon'
-import { View, Tag, Text } from '../index'
+import Icon from "../icon/Icon";
+import { View, Tag, Text } from "../index";
 
-import { useSelectContext } from './selectContext'
+import { useSelectContext } from "./selectContext";
 
 const StyledIcon = styled(Icon)`
   flex-shrink: 0;
-`
+`;
 
-const SelectToggle = () => {
+const SelectToggle = ({ renderSelectToggle }) => {
   const {
     toggleSelect,
     isOpen,
@@ -18,16 +18,16 @@ const SelectToggle = () => {
     placeholder,
     selectedOptions,
     removeValue,
-    multiple
-  } = useSelectContext()
+    multiple,
+  } = useSelectContext();
 
   const handleRemove = useCallback(
     (event, value) => {
-      event.stopPropagation()
-      removeValue(value)
+      event.stopPropagation();
+      removeValue(value);
     },
     [removeValue]
-  )
+  );
 
   const viewArea = useMemo(() => {
     if (isEmpty)
@@ -35,7 +35,7 @@ const SelectToggle = () => {
         <Text as="span" opacity=".4">
           {placeholder}
         </Text>
-      )
+      );
 
     if (multiple) {
       return selectedOptions.map(({ value, label }) => (
@@ -46,15 +46,25 @@ const SelectToggle = () => {
         >
           {label}
         </Tag>
-      ))
+      ));
     }
 
     return (
       <Text color="black" as="span">
         {selectedOptions.label}
       </Text>
-    )
-  }, [handleRemove, isEmpty, multiple, placeholder, selectedOptions])
+    );
+  }, [handleRemove, isEmpty, multiple, placeholder, selectedOptions]);
+
+  if (renderSelectToggle) {
+    return renderSelectToggle({
+      viewArea,
+      isOpen,
+      toggleSelect,
+      selectedOptions,
+      placeholder,
+    });
+  }
 
   return (
     <View
@@ -69,10 +79,12 @@ const SelectToggle = () => {
       overflow="auto"
       display="flex"
     >
-      <View>{viewArea}</View>
-      <StyledIcon icon={isOpen ? 'chevron-up' : 'chevron-down'} />
+      <span fontSize="1em" color="currentColor">
+        {viewArea}
+      </span>
+      <StyledIcon icon={isOpen ? "chevron-up" : "chevron-down"} />
     </View>
-  )
-}
+  );
+};
 
-export default SelectToggle
+export default SelectToggle;

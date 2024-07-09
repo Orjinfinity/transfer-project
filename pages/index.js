@@ -6,7 +6,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes } from "date-fns";
 import { useSWR } from "swr";
-
 import { fetchVehicles } from "../service";
 
 import {
@@ -29,6 +28,7 @@ import {
   Tag,
   CustomerCard,
   Destinations,
+  PersonSelect,
 } from "@/components";
 import { Tabs, Tab, Content } from "../components/tab/Tab";
 import Background from "../assets/img/bg.jpeg";
@@ -52,7 +52,11 @@ import LocationForm from "../assets/icons/location-form.svg";
 import PlusForm from "../assets/icons/plus-form.svg";
 import CalendarForm from "../assets/icons/calendar-form.svg";
 import AirPlaneForm from "../assets/icons/airplane-form.svg";
-import CustomSelect from "components/select/Select";
+import Select from "components/select/Select";
+import { fontSize, marginLeft } from "styled-system";
+import SelectToggle from "components/select/SelectToggle";
+import PlusVector from "../assets/icons/plusVector.svg";
+import MinusVector from "../assets/icons/minusVector.svg";
 
 const DateInput = (props) => {
   return (
@@ -74,31 +78,41 @@ const DateInput = (props) => {
 };
 
 export default function Home({ vehicles }) {
+  const { control, handleSubmit, watch, setValue, getValues } = useForm({
+    defaultValues: {
+      fromSearch: "option1",
+      toSearch: "option1",
+      pickupDate: new Date(),
+      returnDate: new Date(),
+      passengers: {
+        adult: 2,
+        child: 1,
+        baby: 1,
+      },
+    },
+  });
+
+  const increment = (name) => {
+    console.log(name, "nameProp");
+    const value = getValues(name);
+    console.log(value, "getValue");
+    setValue(name, value + 1);
+  };
+
+  const decrement = (name) => {
+    const value = getValues(name);
+    if (value > 0) {
+      setValue(name, value - 1);
+    }
+  };
+
+  const pickupDate = watch("pickupDate");
+
   console.log("Vehicles:", vehicles);
   const router = useRouter();
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(""); // Seçilen seçeneği saklamak için state
-
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value); // Seçilen değeri güncelle
-    console.log("Selected option:", event.target.value); // Seçilen değeri konsola yazdır
-  };
-
-  const handleLocationClick = () => {
-    setIsSelectOpen(!isSelectOpen); // LocationForm'a tıklanınca select'i aç/kapat
-  };
-
-  const [startDate, setStartDate] = useState("");
-
-  const [endDate, setEndDate] = useState("");
-
-  const handleCalendarClick = () => {
-    setShowDatePicker(!showDatePicker);
-  };
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const filteredPassedDate = (date) => {
-    const currentDate = startDate;
+    const currentDate = pickupDate;
     const selectedDate = new Date(date);
 
     return currentDate < selectedDate;
@@ -106,6 +120,10 @@ export default function Home({ vehicles }) {
 
   const handleSearch = () => {
     router.push("/transfer-sorgu");
+  };
+
+  const onSubmit = (data) => {
+    console.log("Form Data:", data);
   };
 
   return (
@@ -144,7 +162,389 @@ export default function Home({ vehicles }) {
             discount
           </View>
 
-          <View
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <View
+              backgroundColor="white"
+              margin="0 auto"
+              padding="20px"
+              borderRadius="10px"
+              width="1100px"
+              mt="30px"
+            >
+              <View
+                display="grid"
+                gridGap="10px"
+                gridTemplateColumns="auto auto auto auto auto auto"
+              >
+                <View
+                  afterLine
+                  style={{ cursor: "pointer" }}
+                  display="flex"
+                  position="relative"
+                  ml="20px"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="row"
+                >
+                  <View>
+                    <Controller
+                      name="fromSearch"
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <View display="flex" alignItems="center">
+                          <View fontSize="14px" color="#B6B6B6">
+                            <Select
+                              id="from"
+                              buttonProps={{
+                                p: "0",
+                                color: "red",
+                                fontSize: "14px",
+                              }}
+                              value={value}
+                              onChange={onChange}
+                              placeholder="Search"
+                              renderSelectToggle={({
+                                toggleSelect,
+                                selectedOptions,
+                                placeholder,
+                              }) => {
+                                return (
+                                  <View
+                                    display="flex"
+                                    alignItems="center"
+                                    onClick={toggleSelect}
+                                  >
+                                    <AirPlaneForm />
+                                    <View
+                                      display="flex"
+                                      alignItems="flex-start"
+                                      flexDirection="column"
+                                      marginLeft="10px"
+                                    >
+                                      <View>From</View>
+                                      {selectedOptions?.label || placeholder}
+                                    </View>
+                                  </View>
+                                );
+                              }}
+                            >
+                              <Select.Option value="option1" label="Option 1" />
+                              <Select.Option value="option2" label="Option 2" />
+                              <Select.Option value="option3" label="Option 3" />
+                            </Select>
+                          </View>
+                        </View>
+                      )}
+                    />
+                  </View>
+                </View>
+
+                <View
+                  afterLine
+                  style={{ cursor: "pointer" }}
+                  display="flex"
+                  position="relative"
+                  ml="20px"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="row"
+                >
+                  <View>
+                    <Controller
+                      name="toSearch"
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <View display="flex" alignItems="center">
+                          <View
+                            display="flex"
+                            alignItems="flex-start"
+                            flexDirection="column"
+                            marginLeft="10px"
+                          >
+                            <View fontSize="14px" color="#B6B6B6">
+                              <Select
+                                buttonProps={{
+                                  p: "0",
+                                  color: "red",
+                                  fontSize: "14px",
+                                }}
+                                value={value}
+                                onChange={onChange}
+                                placeholder="Search"
+                                renderSelectToggle={({
+                                  toggleSelect,
+                                  selectedOptions,
+                                  placeholder,
+                                }) => {
+                                  return (
+                                    <View
+                                      display="flex"
+                                      alignItems="center"
+                                      onClick={toggleSelect}
+                                    >
+                                      <LocationForm />
+                                      <View
+                                        display="flex"
+                                        alignItems="flex-start"
+                                        flexDirection="column"
+                                        marginLeft="10px"
+                                      >
+                                        <View>To</View>
+                                        {selectedOptions?.label || placeholder}
+                                      </View>
+                                    </View>
+                                  );
+                                }}
+                              >
+                                <Select.Option
+                                  value="option1"
+                                  label="Option 1"
+                                />
+                                <Select.Option
+                                  value="option2"
+                                  label="Option 2"
+                                />
+                                <Select.Option
+                                  value="option3"
+                                  label="Option 3"
+                                />
+                              </Select>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    />
+                  </View>
+                </View>
+
+                <View
+                  afterLine
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Controller
+                    name="pickupDate"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <DatePicker
+                        selected={value}
+                        onChange={(date) => onChange(date)}
+                        showTimeSelect
+                        excludeTimes={[
+                          setHours(setMinutes(new Date(), 0), 17),
+                          setHours(setMinutes(new Date(), 30), 18),
+                          setHours(setMinutes(new Date(), 30), 19),
+                          setHours(setMinutes(new Date(), 30), 17),
+                        ]}
+                        dateFormat="dd:MM:yyyy h:mm"
+                        popperPlacement="bottom-start"
+                        placeholderText="Add Pickup Date"
+                        title="Pickup Date"
+                        customInput={<DateInput />}
+                      />
+                    )}
+                  />
+                </View>
+
+                <View
+                  afterLine
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Controller
+                    name="returnDate"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <DatePicker
+                        selected={value}
+                        onChange={(date) => onChange(date)}
+                        showTimeSelect
+                        dateFormat="dd:MM:yyyy h:mm"
+                        popperPlacement="bottom-start"
+                        placeholderText="Add Return Date"
+                        title="Return Date"
+                        filterDate={filteredPassedDate}
+                        customInput={<DateInput />}
+                      />
+                    )}
+                  />
+                </View>
+                {/* 
+                <View
+                  afterLine
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Controller
+                    name="passenger"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <View display="flex">
+                        <Select
+                          id="from"
+                          buttonProps={{
+                            p: "0",
+                            color: "red",
+                            fontSize: "14px",
+                          }}
+                          multiple
+                          value={value}
+                          onChange={(newValue) => {
+                            console.log("Selected option:", newValue);
+                            onChange(newValue);
+                          }}
+                          placeholder="Transport"
+                          renderSelectToggle={({
+                            toggleSelect,
+                            selectedOptions,
+                            placeholder,
+                          }) => {
+                            console.log("Selected options:", selectedOptions);
+                            console.log("Placeholder:", placeholder);
+                            return (
+                              <View
+                                display="flex"
+                                alignItems="center"
+                                onClick={toggleSelect}
+                              >
+                                <UserForm />
+                                <View
+                                  display="flex"
+                                  alignItems="flex-start"
+                                  flexDirection="column"
+                                  marginLeft="10px"
+                                >
+                                  <View>Passengers</View>
+
+                                  <View
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                  >
+                                    <View fontSize="10px" mr="8px">
+                                      {" "}
+                                      {selectedOptions?.label || placeholder}
+                                    </View>
+                                    <PlusForm />
+                                  </View>
+                                </View>
+                              </View>
+                            );
+                          }}
+                        >
+                          <Select.Option value="option1" label="Option 1" />
+                          <Select.Option value="option2" label="Option 2" />
+                          <Select.Option value="option3" label="Option 3" />
+                        </Select>
+                      </View>
+                    )}
+                  />
+                </View> */}
+
+                <View
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="flex-start"
+                >
+                  <View mb="20px">
+                    <Controller
+                      name="passengers"
+                      control={control}
+                      render={({ field }) => (
+                        <PersonSelect {...field}>
+                          <View display="flex" alignItems="center">
+                            <UserForm />
+                            <View
+                              display="flex"
+                              alignItems="flex-start"
+                              flexDirection="column"
+                              marginLeft="10px"
+                            >
+                              <span>Passengers</span>
+
+                              <View
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                              >
+                                <Text
+                                  as="span"
+                                  mr="5px"
+                                  fontSize="1em"
+                                  display="block"
+                                >
+                                  {Object.values(field.value).reduce(
+                                    (acc, p) => acc + p,
+                                    0
+                                  )}
+                                </Text>
+                                <PlusForm />
+                              </View>
+                            </View>
+                          </View>
+                        </PersonSelect>
+                      )}
+                    />
+                  </View>
+                  {/* 
+                  <View mb="20px">
+                    <Controller
+                      name="children"
+                      control={control}
+                      render={({ field: { value } }) => (
+                        <View
+                          display="flex"
+                          width="220px"
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <View
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="start"
+                            ml="12px"
+                          >
+                            <View mr="10px">Children</View>
+                            <View fontSize="8px">+13 Age</View>
+                          </View>
+                          <View
+                            display="flex"
+                            alignItems="center"
+                            ml="20px"
+                            flexDirection="column"
+                          >
+                            <View display="flex" alignItems="center">
+                              <View display="flex" alignItems="center">
+                                <MinusVector
+                                  type="button"
+                                  onClick={() => decrement("children")}
+                                >
+                                  -
+                                </MinusVector>
+                                <View mx="10px">{value}</View>
+                                <PlusVector
+                                  type="button"
+                                  onClick={() => increment("children")}
+                                >
+                                  +
+                                </PlusVector>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    />
+                  </View> */}
+                </View>
+
+                <Button as="button">Ara</Button>
+              </View>
+            </View>
+          </form>
+          {/* <View
             backgroundColor="white"
             margin="0 auto"
             padding="20px"
@@ -181,23 +581,22 @@ export default function Home({ vehicles }) {
                 justifyContent="center"
                 flexDirection="row"
               >
-                <LocationForm onClick={handleLocationClick} />
+                <LocationForm />
                 <View>
                   <View>To</View>
                   <View fontSize="14px" color="#B6B6B6">
                     Search
                   </View>
-                </View>
-
-                <View position="absolute" padding="2px" left="0" top="150%">
-                  {isSelectOpen && (
-                    <select onChange={handleSelectChange}>
-                      <option value="">Select an option</option>
-                      <option value="option1">Option 1</option>
-                      <option value="option2">Option 2</option>
-                      <option value="option3">Option 3</option>
-                    </select>
-                  )}
+                  <Select>
+                    <Select.Option
+                      value="option1"
+                      label="Option 1"
+                    ></Select.Option>
+                    <Select.Option
+                      value="option2"
+                      label="Option 2"
+                    ></Select.Option>
+                  </Select>
                 </View>
               </View>
 
@@ -263,27 +662,7 @@ export default function Home({ vehicles }) {
 
               <Button onClick={handleSearch}>Search</Button>
             </View>
-
-            {/* <View>
-              <UserForm />
-              <CalendarForm onClick={handleCalendarClick} />
-              {showDatePicker && (
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  showTimeSelect
-                  excludeTimes={[
-                    setHours(setMinutes(new Date(), 0), 17),
-                    setHours(setMinutes(new Date(), 30), 18),
-                    setHours(setMinutes(new Date(), 30), 19),
-                    setHours(setMinutes(new Date(), 30), 17),
-                  ]}
-                  dateFormat="MMMM d, yyyy h:mm aa"
-                  popperPlacement="bottom-start"
-                />
-              )}
-            </View> */}
-          </View>
+          </View> */}
         </BreadCrumb>
         <Section
           my="55px"

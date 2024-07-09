@@ -1,11 +1,11 @@
-import { View, FieldArea, Icon } from '@/components'
+import { View, FieldArea, Icon } from "@/components";
 
-import { useSelectContext } from './selectContext'
+import { useSelectContext } from "./selectContext";
 
-import SelectOption from './SelectOption'
+import SelectOption from "./SelectOption";
 
 const SelectList = ({ children, searchArea }) => {
-  const { isOpen, value, allSelected } = useSelectContext()
+  const { isOpen, value, allSelected } = useSelectContext();
 
   return isOpen ? (
     <View
@@ -24,6 +24,7 @@ const SelectList = ({ children, searchArea }) => {
       bg="white"
       borderRadius="5px"
       maxHeight="300px"
+      minWidth="150px"
       overflowY="auto"
     >
       {searchArea ? (
@@ -39,7 +40,7 @@ const SelectList = ({ children, searchArea }) => {
       ) : null}
       {children}
     </View>
-  ) : null
-}
+  ) : null;
+};
 
-export default SelectList
+export default SelectList;

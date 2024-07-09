@@ -35,6 +35,13 @@ const buttonVariants = ({ theme }) =>
         minWidth: "50px",
         padding: "0",
       },
+      link: {
+        width: "auto",
+        height: "auto",
+        minWidth: "auto",
+        padding: "0",
+        background: "transparent",
+      },
     },
   });
 

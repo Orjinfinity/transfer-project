@@ -13,7 +13,7 @@ import {
   grid,
 } from "styled-system";
 
-const View = styled("div", {
+const StyledView = styled("div", {
   shouldForwardProp,
 })`
   color: #000;
@@ -34,6 +34,18 @@ const View = styled("div", {
   ${shadow}
   ${background}
   ${grid}
+  ${(props) =>
+    props.afterLine &&
+    `
+    &::after {
+      content: '';
+      display: block;
+      margin-left:20px;
+      width: 2px;
+      height: 34px;
+      background-color: #00000033; /* Çizgi rengi */
+    }
+  `}
 `;
 
-export default View;
+export default StyledView;

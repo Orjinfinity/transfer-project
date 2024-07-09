@@ -1,9 +1,9 @@
-import { SelectContextProviderComponent } from './selectContext'
+import { SelectContextProviderComponent } from "./selectContext";
 
-import SelectToggle from './SelectToggle'
-import SelectOption from './SelectOption'
-import SelectList from './SelectList'
-import SelectWrapper from './SelectWrapper'
+import SelectToggle from "./SelectToggle";
+import SelectOption from "./SelectOption";
+import SelectList from "./SelectList";
+import SelectWrapper from "./SelectWrapper";
 
 const Select = ({
   children,
@@ -14,6 +14,7 @@ const Select = ({
   onBlur,
   placeholder,
   allSelected,
+  renderSelectToggle,
   ...styledSystemProps
 }) => {
   return (
@@ -25,13 +26,13 @@ const Select = ({
       allSelected={allSelected}
     >
       <SelectWrapper {...styledSystemProps}>
-        <SelectToggle />
+        <SelectToggle renderSelectToggle={renderSelectToggle} />
         <SelectList searchArea={searchArea}>{children}</SelectList>
       </SelectWrapper>
     </SelectContextProviderComponent>
-  )
-}
+  );
+};
 
-Select.Option = SelectOption
+Select.Option = SelectOption;
 
-export default Select
+export default Select;

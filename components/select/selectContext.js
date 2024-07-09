@@ -1,33 +1,33 @@
-import { createContext, useContext, useState, useMemo, useEffect } from 'react'
+import { createContext, useContext, useState, useMemo, useEffect } from "react";
 
-const SelectContext = createContext(null)
+const SelectContext = createContext(null);
 
 export const useSelectContext = () => {
-  const context = useContext(SelectContext)
+  const context = useContext(SelectContext);
 
   if (!context) {
     throw new Error(
-      'Select components are compound component. Must be used inside Select.'
-    )
+      "Select components are compound component. Must be used inside Select."
+    );
   }
 
-  return context
-}
+  return context;
+};
 
 export const SelectContextProviderComponent = ({
   children,
   value: selectedItem = {},
   onChange,
   allSelected,
-  placeholder
+  placeholder,
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const multiple = Array.isArray(selectedItem)
+  const [isOpen, setIsOpen] = useState(false);
+  const multiple = Array.isArray(selectedItem);
 
   const isEmpty = useMemo(
     () => (multiple ? selectedItem.length === 0 : !selectedItem.value),
     [multiple, selectedItem.length, selectedItem.value]
-  )
+  );
 
   useEffect(() => {
     if (
@@ -38,64 +38,64 @@ export const SelectContextProviderComponent = ({
     ) {
       const defaultSelected = {
         label: allSelected.label,
-        value: allSelected.value
-      }
+        value: allSelected.value,
+      };
 
-      onChange(multiple ? [defaultSelected] : defaultSelected)
+      onChange(multiple ? [defaultSelected] : defaultSelected);
     }
-  }, [allSelected, isEmpty, multiple, onChange])
+  }, [allSelected, isEmpty, multiple, onChange]);
 
   const toggleSelect = () => {
-    setIsOpen((prevIsOpen) => !prevIsOpen)
-  }
+    setIsOpen((prevIsOpen) => !prevIsOpen);
+  };
 
   const openSelect = () => {
-    setIsOpen(true)
-  }
+    setIsOpen(true);
+  };
 
   const closeSelect = () => {
-    setIsOpen(false)
-  }
+    setIsOpen(false);
+  };
 
   const getIsSelectedOption = (optionValue) =>
     multiple
       ? selectedItem.some((option) => option.value === optionValue)
-      : selectedItem.value === optionValue
+      : selectedItem.value === optionValue;
 
   const setValue = (selectedOption) => {
     if (selectedOption.value === allSelected?.value) {
-      onChange(multiple ? [] : {})
+      onChange(multiple ? [] : {});
     } else {
-      const isExistValue = getIsSelectedOption(selectedOption.value)
+      const isExistValue = getIsSelectedOption(selectedOption.value);
 
       if (!multiple) {
-        isExistValue ? onChange({}) : onChange(selectedOption)
+        isExistValue ? onChange({}) : onChange(selectedOption);
       } else {
         const filteredSelectedItems = selectedItem.filter(
           (item) => item.value !== allSelected?.value
-        )
+        );
         isExistValue
           ? onChange(
               filteredSelectedItems.filter(
                 (item) => item.value !== selectedOption.value
               )
             )
-          : onChange([...filteredSelectedItems, selectedOption])
+          : onChange([...filteredSelectedItems, selectedOption]);
       }
     }
-  }
+  };
 
   const removeValue = (optionValue) => {
     if (allSelected?.value === optionValue) {
-      openSelect()
+      openSelect();
     } else {
-      onChange(selectedItem.filter((item) => item.value !== optionValue))
+      onChange(selectedItem.filter((item) => item.value !== optionValue));
     }
-  }
+  };
 
   const clearSelect = () => {
-    onChange(multiple ? [] : {})
-  }
+    onChange(multiple ? [] : {});
+  };
 
   const providerValue = {
     selectedOptions: selectedItem,
@@ -110,14 +110,14 @@ export const SelectContextProviderComponent = ({
     clearSelect,
     allSelected,
     multiple,
-    placeholder
-  }
+    placeholder,
+  };
 
   return (
     <SelectContext.Provider value={providerValue}>
       {children}
     </SelectContext.Provider>
-  )
-}
+  );
+};
 
-export default SelectContext
+export default SelectContext;

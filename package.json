@@ -11,6 +11,7 @@
   "dependencies": {
     "@directus/sdk": "^10.3.1",
     "@fancyapps/ui": "^4.0.31",
+    "@popperjs/core": "^2.11.8",
     "@styled-system/should-forward-prop": "^5.1.5",
     "@svgr/webpack": "^6.5.1",
     "axios": "^1.2.1",
@@ -33,6 +34,7 @@
     "react-iframe": "^1.8.5",
     "react-is": "^18.2.0",
     "react-masonry-css": "^1.0.16",
+    "react-popper": "^2.3.0",
     "react-responsive-masonry": "^2.2.0",
     "reactjs-popup": "^2.0.5",
     "strapi-sdk-js": "^2.3.3",
