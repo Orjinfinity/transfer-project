@@ -718,7 +718,7 @@ export default function Home() {
       <WizardProvider>
         <Layout>
           <Section
-            my="200px"
+            my={['100px','100px','200px']}
             style={{
               backgroundSize: "cover",
             }}

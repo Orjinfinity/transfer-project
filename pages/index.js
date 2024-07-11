@@ -529,7 +529,7 @@ export default function Home({ vehicles }) {
                   </View> */}
                 </View>
 
-                <Button as="button">Ara</Button>
+                <Button as="a" href="/transfer-sorgu">Ara</Button>
               </View>
             </View>
           </form>
