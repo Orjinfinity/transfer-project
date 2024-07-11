@@ -1,6 +1,17 @@
 import styled from "styled-components";
-import { space,color,position,background  } from 'styled-system'
- 
+import {
+  space,
+  color,
+  typography,
+  flexbox,
+  layout,
+  position,
+  border,
+  shadow,
+  background,
+  grid,
+} from "styled-system";
+
 const Section = styled.section`
   padding: 20px 0;
 
@@ -10,9 +21,14 @@ const Section = styled.section`
 
   ${space}
   ${color}
-  ${position }
+  ${typography}
+  ${flexbox}
+  ${layout}
+  ${position}
+  ${border}
+  ${shadow}
   ${background}
+  ${grid}
 `;
 
- 
 export default Section;

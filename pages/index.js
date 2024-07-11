@@ -53,7 +53,7 @@ import PlusForm from "../assets/icons/plus-form.svg";
 import CalendarForm from "../assets/icons/calendar-form.svg";
 import AirPlaneForm from "../assets/icons/airplane-form.svg";
 import Select from "components/select/Select";
-import { fontSize, marginLeft } from "styled-system";
+import { flexDirection, fontSize, marginLeft } from "styled-system";
 import SelectToggle from "components/select/SelectToggle";
 import PlusVector from "../assets/icons/plusVector.svg";
 import MinusVector from "../assets/icons/minusVector.svg";
@@ -91,20 +91,6 @@ export default function Home({ vehicles }) {
       },
     },
   });
-
-  const increment = (name) => {
-    console.log(name, "nameProp");
-    const value = getValues(name);
-    console.log(value, "getValue");
-    setValue(name, value + 1);
-  };
-
-  const decrement = (name) => {
-    const value = getValues(name);
-    if (value > 0) {
-      setValue(name, value - 1);
-    }
-  };
 
   const pickupDate = watch("pickupDate");
 
@@ -144,7 +130,7 @@ export default function Home({ vehicles }) {
           backgroundImage={`url(${Background.src})`}
           height="calc(100vh - 80px)"
         >
-          <Title mt="100px" fontSize="60px">
+          <Title mt="100px" fontSize={["40px", "40px", "60px"]}>
             Find and book your transfer in Antalya easily
           </Title>
           <View
@@ -174,16 +160,20 @@ export default function Home({ vehicles }) {
               <View
                 display="grid"
                 gridGap="10px"
-                gridTemplateColumns="auto auto auto auto auto auto"
+                gridTemplateColumns={[
+                  "1fr 1fr",
+                  "1fr 1fr",
+                  "1fr 1fr 1fr 1fr 1fr 1fr",
+                ]}
+                justifyContent="space-between"
               >
                 <View
                   afterLine
                   style={{ cursor: "pointer" }}
                   display="flex"
                   position="relative"
-                  ml="20px"
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="space-between"
                   flexDirection="row"
                 >
                   <View>
@@ -244,9 +234,8 @@ export default function Home({ vehicles }) {
                   style={{ cursor: "pointer" }}
                   display="flex"
                   position="relative"
-                  ml="20px"
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="space-between"
                   flexDirection="row"
                 >
                   <View>
@@ -259,7 +248,6 @@ export default function Home({ vehicles }) {
                             display="flex"
                             alignItems="flex-start"
                             flexDirection="column"
-                            marginLeft="10px"
                           >
                             <View fontSize="14px" color="#B6B6B6">
                               <Select
@@ -321,7 +309,7 @@ export default function Home({ vehicles }) {
                   afterLine
                   display="flex"
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="space-between"
                 >
                   <Controller
                     name="pickupDate"
@@ -351,7 +339,7 @@ export default function Home({ vehicles }) {
                   afterLine
                   display="flex"
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="space-between"
                 >
                   <Controller
                     name="returnDate"
@@ -448,6 +436,7 @@ export default function Home({ vehicles }) {
                   display="flex"
                   flexDirection="column"
                   alignItems="flex-start"
+                  justifyContent={["space-between", "space-between", "center"]}
                 >
                   <View mb="20px">
                     <Controller
@@ -671,14 +660,21 @@ export default function Home({ vehicles }) {
           }}
         >
           <Container>
-            <View textAlign="center" mb="80px">
+            <View textAlign="center" mb={["40px", "40px", "80px"]}>
               <Tag>OUR SERVİCES</Tag>
-              <View mt="50px" as="h2" fontSize="38px">
+              <View
+                mt={["20px", "20px", "50px"]}
+                as="h2"
+                fontSize={["24px", "24px", "38px"]}
+              >
                 Why book a transfer from Victoria?
               </View>
             </View>
 
-            <Grid gridTemplateColumns="1fr 1fr 1fr 1fr">
+            <Grid
+              gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr 1fr"]}
+              gridGap={["40px", "40px", "0px"]}
+            >
               <View
                 display="flex"
                 flexDirection="column"
@@ -848,15 +844,19 @@ export default function Home({ vehicles }) {
           }}
         >
           <Container>
-            <View textAlign="center" mb="80px">
+            <View textAlign="center" mb={["30px", "30px", "80px"]}>
               <Tag>OUR FLEET</Tag>
-              <View mt="50px" as="h2" fontSize="38px">
+              <View
+                mt={["30px", "30px", "50px"]}
+                as="h2"
+                fontSize={["27px", "27px", "38px"]}
+              >
                 Take a look at our brand new fleet
               </View>
             </View>
 
             <Grid
-              gridTemplateColumns="250px 250px 250px"
+              gridTemplateColumns={["1fr", "1fr", "250px 250px 250px"]}
               alignItems="center"
               justifyContent="center"
               gridGap="32px"
@@ -895,6 +895,7 @@ export default function Home({ vehicles }) {
                   </LogisticsCard.Desc>
                 </View>
               </LogisticsCard>
+
               <LogisticsCard>
                 <Image src="/car.png" />
                 <LogisticsCard.Title>Minivan</LogisticsCard.Title>
@@ -965,7 +966,7 @@ export default function Home({ vehicles }) {
                 </View>
               </LogisticsCard>
             </Grid>
-            <View textAlign="center" mt="64px">
+            <View textAlign="center" mt={["30px", "30px", "64px"]}>
               <View
                 as="a"
                 href="#"
@@ -990,9 +991,13 @@ export default function Home({ vehicles }) {
           }}
         >
           <Container>
-            <View textAlign="center" mb="80px">
+            <View textAlign="center" mb={["30px", "30px", "80px"]}>
               <Tag>OUR CUSTOMERS</Tag>
-              <View mt="50px" as="h2" fontSize="38px">
+              <View
+                mt={["20px", "20px", "50px"]}
+                as="h2"
+                fontSize={["27px", "27px", "38px"]}
+              >
                 What peole say about us?
               </View>
             </View>
@@ -1102,13 +1107,13 @@ export default function Home({ vehicles }) {
           <Container>
             <View textAlign="center" mb="64px">
               <Tag>TOP BOOKED</Tag>
-              <View mt="50px" as="h2" fontSize="38px">
+              <View mt="50px" as="h2" fontSize={["27px", "27px", "38px"]}>
                 Top Destinations
               </View>
             </View>
 
             <Grid
-              gridTemplateColumns="275px 275px 275px"
+              gridTemplateColumns={["1fr", "1fr", "275px 275px 275px"]}
               gridGap="64px"
               justifyContent="center"
             >
@@ -1213,22 +1218,29 @@ export default function Home({ vehicles }) {
         </Section>
 
         <Section
+          display="flex"
           my="55px"
+          alignItems={["center", "center", "left"]}
+          flexDirection={["column", "column", "row"]}
           style={{
             backgroundSize: "cover",
             backgroundColor: "#fff",
-            display: "flex",
           }}
         >
           <View>
-            <Image width="758px" src="/chouseus.png" />
+            <Image width={["100%", "100%", "758px"]} src="/chouseus.png" />
           </View>
 
           <Container>
             <View>
               <View>
                 <Tag>WHY CHOOSE US</Tag>
-                <View mt="30px" as="h2" fontSize="38px" maxWidth="576px">
+                <View
+                  mt="30px"
+                  as="h2"
+                  fontSize={["27px", "27px", "38px"]}
+                  maxWidth="576px"
+                >
                   We offer the best experience with our booking deals
                 </View>
               </View>

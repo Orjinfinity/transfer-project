@@ -38,7 +38,12 @@ const StepLeft = () => {
   const { total } = useWizardContext();
   return (
     <View>
-      <View mb="50px" boxShadow="0 4px 8px rgba(0, 0, 0, 0.4);">
+      <View
+        mb="50px"
+        boxShadow="0 4px 8px rgba(0, 0, 0, 0.4);"
+        width={["350px", "350px", "100%"]}
+        m="0 auto"
+      >
         <View>
           <View
             backgroundColor="#1572D3"
@@ -189,17 +194,20 @@ const StepLeft = () => {
           </View>
         </View>
       </View>
+
       <View
         borderBottom="1px solid #adadad"
         pb="5px"
         my="50px"
         display="flex"
         justifyContent="space-between"
+        m="30px auto"
+        width={["350px", "350px", "100%"]}
       >
         <View>Toplam</View>
         <View fontWeight="bold">{total} TL</View>
       </View>
-      <View>
+      <View width={["350px", "350px", "100%"]} m="30px auto">
         <View as="h5" my="10px" fontSize="20px" fontWeight="bold">
           7/24 Destek
         </View>
@@ -248,16 +256,28 @@ const Step1 = () => {
         display="grid"
         border="1px solid gray"
         p="20px"
-        height="300px"
-        gridTemplateColumns="600px 1fr"
+        gridTemplateColumns={["1fr", "1fr", "1fr", "1fr", "1fr auto"]}
       >
-        <View display="grid" gridTemplateColumns="1fr 1fr">
-          <View>
+        <View display="flex" flexDirection="column">
+          <View
+            display="flex"
+            alignItems="center"
+            mr={["0", "0", "5em"]}
+            flexDirection={["column", "column", "row"]}
+          >
             <img src="/car.png" />
+            <Title as="h5" size="xl">
+              VIP Ekonomik
+            </Title>
           </View>
           <View>
-            <View as="h5" fontSize="40px">
-              VIP Ekonomik
+            <View
+              backgroundColor="#d8d8d8"
+              display="inline-block"
+              color="#000"
+              p="10px 20px"
+            >
+              Hizmet Bilgileri
             </View>
             <View my="20px" display="flex" flexDirection="column">
               <View as="span">Özel Transfer</View>
@@ -266,15 +286,6 @@ const Step1 = () => {
             <View my="20px">
               <View>Max 8 Yolcu</View>
               <View>8 adet orta boy valiz</View>
-            </View>
-
-            <View
-              backgroundColor="#d8d8d8"
-              display="inline-block"
-              color="#000"
-              p="10px 20px"
-            >
-              Hizmet Bilgileri
             </View>
           </View>
         </View>
@@ -298,91 +309,6 @@ const Step1 = () => {
                 color="#fff"
                 p="15px 25px"
                 right="0"
-                display="inline-block"
-                backgroundColor="orange"
-              >
-                4100 ₺
-              </View>
-            </View>
-
-            <View mt="20px">
-              <ul>
-                <li>Araçta şoföre ödeme opsiyonu</li>
-                <li>Koşulsuz iptal hakkı</li>
-              </ul>
-            </View>
-            <Button
-              as="button"
-              onClick={gotoNextStep}
-              cursor="pointer"
-              width="100%"
-              border="none"
-              mt="20px"
-              textAlign="center"
-              backgroundColor="#1572D3"
-              p="10px 20px"
-              color="#fff"
-            >
-              Bu Aracı Seç
-            </Button>
-          </View>
-        </View>
-      </View>
-      <View
-        mb="20px"
-        display="grid"
-        border="1px solid gray"
-        p="20px"
-        height="300px"
-        gridTemplateColumns="600px 1fr"
-      >
-        <View display="grid" gridTemplateColumns="1fr 1fr">
-          <View>
-            <img src="/car.png" />
-          </View>
-          <View>
-            <View as="h5" fontSize="40px">
-              VIP Ekonomik
-            </View>
-            <View my="20px" display="flex" flexDirection="column">
-              <View as="span">Özel Transfer</View>
-              <View as="span">Mercedes Vito veya VW Caravelle</View>
-            </View>
-            <View my="20px">
-              <View>Max 8 Yolcu</View>
-              <View>8 adet orta boy valiz</View>
-            </View>
-
-            <View
-              backgroundColor="#d8d8d8"
-              display="inline-block"
-              color="#000"
-              p="10px 20px"
-            >
-              Hizmet Bilgileri
-            </View>
-          </View>
-        </View>
-
-        <View>
-          <View boxShadow="0 4px 8px rgba(0,0,0,0.4)" p="20px">
-            <View
-              position="relative"
-              display="flex"
-              justifyContent="space-between"
-            >
-              <View>
-                <View>Çift Yön</View>
-                <View>Özel Transfer</View>
-                <View color="red" fontSize="13px" fontWeight="bold">
-                  Araç Toplam Ücret
-                </View>
-              </View>
-              <View
-                position="absolute"
-                right="0"
-                color="#fff"
-                p="15px 25px"
                 display="inline-block"
                 backgroundColor="orange"
               >
@@ -445,9 +371,9 @@ const Step2 = () => {
         pt="30px"
         pr="20px"
         display="grid"
-        gridTemplateColumns="1fr 1fr 1fr"
+        gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr"]}
       >
-        <View>
+        <View width={["100%", "100%", "300px"]}>
           <img src="/car.png" />
         </View>
         <View>
@@ -620,7 +546,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
           mt="20px"
           mb="20px"
           display="grid"
-          gridTemplateColumns="1fr 1fr"
+          gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
           gridRowGap="20px"
           gridColumnGap="50px"
           ref={ref}
@@ -743,7 +669,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
         </View>
 
         <Button type="submit" block rounded size="xl">
-            Rezervasyon Oluştur
+          Rezervasyon Oluştur
         </Button>
       </form>
     </View>
@@ -762,7 +688,7 @@ const Wizard = () => {
     setStep,
   } = useWizardContext();
   return (
-    <Grid gridTemplateColumns="400px 1fr" gridGap="30px">
+    <Grid gridTemplateColumns={["1fr", "1fr", "400px 1fr"]} gridGap="30px">
       <View>
         <StepLeft />
       </View>
