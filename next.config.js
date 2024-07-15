@@ -1,21 +1,16 @@
 /** @type {import('next').NextConfig} */
 
-module.exports = {
-  i18n: {
-    locales: ["en", "tr"],
-    defaultLocale: "tr",
-  },
-};
-
 const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: false,
   swcMinify: true,
-  output: "export",
   images: {
-    domains: ["127.0.0.1", "localhost", "cms.focusteam.top"],
+    domains: ["127.0.0.1", "localhost", "cdn.sanity.io"],
   },
-
+  i18n: {
+    locales: ["en", "tr", "ru"],
+    defaultLocale: "ru",
+  },
   compiler: {
     // ssr and displayName are configured by default
     styledComponents: true,

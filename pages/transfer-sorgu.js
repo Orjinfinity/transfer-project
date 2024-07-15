@@ -521,23 +521,21 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
 
   const { handleSubmit, control, watch } = useForm({
     defaultValues: {
-      brand: "",
-      phone: "",
-      name: "",
+      surname: "sd",
+      email: "aa",
+      name: "bb",
       isKvkk: false,
-      sectors: [],
+      phone: "cc",
+    
     },
   });
 
-  const onSubmit = async ({
-    name,
-    phone,
-    brand,
-    sectors: selectedSector,
-  }) => {};
+  const onSubmit =  (data) => {
+    console.log(data);
+  };
 
   return (
-    <View width="100%" p="50px" {...otherProps}>
+    <View width="100%" {...otherProps}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Title fontSize="20px" fontWeight="regular">
           Yolcu Karşılama ve İletişim Bilgileri
@@ -659,7 +657,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea mt="10px" variant="transparent" error={error}>
                 <Checkbox id="check-kvkk" {...field} isChecked={false}>
-                  <Text fontSize="12px">
+                  <Text fontSize="12px" width="400px">
                     WhatsApp üzerinden bilgilendirme yapılmasını kabul ediyorum
                   </Text>
                 </Checkbox>
@@ -667,6 +665,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             )}
           />
         </View>
+       
 
         <Button type="submit" block rounded size="xl">
           Rezervasyon Oluştur

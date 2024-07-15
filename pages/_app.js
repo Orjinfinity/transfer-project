@@ -1,13 +1,16 @@
+import App from "next/app";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import getConfig from "next/config";
 import { ThemeProviderComponent } from "@/theme";
+import { fetchFooterNavigation, fetchMainNavigaiton, fetchPages} from "../service"
 
 import "../styles/globals.css";
+import { Layout } from "components";
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
-function MyApp({ Component, pageProps }) {
+function CustomApp({ Component, pageProps, globalProps }) {
   const router = useRouter();
 
   return (
@@ -22,15 +25,32 @@ function MyApp({ Component, pageProps }) {
       </Head>
 
       <ThemeProviderComponent>
-        <Component
-          {...pageProps}
-          publicRuntimeConfig={publicRuntimeConfig}
-          serverRuntimeConfig={serverRuntimeConfig}
-          key={router.asPath}
-        />
+        <Layout globalProps={globalProps}>
+          <Component
+            pageProps={{...pageProps, ...globalProps}}
+            publicRuntimeConfig={publicRuntimeConfig}
+            serverRuntimeConfig={serverRuntimeConfig}
+            key={router.asPath}
+          />
+        </Layout>
       </ThemeProviderComponent>
     </>
   );
 }
 
-export default MyApp;
+CustomApp.getInitialProps = async (ctx) => {
+  const appProps = await App.getInitialProps(ctx)
+  const mainNavigation = await fetchMainNavigaiton(ctx?.ctx?.locale)
+  const pages = await fetchPages(ctx?.ctx?.locale)
+  const footerNavigation = await fetchFooterNavigation(ctx?.ctx?.locale)
+  return {
+    ...appProps,
+    globalProps: {
+      pages,
+      mainNavigation,
+      footerNavigation
+    }
+  }
+}
+
+export default CustomApp;

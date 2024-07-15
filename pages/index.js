@@ -6,7 +6,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes } from "date-fns";
 import { useSWR } from "swr";
-import { fetchVehicles } from "../service";
+import {
+  fetchVehicles,
+  getImageUrl,
+  fetchTransferPoints,
+  getTransferPoints,
+  getVehicles,
+  getTestimonials,
+  getDestinations,
+} from "../service";
 
 import {
   Layout,
@@ -77,7 +85,9 @@ const DateInput = (props) => {
   );
 };
 
-export default function Home({ vehicles }) {
+export default function Home({ pageProps }) {
+  const { transferPoints, vehicles, testimonials, destinations } = pageProps;
+
   const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       fromSearch: "option1",
@@ -94,7 +104,6 @@ export default function Home({ vehicles }) {
 
   const pickupDate = watch("pickupDate");
 
-  console.log("Vehicles:", vehicles);
   const router = useRouter();
 
   const filteredPassedDate = (date) => {
@@ -125,66 +134,137 @@ export default function Home({ vehicles }) {
         <meta name="twitter:description" content="VICTORIA TRANSFER" />
         <meta name="twitter:image" content="/logo.png" />
       </Head>
-      <Layout>
-        <BreadCrumb
-          backgroundImage={`url(${Background.src})`}
-          height="calc(100vh - 80px)"
-        >
-          <Title mt="100px" fontSize={["40px", "40px", "60px"]}>
-            Find and book your transfer in Antalya easily
-          </Title>
-          <View
-            as="p"
-            m="0 auto"
-            mt="68px"
-            fontSize=".7em"
-            color="#000"
-            fontWeight="bold"
-            backgroundColor="#fff"
-            borderRadius="10px"
-            p="6px"
-          >
-            If you buy the return transfer now, your return will be rewarded 10%
-            discount
-          </View>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+      <BreadCrumb
+        backgroundImage={`url(${Background.src})`}
+        height="calc(100vh - 80px)"
+      >
+        <Title mt="100px" fontSize={["40px", "40px", "60px"]}>
+          Find and book your transfer in Antalya easily
+        </Title>
+        <View
+          as="p"
+          m="0 auto"
+          mt="68px"
+          fontSize=".7em"
+          color="#000"
+          fontWeight="bold"
+          backgroundColor="#fff"
+          borderRadius="10px"
+          p="6px"
+        >
+          If you buy the return transfer now, your return will be rewarded 10%
+          discount
+        </View>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <View
+            backgroundColor="white"
+            margin="0 auto"
+            padding="20px"
+            borderRadius="10px"
+            width="1100px"
+            mt="30px"
+          >
             <View
-              backgroundColor="white"
-              margin="0 auto"
-              padding="20px"
-              borderRadius="10px"
-              width="1100px"
-              mt="30px"
+              display="grid"
+              gridGap="10px"
+              gridTemplateColumns={[
+                "1fr 1fr",
+                "1fr 1fr",
+                "1fr 1fr 1fr 1fr 1fr 1fr",
+              ]}
+              justifyContent="space-between"
             >
               <View
-                display="grid"
-                gridGap="10px"
-                gridTemplateColumns={[
-                  "1fr 1fr",
-                  "1fr 1fr",
-                  "1fr 1fr 1fr 1fr 1fr 1fr",
-                ]}
+                afterLine
+                style={{ cursor: "pointer" }}
+                display="flex"
+                position="relative"
+                alignItems="center"
                 justifyContent="space-between"
+                flexDirection="row"
               >
-                <View
-                  afterLine
-                  style={{ cursor: "pointer" }}
-                  display="flex"
-                  position="relative"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  flexDirection="row"
-                >
-                  <View>
-                    <Controller
-                      name="fromSearch"
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <View display="flex" alignItems="center">
+                <View>
+                  <Controller
+                    name="fromSearch"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <View display="flex" alignItems="center">
+                        <View fontSize="14px" color="#B6B6B6">
+                          <Select
+                            id="from"
+                            buttonProps={{
+                              p: "0",
+                              color: "red",
+                              fontSize: "14px",
+                            }}
+                            value={value}
+                            onChange={onChange}
+                            placeholder="Search"
+                            renderSelectToggle={({
+                              toggleSelect,
+                              selectedOptions,
+                              placeholder,
+                            }) => {
+                              return (
+                                <View
+                                  display="flex"
+                                  alignItems="center"
+                                  onClick={toggleSelect}
+                                >
+                                  <AirPlaneForm />
+                                  <View
+                                    display="flex"
+                                    alignItems="flex-start"
+                                    flexDirection="column"
+                                    marginLeft="10px"
+                                  >
+                                    <View>From</View>
+                                    {selectedOptions?.label || placeholder}
+                                  </View>
+                                </View>
+                              );
+                            }}
+                          >
+                            {transferPoints?.map((point) => {
+                              return (
+                                <Select.Option
+                                  value={point?._id}
+                                  label={point?.name}
+                                />
+                              );
+                            })}
+                          </Select>
+                        </View>
+                      </View>
+                    )}
+                  />
+                </View>
+              </View>
+
+              <View
+                afterLine
+                style={{ cursor: "pointer" }}
+                display="flex"
+                position="relative"
+                alignItems="center"
+                justifyContent="space-between"
+                flexDirection="row"
+              >
+                <View>
+                  <Controller
+                    name="toSearch"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <View display="flex" alignItems="center">
+                        <View
+                          display="flex"
+                          alignItems="flex-start"
+                          flexDirection="column"
+                        >
                           <View fontSize="14px" color="#B6B6B6">
                             <Select
-                              id="from"
                               buttonProps={{
                                 p: "0",
                                 color: "red",
@@ -204,162 +284,92 @@ export default function Home({ vehicles }) {
                                     alignItems="center"
                                     onClick={toggleSelect}
                                   >
-                                    <AirPlaneForm />
+                                    <LocationForm />
                                     <View
                                       display="flex"
                                       alignItems="flex-start"
                                       flexDirection="column"
                                       marginLeft="10px"
                                     >
-                                      <View>From</View>
+                                      <View>To</View>
                                       {selectedOptions?.label || placeholder}
                                     </View>
                                   </View>
                                 );
                               }}
                             >
-                              <Select.Option value="option1" label="Option 1" />
-                              <Select.Option value="option2" label="Option 2" />
-                              <Select.Option value="option3" label="Option 3" />
+                              {transferPoints?.map((point) => {
+                                return (
+                                  <Select.Option
+                                    value={point?._id}
+                                    label={point?.name}
+                                  />
+                                );
+                              })}
                             </Select>
                           </View>
                         </View>
-                      )}
-                    />
-                  </View>
-                </View>
-
-                <View
-                  afterLine
-                  style={{ cursor: "pointer" }}
-                  display="flex"
-                  position="relative"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  flexDirection="row"
-                >
-                  <View>
-                    <Controller
-                      name="toSearch"
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <View display="flex" alignItems="center">
-                          <View
-                            display="flex"
-                            alignItems="flex-start"
-                            flexDirection="column"
-                          >
-                            <View fontSize="14px" color="#B6B6B6">
-                              <Select
-                                buttonProps={{
-                                  p: "0",
-                                  color: "red",
-                                  fontSize: "14px",
-                                }}
-                                value={value}
-                                onChange={onChange}
-                                placeholder="Search"
-                                renderSelectToggle={({
-                                  toggleSelect,
-                                  selectedOptions,
-                                  placeholder,
-                                }) => {
-                                  return (
-                                    <View
-                                      display="flex"
-                                      alignItems="center"
-                                      onClick={toggleSelect}
-                                    >
-                                      <LocationForm />
-                                      <View
-                                        display="flex"
-                                        alignItems="flex-start"
-                                        flexDirection="column"
-                                        marginLeft="10px"
-                                      >
-                                        <View>To</View>
-                                        {selectedOptions?.label || placeholder}
-                                      </View>
-                                    </View>
-                                  );
-                                }}
-                              >
-                                <Select.Option
-                                  value="option1"
-                                  label="Option 1"
-                                />
-                                <Select.Option
-                                  value="option2"
-                                  label="Option 2"
-                                />
-                                <Select.Option
-                                  value="option3"
-                                  label="Option 3"
-                                />
-                              </Select>
-                            </View>
-                          </View>
-                        </View>
-                      )}
-                    />
-                  </View>
-                </View>
-
-                <View
-                  afterLine
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Controller
-                    name="pickupDate"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <DatePicker
-                        selected={value}
-                        onChange={(date) => onChange(date)}
-                        showTimeSelect
-                        excludeTimes={[
-                          setHours(setMinutes(new Date(), 0), 17),
-                          setHours(setMinutes(new Date(), 30), 18),
-                          setHours(setMinutes(new Date(), 30), 19),
-                          setHours(setMinutes(new Date(), 30), 17),
-                        ]}
-                        dateFormat="dd:MM:yyyy h:mm"
-                        popperPlacement="bottom-start"
-                        placeholderText="Add Pickup Date"
-                        title="Pickup Date"
-                        customInput={<DateInput />}
-                      />
+                      </View>
                     )}
                   />
                 </View>
+              </View>
 
-                <View
-                  afterLine
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Controller
-                    name="returnDate"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <DatePicker
-                        selected={value}
-                        onChange={(date) => onChange(date)}
-                        showTimeSelect
-                        dateFormat="dd:MM:yyyy h:mm"
-                        popperPlacement="bottom-start"
-                        placeholderText="Add Return Date"
-                        title="Return Date"
-                        filterDate={filteredPassedDate}
-                        customInput={<DateInput />}
-                      />
-                    )}
-                  />
-                </View>
-                {/* 
+              <View
+                afterLine
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Controller
+                  name="pickupDate"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <DatePicker
+                      selected={value}
+                      onChange={(date) => onChange(date)}
+                      showTimeSelect
+                      excludeTimes={[
+                        setHours(setMinutes(new Date(), 0), 17),
+                        setHours(setMinutes(new Date(), 30), 18),
+                        setHours(setMinutes(new Date(), 30), 19),
+                        setHours(setMinutes(new Date(), 30), 17),
+                      ]}
+                      dateFormat="dd:MM:yyyy h:mm"
+                      popperPlacement="bottom-start"
+                      placeholderText="Add Pickup Date"
+                      title="Pickup Date"
+                      customInput={<DateInput />}
+                    />
+                  )}
+                />
+              </View>
+
+              <View
+                afterLine
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Controller
+                  name="returnDate"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <DatePicker
+                      selected={value}
+                      onChange={(date) => onChange(date)}
+                      showTimeSelect
+                      dateFormat="dd:MM:yyyy h:mm"
+                      popperPlacement="bottom-start"
+                      placeholderText="Add Return Date"
+                      title="Return Date"
+                      filterDate={filteredPassedDate}
+                      customInput={<DateInput />}
+                    />
+                  )}
+                />
+              </View>
+              {/* 
                 <View
                   afterLine
                   display="flex"
@@ -432,53 +442,53 @@ export default function Home({ vehicles }) {
                   />
                 </View> */}
 
-                <View
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="flex-start"
-                  justifyContent={["space-between", "space-between", "center"]}
-                >
-                  <View mb="20px">
-                    <Controller
-                      name="passengers"
-                      control={control}
-                      render={({ field }) => (
-                        <PersonSelect {...field}>
-                          <View display="flex" alignItems="center">
-                            <UserForm />
+              <View
+                display="flex"
+                flexDirection="column"
+                alignItems="flex-start"
+                justifyContent={["space-between", "space-between", "center"]}
+              >
+                <View mb="20px">
+                  <Controller
+                    name="passengers"
+                    control={control}
+                    render={({ field }) => (
+                      <PersonSelect {...field}>
+                        <View display="flex" alignItems="center">
+                          <UserForm />
+                          <View
+                            display="flex"
+                            alignItems="flex-start"
+                            flexDirection="column"
+                            marginLeft="10px"
+                          >
+                            <span>Passengers</span>
+
                             <View
                               display="flex"
-                              alignItems="flex-start"
-                              flexDirection="column"
-                              marginLeft="10px"
+                              alignItems="center"
+                              justifyContent="center"
                             >
-                              <span>Passengers</span>
-
-                              <View
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
+                              <Text
+                                as="span"
+                                mr="5px"
+                                fontSize="1em"
+                                display="block"
                               >
-                                <Text
-                                  as="span"
-                                  mr="5px"
-                                  fontSize="1em"
-                                  display="block"
-                                >
-                                  {Object.values(field.value).reduce(
-                                    (acc, p) => acc + p,
-                                    0
-                                  )}
-                                </Text>
-                                <PlusForm />
-                              </View>
+                                {Object.values(field.value).reduce(
+                                  (acc, p) => acc + p,
+                                  0
+                                )}
+                              </Text>
+                              <PlusForm />
                             </View>
                           </View>
-                        </PersonSelect>
-                      )}
-                    />
-                  </View>
-                  {/* 
+                        </View>
+                      </PersonSelect>
+                    )}
+                  />
+                </View>
+                {/* 
                   <View mb="20px">
                     <Controller
                       name="children"
@@ -527,13 +537,15 @@ export default function Home({ vehicles }) {
                       )}
                     />
                   </View> */}
-                </View>
-
-                <Button as="a" href="/transfer-sorgu">Ara</Button>
               </View>
+
+              <Button as="a" href="/transfer-sorgu">
+                Ara
+              </Button>
             </View>
-          </form>
-          {/* <View
+          </View>
+        </form>
+        {/* <View
             backgroundColor="white"
             margin="0 auto"
             padding="20px"
@@ -652,723 +664,525 @@ export default function Home({ vehicles }) {
               <Button onClick={handleSearch}>Search</Button>
             </View>
           </View> */}
-        </BreadCrumb>
-        <Section
-          my="55px"
-          style={{
-            backgroundSize: "cover",
-          }}
-        >
-          <Container>
-            <View textAlign="center" mb={["40px", "40px", "80px"]}>
-              <Tag>OUR SERVİCES</Tag>
-              <View
-                mt={["20px", "20px", "50px"]}
-                as="h2"
-                fontSize={["24px", "24px", "38px"]}
-              >
-                Why book a transfer from Victoria?
-              </View>
-            </View>
-
-            <Grid
-              gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr 1fr"]}
-              gridGap={["40px", "40px", "0px"]}
+      </BreadCrumb>
+      <Section
+        my="55px"
+        style={{
+          backgroundSize: "cover",
+        }}
+      >
+        <Container>
+          <View textAlign="center" mb={["40px", "40px", "80px"]}>
+            <Tag>OUR SERVİCES</Tag>
+            <View
+              mt={["20px", "20px", "50px"]}
+              as="h2"
+              fontSize={["24px", "24px", "38px"]}
             >
-              <View
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                textAlign="center"
-              >
-                <View
-                  width="112px"
-                  height="112px"
-                  borderRadius="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor="#ECF5FF"
-                >
-                  <Airplane />{" "}
-                </View>
-                <View>
-                  <View
-                    pt="40px"
-                    pb="20px"
-                    as="h5"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    Welcoming
-                  </View>
-                  <View
-                    m="0 auto"
-                    maxWidth="180px"
-                    as="p"
-                    color="#6D6D6D"
-                    fontSize="14px"
-                  >
-                    From the minute one you will enjoy Turkish Hopitality
-                    completely free
-                  </View>
-                </View>
-              </View>
-
-              <View
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                textAlign="center"
-              >
-                <View
-                  width="112px"
-                  height="112px"
-                  borderRadius="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor="#ECF5FF"
-                >
-                  <MoneyRecive />{" "}
-                </View>
-                <View>
-                  <View
-                    pt="40px"
-                    pb="20px"
-                    as="h5"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    Reasonable Prices
-                  </View>
-                  <View
-                    maxWidth="180px"
-                    m="0 auto"
-                    as="p"
-                    color="#6D6D6D"
-                    fontSize="14px"
-                  >
-                    Our prices are quite competable for the market
-                  </View>
-                </View>
-              </View>
-
-              <View
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                textAlign="center"
-              >
-                <View
-                  width="112px"
-                  height="112px"
-                  borderRadius="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor="#ECF5FF"
-                >
-                  <Calendar />{" "}
-                </View>
-                <View>
-                  <View
-                    pt="40px"
-                    pb="20px"
-                    as="h5"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    Timely Transit
-                  </View>
-                  <View
-                    maxWidth="180px"
-                    m="0 auto"
-                    as="p"
-                    color="#6D6D6D"
-                    fontSize="14px"
-                  >
-                    We are punctual when it times to time
-                  </View>
-                </View>
-              </View>
-
-              <View
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                textAlign="center"
-              >
-                <View
-                  width="112px"
-                  height="112px"
-                  borderRadius="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor="#ECF5FF"
-                >
-                  <House />{" "}
-                </View>
-                <View>
-                  <View
-                    pt="40px"
-                    pb="20px"
-                    as="h5"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    Door-to-Door Delivery
-                  </View>
-                  <View
-                    maxWidth="180px"
-                    m="0 auto"
-                    as="p"
-                    color="#6D6D6D"
-                    fontSize="14px"
-                  >
-                    We will take you directly to door of your hotel
-                  </View>
-                </View>
-              </View>
-            </Grid>
-          </Container>
-        </Section>
-
-        <Section
-          my="55px"
-          py="100px"
-          style={{
-            backgroundSize: "cover",
-            backgroundColor: "#ECF5FF",
-          }}
-        >
-          <Container>
-            <View textAlign="center" mb={["30px", "30px", "80px"]}>
-              <Tag>OUR FLEET</Tag>
-              <View
-                mt={["30px", "30px", "50px"]}
-                as="h2"
-                fontSize={["27px", "27px", "38px"]}
-              >
-                Take a look at our brand new fleet
-              </View>
+              Why book a transfer from Victoria?
             </View>
-
-            <Grid
-              gridTemplateColumns={["1fr", "1fr", "250px 250px 250px"]}
-              alignItems="center"
-              justifyContent="center"
-              gridGap="32px"
-            >
-              <LogisticsCard>
-                <Image src="/car.png" />
-                <LogisticsCard.Title>Minivan</LogisticsCard.Title>
-                <View
-                  display="flex"
-                  flexWrap="wrap"
-                  justifyContent="space-between"
-                >
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <User />
-                    </View>
-                    4 Passagers
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Auto />
-                    </View>
-                    Auto
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Air />
-                    </View>
-                    Air Conditioning
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Door />
-                    </View>
-                    4 Doors
-                  </LogisticsCard.Desc>
-                </View>
-              </LogisticsCard>
-
-              <LogisticsCard>
-                <Image src="/car.png" />
-                <LogisticsCard.Title>Minivan</LogisticsCard.Title>
-                <View
-                  display="flex"
-                  flexWrap="wrap"
-                  justifyContent="space-between"
-                >
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <User />
-                    </View>
-                    4 Passagers
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Auto />
-                    </View>
-                    Auto
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Air />
-                    </View>
-                    Air Conditioning
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Door />
-                    </View>
-                    4 Doors
-                  </LogisticsCard.Desc>
-                </View>
-              </LogisticsCard>
-
-              <LogisticsCard>
-                <Image src="/car.png" />
-                <LogisticsCard.Title>Minivan</LogisticsCard.Title>
-                <View
-                  display="flex"
-                  flexWrap="wrap"
-                  justifyContent="space-between"
-                >
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <User />
-                    </View>
-                    4 Passagers
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Auto />
-                    </View>
-                    Auto
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Air />
-                    </View>
-                    Air Conditioning
-                  </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Door />
-                    </View>
-                    4 Doors
-                  </LogisticsCard.Desc>
-                </View>
-              </LogisticsCard>
-            </Grid>
-            <View textAlign="center" mt={["30px", "30px", "64px"]}>
-              <View
-                as="a"
-                href="#"
-                p="19px 34px"
-                display="inline-block"
-                borderRadius="8px"
-                backgroundColor="#fff"
-                color="#4E4E4E"
-                fontSize="14px"
-              >
-                Show all vehicles{" "}
-              </View>
-            </View>
-          </Container>
-        </Section>
-
-        <Section
-          my="55px"
-          style={{
-            backgroundSize: "cover",
-            backgroundColor: "#F7FBFF",
-          }}
-        >
-          <Container>
-            <View textAlign="center" mb={["30px", "30px", "80px"]}>
-              <Tag>OUR CUSTOMERS</Tag>
-              <View
-                mt={["20px", "20px", "50px"]}
-                as="h2"
-                fontSize={["27px", "27px", "38px"]}
-              >
-                What peole say about us?
-              </View>
-            </View>
-          </Container>
-
-          <Slider>
-            <Slider.Item>
-              <CustomerCard py="13.5px">
-                <Image src="/customer-img.png" maxWidth="50%" width="auto" />
-                <View px="40px" py="26px">
-                  <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                    5.0
-                    <View fontSize="24px" as="span">
-                      stars
-                    </View>
-                  </View>
-                  <Star />
-                  <View maxWidth="317px" mt="48px" mb="80px">
-                    <View as="p" fontSize="18px">
-                      “I feel very secure when using Victoria Travel services.
-                      Your customer care team is very enthusiastic and the
-                      driver is always on time.”
-                    </View>
-                  </View>
-
-                  <View>
-                    <View as="h6" fontSize="24px">
-                      Charlie Johnson
-                    </View>
-                    <View as="span" color="#838383">
-                      From New York, US
-                    </View>
-                  </View>
-                </View>
-              </CustomerCard>
-            </Slider.Item>
-            <Slider.Item>
-              <CustomerCard py="13.5px">
-                <Image src="/customer-img.png" maxWidth="50%" width="auto" />
-                <View px="40px" py="26px">
-                  <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                    5.0
-                    <View fontSize="24px" as="span">
-                      stars
-                    </View>
-                  </View>
-                  <Star />
-                  <View maxWidth="317px" mt="48px" mb="80px">
-                    <View as="p" fontSize="18px">
-                      “I feel very secure when using Victoria Travel services.
-                      Your customer care team is very enthusiastic and the
-                      driver is always on time.”
-                    </View>
-                  </View>
-
-                  <View>
-                    <View as="h6" fontSize="24px">
-                      Charlie Johnson
-                    </View>
-                    <View as="span" color="#838383">
-                      From New York, US
-                    </View>
-                  </View>
-                </View>
-              </CustomerCard>
-            </Slider.Item>
-            <Slider.Item>
-              <CustomerCard py="13.5px">
-                <Image src="/customer-img.png" maxWidth="50%" width="auto" />
-                <View px="40px" py="26px">
-                  <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
-                    5.0
-                    <View fontSize="24px" as="span">
-                      stars
-                    </View>
-                  </View>
-                  <Star />
-                  <View maxWidth="317px" mt="48px" mb="80px">
-                    <View as="p" fontSize="18px">
-                      “I feel very secure when using Victoria Travel services.
-                      Your customer care team is very enthusiastic and the
-                      driver is always on time.”
-                    </View>
-                  </View>
-
-                  <View>
-                    <View as="h6" fontSize="24px">
-                      Charlie Johnson
-                    </View>
-                    <View as="span" color="#838383">
-                      From New York, US
-                    </View>
-                  </View>
-                </View>
-              </CustomerCard>
-            </Slider.Item>
-          </Slider>
-        </Section>
-
-        <Section
-          my="55px"
-          style={{
-            backgroundSize: "cover",
-            backgroundColor: "#fff",
-          }}
-        >
-          <Container>
-            <View textAlign="center" mb="64px">
-              <Tag>TOP BOOKED</Tag>
-              <View mt="50px" as="h2" fontSize={["27px", "27px", "38px"]}>
-                Top Destinations
-              </View>
-            </View>
-
-            <Grid
-              gridTemplateColumns={["1fr", "1fr", "275px 275px 275px"]}
-              gridGap="64px"
-              justifyContent="center"
-            >
-              <Destinations borderRadius="32px !important">
-                <View>
-                  <Image src="/des-img.png" />
-                </View>
-                <View px="15px">
-                  <View
-                    fontSize="18px"
-                    pb="16px"
-                    color="#5E6282"
-                    as="h5"
-                    pt="25px"
-                  >
-                    Double Tree by Hilton
-                  </View>
-                  <View
-                    as="span"
-                    display="flex"
-                    alignItems="center"
-                    fontSize="16px"
-                    pb="37px"
-                    color="#5E6282"
-                  >
-                    <View pr="10px">
-                      <Navigation />
-                    </View>
-                    Central, Antalya
-                  </View>
-                </View>
-              </Destinations>
-              <Destinations borderRadius="32px !important">
-                <View>
-                  <Image src="/des-img.png" />
-                </View>
-                <View px="15px">
-                  <View
-                    fontSize="18px"
-                    pb="16px"
-                    color="#5E6282"
-                    as="h5"
-                    pt="25px"
-                  >
-                    Double Tree by Hilton
-                  </View>
-                  <View
-                    as="span"
-                    display="flex"
-                    alignItems="center"
-                    fontSize="16px"
-                    pb="37px"
-                    color="#5E6282"
-                  >
-                    <View pr="10px">
-                      <Navigation />
-                    </View>
-                    Central, Antalya
-                  </View>
-                </View>
-              </Destinations>
-              <Destinations borderRadius="32px !important">
-                <View>
-                  <Image src="/des-img.png" />
-                </View>
-                <View px="15px">
-                  <View
-                    fontSize="18px"
-                    pb="16px"
-                    color="#5E6282"
-                    as="h5"
-                    pt="25px"
-                  >
-                    Double Tree by Hilton
-                  </View>
-                  <View
-                    as="span"
-                    display="flex"
-                    alignItems="center"
-                    fontSize="16px"
-                    pb="37px"
-                    color="#5E6282"
-                  >
-                    <View pr="10px">
-                      <Navigation />
-                    </View>
-                    Central, Antalya
-                  </View>
-                </View>
-              </Destinations>
-            </Grid>
-
-            <View display="flex" justifyContent="center" mt="64px">
-              <View display="flex" as="a" href="#" fontSize="14px">
-                Show all destinations{" "}
-                <View pl="8px">
-                  <ArrowRight />
-                </View>
-              </View>
-            </View>
-          </Container>
-        </Section>
-
-        <Section
-          display="flex"
-          my="55px"
-          alignItems={["center", "center", "left"]}
-          flexDirection={["column", "column", "row"]}
-          style={{
-            backgroundSize: "cover",
-            backgroundColor: "#fff",
-          }}
-        >
-          <View>
-            <Image width={["100%", "100%", "758px"]} src="/chouseus.png" />
           </View>
 
-          <Container>
-            <View>
+          <Grid
+            gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr 1fr"]}
+            gridGap={["40px", "40px", "0px"]}
+          >
+            <View
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              textAlign="center"
+            >
+              <View
+                width="112px"
+                height="112px"
+                borderRadius="16px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="#ECF5FF"
+              >
+                <Airplane />{" "}
+              </View>
               <View>
-                <Tag>WHY CHOOSE US</Tag>
+                <View pt="40px" pb="20px" as="h5" fontSize="20px" color="#000">
+                  Welcoming
+                </View>
                 <View
-                  mt="30px"
-                  as="h2"
-                  fontSize={["27px", "27px", "38px"]}
-                  maxWidth="576px"
+                  m="0 auto"
+                  maxWidth="180px"
+                  as="p"
+                  color="#6D6D6D"
+                  fontSize="14px"
                 >
-                  We offer the best experience with our booking deals
-                </View>
-              </View>
-
-              <View display="flex" mt="35px">
-                <View
-                  mr="24px"
-                  width="64px"
-                  height="64px"
-                  p="20px"
-                  borderRadius="16px"
-                  backgroundColor="#ECF5FF"
-                >
-                  <Wallet />
-                </View>
-                <View maxWidth="322px">
-                  <View
-                    as="h5"
-                    lineHeight="1"
-                    mb="20px"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    Best price guaranteed
-                  </View>
-                  <View as="p" fontSize="16px" color="#6D6D6D">
-                    Find a lower price? We’ll refund you 100% of the difference.
-                  </View>
-                </View>
-              </View>
-
-              <View display="flex" mt="35px">
-                <View
-                  mr="24px"
-                  width="64px"
-                  height="64px"
-                  p="20px"
-                  borderRadius="16px"
-                  backgroundColor="#ECF5FF"
-                >
-                  <UserTick />
-                </View>
-                <View maxWidth="322px">
-                  <View
-                    as="h5"
-                    lineHeight="1"
-                    mb="20px"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    Experience driver
-                  </View>
-                  <View as="p" fontSize="16px" color="#6D6D6D">
-                    Don’t have driver? Don’t worry, we have many experienced
-                    driver for you.
-                  </View>
-                </View>
-              </View>
-
-              <View display="flex" mt="35px">
-                <View
-                  mr="24px"
-                  width="64px"
-                  height="64px"
-                  p="20px"
-                  borderRadius="16px"
-                  backgroundColor="#ECF5FF"
-                >
-                  <Support />
-                </View>
-                <View maxWidth="322px">
-                  <View
-                    as="h5"
-                    lineHeight="1"
-                    mb="20px"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    24 hour car delivery
-                  </View>
-                  <View as="p" fontSize="16px" color="#6D6D6D">
-                    Book your car anytime and we will deliver it directly to
-                    you.
-                  </View>
-                </View>
-              </View>
-
-              <View display="flex" mt="35px">
-                <View
-                  mr="24px"
-                  width="64px"
-                  height="64px"
-                  p="20px"
-                  borderRadius="16px"
-                  backgroundColor="#ECF5FF"
-                >
-                  <Messages />
-                </View>
-                <View maxWidth="322px">
-                  <View
-                    as="h5"
-                    lineHeight="1"
-                    mb="20px"
-                    fontSize="20px"
-                    color="#000"
-                  >
-                    24/7 technical support
-                  </View>
-                  <View as="p" fontSize="16px" color="#6D6D6D">
-                    Have a question? Contact Rentcars support any time when you
-                    have problem.
-                  </View>
+                  From the minute one you will enjoy Turkish Hopitality
+                  completely free
                 </View>
               </View>
             </View>
-          </Container>
-        </Section>
-      </Layout>
+
+            <View
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              textAlign="center"
+            >
+              <View
+                width="112px"
+                height="112px"
+                borderRadius="16px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="#ECF5FF"
+              >
+                <MoneyRecive />{" "}
+              </View>
+              <View>
+                <View pt="40px" pb="20px" as="h5" fontSize="20px" color="#000">
+                  Reasonable Prices
+                </View>
+                <View
+                  maxWidth="180px"
+                  m="0 auto"
+                  as="p"
+                  color="#6D6D6D"
+                  fontSize="14px"
+                >
+                  Our prices are quite competable for the market
+                </View>
+              </View>
+            </View>
+
+            <View
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              textAlign="center"
+            >
+              <View
+                width="112px"
+                height="112px"
+                borderRadius="16px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="#ECF5FF"
+              >
+                <Calendar />{" "}
+              </View>
+              <View>
+                <View pt="40px" pb="20px" as="h5" fontSize="20px" color="#000">
+                  Timely Transit
+                </View>
+                <View
+                  maxWidth="180px"
+                  m="0 auto"
+                  as="p"
+                  color="#6D6D6D"
+                  fontSize="14px"
+                >
+                  We are punctual when it times to time
+                </View>
+              </View>
+            </View>
+
+            <View
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              textAlign="center"
+            >
+              <View
+                width="112px"
+                height="112px"
+                borderRadius="16px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="#ECF5FF"
+              >
+                <House />{" "}
+              </View>
+              <View>
+                <View pt="40px" pb="20px" as="h5" fontSize="20px" color="#000">
+                  Door-to-Door Delivery
+                </View>
+                <View
+                  maxWidth="180px"
+                  m="0 auto"
+                  as="p"
+                  color="#6D6D6D"
+                  fontSize="14px"
+                >
+                  We will take you directly to door of your hotel
+                </View>
+              </View>
+            </View>
+          </Grid>
+        </Container>
+      </Section>
+
+      <Section
+        my="55px"
+        py="100px"
+        style={{
+          backgroundSize: "cover",
+          backgroundColor: "#ECF5FF",
+        }}
+      >
+        <Container>
+          <View textAlign="center" mb={["30px", "30px", "80px"]}>
+            <Tag>OUR FLEET</Tag>
+            <View
+              mt={["30px", "30px", "50px"]}
+              as="h2"
+              fontSize={["27px", "27px", "38px"]}
+            >
+              Take a look at our brand new fleet
+            </View>
+          </View>
+
+          <Grid
+            gridTemplateColumns={["1fr", "1fr", "250px 250px 250px"]}
+            alignItems="center"
+            justifyContent="center"
+            gridGap="32px"
+          >
+            {vehicles?.map((vehicle) => (
+              <LogisticsCard key={vehicle._id}>
+                {vehicle?.imageUrl ? <Image src={vehicle.imageUrl} /> : null}
+                <LogisticsCard.Title>{vehicle?.type}</LogisticsCard.Title>
+                <View
+                  display="flex"
+                  flexWrap="wrap"
+                  justifyContent="space-between"
+                >
+                  <LogisticsCard.Desc>
+                    <View mr="5px">
+                      <User />
+                    </View>
+                    {vehicle?.passengerCapacity} Passagers
+                  </LogisticsCard.Desc>
+                  <LogisticsCard.Desc>
+                    <View mr="5px">
+                      <Auto />
+                    </View>
+                    {vehicle?.transmission}
+                  </LogisticsCard.Desc>
+                  <LogisticsCard.Desc>
+                    <View mr="5px">
+                      <Air />
+                    </View>
+                    {vehicle?.features.includes("airConditioning")
+                      ? "Air Conditioning"
+                      : "No Air Conditioning"}
+                  </LogisticsCard.Desc>
+                  {/* <LogisticsCard.Desc>
+                    <View mr="5px">
+                      <Door />
+                    </View>
+                    {vehicle?.attributes?.has_ac} Doors
+                  </LogisticsCard.Desc> */}
+                </View>
+              </LogisticsCard>
+            ))}
+          </Grid>
+          <View textAlign="center" mt={["30px", "30px", "64px"]}>
+            <View
+              as="a"
+              href="#"
+              p="19px 34px"
+              display="inline-block"
+              borderRadius="8px"
+              backgroundColor="#fff"
+              color="#4E4E4E"
+              fontSize="14px"
+            >
+              Show all vehicles{" "}
+            </View>
+          </View>
+        </Container>
+      </Section>
+
+      <Section
+        my="55px"
+        style={{
+          backgroundSize: "cover",
+          backgroundColor: "#F7FBFF",
+        }}
+      >
+        <Container>
+          <View textAlign="center" mb={["30px", "30px", "80px"]}>
+            <Tag>OUR CUSTOMERS</Tag>
+            <View
+              mt={["20px", "20px", "50px"]}
+              as="h2"
+              fontSize={["27px", "27px", "38px"]}
+            >
+              What peole say about us?
+            </View>
+          </View>
+        </Container>
+
+        <Slider>
+          {testimonials?.map((testimonial) => (
+            <Slider.Item key={testimonial?._id}>
+              <CustomerCard py="13.5px">
+                {testimonial?.photoUrl ? <Image src={testimonial?.photoUrl} maxWidth="50%" width="auto" /> : null}
+                <View px="40px" py="26px">
+                  <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
+                    {testimonial?.rating ? (
+                      <>
+                        {testimonial?.rating}
+                        <View fontSize="24px" as="span">
+                          stars
+                        </View>
+                      </>
+                    ) : null}
+                  </View>
+                  <Star />
+                  <View mt="48px" mb="80px">
+                    <View as="p" fontSize="18px">
+                      {testimonial?.feedback}
+                    </View>
+                  </View>
+                  <View>
+                    <View as="h6" fontSize="24px">
+                      {testimonial?.name}
+                    </View>
+                    <View as="span" color="#838383">
+                      {testimonial?.location}
+                    </View>
+                  </View>
+                </View>
+              </CustomerCard>
+            </Slider.Item>
+          ))}
+        </Slider>
+      </Section>
+
+      <Section
+        my="55px"
+        style={{
+          backgroundSize: "cover",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Container>
+          <View textAlign="center" mb="64px">
+            <Tag>TOP BOOKED</Tag>
+            <View mt="50px" as="h2" fontSize={["27px", "27px", "38px"]}>
+              Top Destinations
+            </View>
+          </View>
+
+          <Grid
+            gridTemplateColumns={["1fr", "1fr", "275px 275px 275px"]}
+            gridGap="64px"
+            justifyContent="center"
+          >
+            {destinations?.map((destination) => (
+                          <Destinations key={destination?._id} borderRadius="32px !important">
+                          {
+                            destination?.imageUrl ? <View><Image src={destination?.imageUrl} /></View> : null
+                          }
+                          <View px="15px">
+                            <View
+                              fontSize="18px"
+                              pb="16px"
+                              color="#5E6282"
+                              as="h5"
+                              pt="25px"
+                            >
+                              {destination?.title}
+                            </View>
+                            <View
+                              as="span"
+                              display="flex"
+                              alignItems="center"
+                              fontSize="16px"
+                              pb="37px"
+                              color="#5E6282"
+                            >
+                              <View pr="10px">
+                                <Navigation />
+                              </View>
+                              {destination?.location}
+                            </View>
+                          </View>
+                        </Destinations>
+            ))}
+          </Grid>
+
+          <View display="flex" justifyContent="center" mt="64px">
+            <View display="flex" as="a" href="#" fontSize="14px">
+              Show all destinations{" "}
+              <View pl="8px">
+                <ArrowRight />
+              </View>
+            </View>
+          </View>
+        </Container>
+      </Section>
+
+      <Section
+        display="flex"
+        my="55px"
+        alignItems={["center", "center", "left"]}
+        flexDirection={["column", "column", "row"]}
+        style={{
+          backgroundSize: "cover",
+          backgroundColor: "#fff",
+        }}
+      >
+        <View>
+          <Image width={["100%", "100%", "758px"]} src="/chouseus.png" />
+        </View>
+
+        <Container>
+          <View>
+            <View>
+              <Tag>WHY CHOOSE US</Tag>
+              <View
+                mt="30px"
+                as="h2"
+                fontSize={["27px", "27px", "38px"]}
+                maxWidth="576px"
+              >
+                We offer the best experience with our booking deals
+              </View>
+            </View>
+
+            <View display="flex" mt="35px">
+              <View
+                mr="24px"
+                width="64px"
+                height="64px"
+                p="20px"
+                borderRadius="16px"
+                backgroundColor="#ECF5FF"
+              >
+                <Wallet />
+              </View>
+              <View maxWidth="322px">
+                <View
+                  as="h5"
+                  lineHeight="1"
+                  mb="20px"
+                  fontSize="20px"
+                  color="#000"
+                >
+                  Best price guaranteed
+                </View>
+                <View as="p" fontSize="16px" color="#6D6D6D">
+                  Find a lower price? We’ll refund you 100% of the difference.
+                </View>
+              </View>
+            </View>
+
+            <View display="flex" mt="35px">
+              <View
+                mr="24px"
+                width="64px"
+                height="64px"
+                p="20px"
+                borderRadius="16px"
+                backgroundColor="#ECF5FF"
+              >
+                <UserTick />
+              </View>
+              <View maxWidth="322px">
+                <View
+                  as="h5"
+                  lineHeight="1"
+                  mb="20px"
+                  fontSize="20px"
+                  color="#000"
+                >
+                  Experience driver
+                </View>
+                <View as="p" fontSize="16px" color="#6D6D6D">
+                  Don’t have driver? Don’t worry, we have many experienced
+                  driver for you.
+                </View>
+              </View>
+            </View>
+
+            <View display="flex" mt="35px">
+              <View
+                mr="24px"
+                width="64px"
+                height="64px"
+                p="20px"
+                borderRadius="16px"
+                backgroundColor="#ECF5FF"
+              >
+                <Support />
+              </View>
+              <View maxWidth="322px">
+                <View
+                  as="h5"
+                  lineHeight="1"
+                  mb="20px"
+                  fontSize="20px"
+                  color="#000"
+                >
+                  24 hour car delivery
+                </View>
+                <View as="p" fontSize="16px" color="#6D6D6D">
+                  Book your car anytime and we will deliver it directly to you.
+                </View>
+              </View>
+            </View>
+
+            <View display="flex" mt="35px">
+              <View
+                mr="24px"
+                width="64px"
+                height="64px"
+                p="20px"
+                borderRadius="16px"
+                backgroundColor="#ECF5FF"
+              >
+                <Messages />
+              </View>
+              <View maxWidth="322px">
+                <View
+                  as="h5"
+                  lineHeight="1"
+                  mb="20px"
+                  fontSize="20px"
+                  color="#000"
+                >
+                  24/7 technical support
+                </View>
+                <View as="p" fontSize="16px" color="#6D6D6D">
+                  Have a question? Contact Rentcars support any time when you
+                  have problem.
+                </View>
+              </View>
+            </View>
+          </View>
+        </Container>
+      </Section>
     </>
   );
 }
 
-export async function getStaticProps() {
-  // const vehicles = await fetchVehicles();
+export async function getStaticProps(params) {
+  const vehicles = await getVehicles();
+  // const transferPoints = await fetchTransferPoints()
+  const transferPoints = await getTransferPoints();
+  const testimonials = await getTestimonials();
+  const destinations = await getDestinations();
 
   return {
     props: {
-      vehicles: [],
+      vehicles,
+      transferPoints,
+      testimonials,
+      destinations
     },
   };
 }

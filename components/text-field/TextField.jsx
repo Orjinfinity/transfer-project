@@ -6,10 +6,14 @@ import { space } from 'styled-system'
 // eslint-disable-next-line react/display-name
 const GenericField = forwardRef(({ multiple, children, ...props }, ref) => {
   const TagName = multiple ? 'textarea' : 'input'
+
+  console.log(props,"props");
   return (
     <TagName ref={ref} autoComplete="off" {...props}>
       {children}
     </TagName>
+          
+
   )
 })
 

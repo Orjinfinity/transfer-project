@@ -27,7 +27,23 @@ import Mail from "../../assets/icons/sms.svg";
 
 import { FooterWrapper } from "./FooterStyled";
 
-const Footer = () => {
+const Footer = ({footerNavigation,...props}) => {
+  console.log(footerNavigation,"footerNavigation");
+
+  function divideArray(arr){
+
+     const firstHalf = arr?.slice(0,6)
+     const secondHalf = arr?.slice(6,12)
+
+     return{
+      firstHalf,
+      secondHalf
+     }
+
+  }
+  const{firstHalf,secondHalf}=divideArray(footerNavigation)
+  console.log(firstHalf,secondHalf);
+
   return (
     <FooterWrapper
       as="footer"
@@ -91,54 +107,49 @@ const Footer = () => {
               my={["30px", "30px", "0px"]}
             >
               <View width={["100%", "100%", "50%"]}>
-                <Title as="h4" size="16px" mb="20px">
+                {/* <Title as="h4" size="16px" mb="20px">
                   Pages
-                </Title>
+                </Title> */}
                 <View
                   display="grid"
                   gridTemplateColumns="1fr"
                   gridRowGap="10px"
                   color="#D6D6D6"
                 >
-                  <Link color="#D6D6D6 !important;" href="/">
-                    Home
+                  {
+                    firstHalf?.map((item)=>{
+                      return(
+                        <Link color="#D6D6D6 !important;" href={item?.path}>
+                    
+                    {item?.title}
                   </Link>
-                  <Link color="#D6D6D6 !important;" href="/">
-                    FAQ
-                  </Link>
-                  <Link color="#D6D6D6 !important;" href="/">
-                    Gallery
-                  </Link>
-                  <Link color="#D6D6D6 !important;" href="/">
-                    Destinations
-                  </Link>
-                  <Link color="#D6D6D6 !important;" href="/">
-                    Contact
-                  </Link>
+                      )
+                    })
+                  }
+                  
+                
                 </View>
               </View>
 
               <View width={["100%", "100%", "50%"]}>
-                <Title as="h4" size="16px" mb="20px">
+                {/* <Title as="h4" size="16px" mb="20px">
                   Resources
-                </Title>
+                </Title> */}
                 <View
                   display="grid"
                   gridTemplateColumns="1fr"
                   gridRowGap="10px"
                 >
-                  <Link color="#D6D6D6 !important;" href="/">
-                    Privacy Policy
+                {
+                    secondHalf?.map((item)=>{
+                      return(
+                        <Link color="#D6D6D6 !important;" href={item?.path}>
+                    
+                    {item?.title}
                   </Link>
-                  <Link color="#D6D6D6 !important;" href="/">
-                    Terms of use
-                  </Link>
-                  <Link color="#D6D6D6 !important;" href="/">
-                    KVKK Text
-                  </Link>
-                  <Link color="#D6D6D6 !important;" href="/">
-                    Our Licences
-                  </Link>
+                      )
+                    })
+                  }
                 </View>
               </View>
 

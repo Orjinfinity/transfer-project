@@ -29,8 +29,8 @@ const Counter = ({ value, onChange }) => {
   );
 };
 
+
 const PersonSelect = ({ children, onChange, value }) => {
-  console.log("value", value);
   const [open, setOpen] = useState(false);
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);

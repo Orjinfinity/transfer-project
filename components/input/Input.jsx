@@ -33,10 +33,10 @@ const StyledInput = styled.input`
   ${space}
 `;
 
-const input = ({ error, ...otherProps }) => {
+const input = ({ error,field, ...otherProps }) => {
   return (
     <View>
-      <StyledInput {...otherProps}></StyledInput>
+      <StyledInput {...field}{...otherProps}></StyledInput>
       {error?.message && (
         <Text fontSize="12px" fontWeight="bold" color="#e0c47d">
           {error.message}

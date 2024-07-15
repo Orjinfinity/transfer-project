@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useLockedBody } from "@/hooks";
 
 import {
@@ -20,7 +20,7 @@ import Phone from "../../assets/icons/phone.svg";
 
 import { HamburgerMenu, HamburgerItem, HeadNav, NavLink } from "./HeaderStyled";
 
-const Header = ({ ...props }) => {
+const Header = ({mainNavigation, ...props }) => {
   const router = useRouter();
   const url = router.pathname;
 
@@ -165,15 +165,14 @@ const Header = ({ ...props }) => {
               <img src="/logo.png" style={{width:"189px"}} objectFit="contain" alt="logo" />
             </Link>
             <HeadNav className={isOpen ? "active" : ""}>
-              <NavLink href="/">Home</NavLink>
-              <NavLink href="/aboutus">About Us</NavLink>
-              {/* <NavLink href="/ekibimiz">Ekibimiz</NavLink> */}
-              <NavLink href="/faq">F.A.Q</NavLink>
-              {/* <NavLink href="/galeri">Fotoğraflar</NavLink> */}
-              {/* <NavLink href="/galeri/videolar">Videolar</NavLink> */}
-              <NavLink href="/gallery">Photo Gallery</NavLink>
-              <NavLink href="/destinations">Destinations</NavLink>
-            </HeadNav>{" "}
+
+
+              {mainNavigation?.map((item)=>{
+                return(
+                  <NavLink href={item?.path}>{item?.title}</NavLink>
+                )
+              })}
+            </HeadNav>
           </View>
           <View display="flex" height="100%" alignItems="center">
             {/* <View paddingRight="20px" borderRight="1px solid white">
