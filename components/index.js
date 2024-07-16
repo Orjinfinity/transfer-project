@@ -5,6 +5,7 @@ export { default as Button } from "./button/Button";
 export { default as Title } from "./title/Title";
 export { default as Tag } from "./tag/Tag";
 export { default as Text } from "./text/Text";
+export { default as ErrorMessage } from "./text/ErrorMessage";
 export { default as Header } from "./header/Header";
 export { default as Layout } from "./layout/Layout";
 export { default as Banner } from "./banner/Banner";

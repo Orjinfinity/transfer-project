@@ -572,7 +572,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error="sadasd">
+              <FieldArea variant="bordered" error={error}>
                 <Icon icon="user" />
                 <TextField placeholder="Ad" {...field}></TextField>
               </FieldArea>
@@ -597,7 +597,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error="sadasd">
+              <FieldArea variant="bordered" error={error}>
                 <Icon icon="user" />
                 <TextField placeholder="Soyad" {...field}></TextField>
               </FieldArea>
@@ -622,7 +622,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error="sadasd">
+              <FieldArea variant="bordered" error={error}>
                 <Icon icon="email" />
                 <TextField placeholder="Email" {...field}></TextField>
               </FieldArea>
@@ -643,7 +643,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error="sadasd">
+              <FieldArea variant="bordered" error={error}>
                 <Icon icon="mobile" />
 
                 <TextField type="tel" placeholder="Telefon" {...field} />
@@ -661,7 +661,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea mt="10px" variant="transparent" error="sadasd">
+              <FieldArea mt="10px" variant="transparent" error={error}>
                 <Checkbox id="check-kvkk" {...field} isChecked={field.value}>
                   <Text fontSize="12px" width="400px">
                     WhatsApp üzerinden bilgilendirme yapılmasını kabul ediyorum
@@ -711,7 +711,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea
                 variant="bordered"
-                error="sadasd"
+                error={error}
                 flexDirection="column"
                 alignItems="flex-start"
               >
@@ -746,7 +746,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea
                 variant="bordered"
-                error="sadasd"
+                error={error}
                 flexDirection="column"
                 alignItems="flex-start"
               >
@@ -780,7 +780,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea
                 variant="bordered"
-                error="sadasd"
+                error={error}
                 flexDirection="column"
                 alignItems="flex-start"
               >
@@ -811,7 +811,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea
                 variant="bordered"
-                error="sadasd"
+                error={error}
                 flexDirection="column"
                 alignItems="flex-start"
               >
