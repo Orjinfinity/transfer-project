@@ -1,21 +1,24 @@
-import { forwardRef } from 'react'
-import styled from 'styled-components'
-import shouldForwardProp from '@styled-system/should-forward-prop'
-import { space } from 'styled-system'
+import { forwardRef } from "react";
+import styled from "styled-components";
+import shouldForwardProp from "@styled-system/should-forward-prop";
+import { space } from "styled-system";
 
 // eslint-disable-next-line react/display-name
 const GenericField = forwardRef(({ multiple, children, ...props }, ref) => {
-  const TagName = multiple ? 'textarea' : 'input'
+  const TagName = multiple ? "textarea" : "input";
 
-  console.log(props,"props");
   return (
-    <TagName ref={ref} autoComplete="off" {...props}>
+    <TagName
+      ref={ref}
+      autoComplete="off"
+      {...props}
+      onChange={props.onChange}
+      value={props.value}
+    >
       {children}
     </TagName>
-          
-
-  )
-})
+  );
+});
 
 const TextField = styled(GenericField, { shouldForwardProp })`
   border: 0;
@@ -29,6 +32,6 @@ const TextField = styled(GenericField, { shouldForwardProp })`
   resize: none;
 
   ${space}
-`
+`;
 
-export default TextField
+export default TextField;

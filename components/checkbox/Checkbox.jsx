@@ -1,9 +1,9 @@
-import { forwardRef } from 'react'
-import styled from 'styled-components'
-import shouldForwardProp from '@styled-system/should-forward-prop'
-import { space, flexbox } from 'styled-system'
+import { forwardRef } from "react";
+import styled from "styled-components";
+import shouldForwardProp from "@styled-system/should-forward-prop";
+import { space, flexbox } from "styled-system";
 
-const StyledLabel = styled('label', { shouldForwardProp })`
+const StyledLabel = styled("label", { shouldForwardProp })`
   display: flex;
   align-items: center;
   font-size: 1em;
@@ -13,7 +13,7 @@ const StyledLabel = styled('label', { shouldForwardProp })`
 
   ${space}
   ${flexbox}
-`
+`;
 
 const StyledCheckBox = styled.input`
   clip: rect(0 0 0 0);
@@ -25,7 +25,7 @@ const StyledCheckBox = styled.input`
   width: 1px;
   top: 0;
   left: 0;
-`
+`;
 
 const StyledCustomCheckBox = styled.svg`
   display: inline-block;
@@ -37,10 +37,10 @@ const StyledCustomCheckBox = styled.svg`
   flex-shrink: 0;
   border-radius: 2px;
   background-color: ${({ theme, isChecked }) =>
-    isChecked ? theme.colors.green : 'transparent'};
+    isChecked ? theme.colors.green : "transparent"};
   border-color: ${({ theme, isChecked }) =>
     isChecked ? theme.colors.green : theme.colors.gray};
-`
+`;
 
 const Checkbox = forwardRef(
   ({ value, onChange, children, isChecked, id, name, ...styledProps }, ref) => {
@@ -74,10 +74,10 @@ const Checkbox = forwardRef(
 
         {children}
       </StyledLabel>
-    )
+    );
   }
-)
+);
 
-Checkbox.displayName = 'Checkbox'
+Checkbox.displayName = "Checkbox";
 
-export default Checkbox
+export default Checkbox;

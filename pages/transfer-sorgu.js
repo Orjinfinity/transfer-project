@@ -519,26 +519,32 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
   //   () => fetchSectorWithClasses()
   // )
 
-  const { handleSubmit, control, watch } = useForm({
+  const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
-      surname: "sd",
-      email: "aa",
-      name: "bb",
+      surname: "",
+      email: "",
+      name: "",
       isKvkk: false,
-      phone: "cc",
+      phone: "",
+      company: "",
+      address: "",
+      flightno: "",
+      message: "",
     },
   });
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log(data, "data");
   };
 
   return (
     <View width="100%" {...otherProps}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Title fontSize="20px" fontWeight="regular">
-          Yolcu Karşılama ve İletişim Bilgileri
-        </Title>
+        <View background="#ffebc7" p="20px">
+          <Title fontSize="20px" fontWeight="regular">
+            Yolcu Karşılama ve İletişim Bilgileri
+          </Title>
+        </View>
         <View
           mt="20px"
           mb="20px"
@@ -566,7 +572,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error={error}>
+              <FieldArea variant="bordered" error="sadasd">
                 <Icon icon="user" />
                 <TextField placeholder="Ad" {...field}></TextField>
               </FieldArea>
@@ -591,7 +597,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error={error}>
+              <FieldArea variant="bordered" error="sadasd">
                 <Icon icon="user" />
                 <TextField placeholder="Soyad" {...field}></TextField>
               </FieldArea>
@@ -616,7 +622,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error={error}>
+              <FieldArea variant="bordered" error="sadasd">
                 <Icon icon="email" />
                 <TextField placeholder="Email" {...field}></TextField>
               </FieldArea>
@@ -637,8 +643,9 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea variant="bordered" error={error}>
+              <FieldArea variant="bordered" error="sadasd">
                 <Icon icon="mobile" />
+
                 <TextField type="tel" placeholder="Telefon" {...field} />
               </FieldArea>
             )}
@@ -654,8 +661,8 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               },
             }}
             render={({ field, fieldState: { error } }) => (
-              <FieldArea mt="10px" variant="transparent" error={error}>
-                <Checkbox id="check-kvkk" {...field} isChecked={false}>
+              <FieldArea mt="10px" variant="transparent" error="sadasd">
+                <Checkbox id="check-kvkk" {...field} isChecked={field.value}>
                   <Text fontSize="12px" width="400px">
                     WhatsApp üzerinden bilgilendirme yapılmasını kabul ediyorum
                   </Text>
@@ -664,10 +671,162 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             )}
           />
         </View>
+        <View background="#ffebc7" p="20px">
+          <Title fontSize="20px" fontWeight="regular">
+            1. Gidiş Transferi{" "}
+            <View display="block" as="span">
+              Antalya-Havalimanı(AYT) - Alanya
+            </View>
+            <View display="block" as="span">
+              16.5.2024, 21:58
+            </View>
+          </Title>
+        </View>
+        <View
+          mt="20px"
+          mb="20px"
+          display="grid"
+          gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
+          gridRowGap="20px"
+          gridColumnGap="50px"
+          ref={ref}
+        >
+          <Controller
+            control={control}
+            name="company"
+            rules={{
+              required: {
+                value: true,
+                message: "Lütfen marka alanını doldurunuz",
+              },
+              minLength: {
+                value: 4,
+                message: "Lütfen en az 4 karakter giriniz",
+              },
+              maxLength: {
+                value: 50,
+                message: "Lütfen en fazla 50 karakter giriniz",
+              },
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <FieldArea
+                variant="bordered"
+                error="sadasd"
+                flexDirection="column"
+                alignItems="flex-start"
+              >
+                <View>Havayolu şirketi</View>
+                <View mb="20px" as="p" fontSize="13px" color="gray">
+                  Bilet bilgilerinize göre uçuşu takip edeceğiz ve sizi tam
+                  zamanında karşılayacağız{" "}
+                </View>
 
-        <Button type="submit" block rounded size="xl">
-          Rezervasyon Oluştur
-        </Button>
+                <TextField placeholder="Pegasus" {...field}></TextField>
+              </FieldArea>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="address"
+            rules={{
+              required: {
+                value: true,
+                message: "Lütfen marka alanını doldurunuz",
+              },
+              minLength: {
+                value: 4,
+                message: "Lütfen en az 4 karakter giriniz",
+              },
+              maxLength: {
+                value: 50,
+                message: "Lütfen en fazla 50 karakter giriniz",
+              },
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <FieldArea
+                variant="bordered"
+                error="sadasd"
+                flexDirection="column"
+                alignItems="flex-start"
+              >
+                <View>Bırakma yeri: Otel Adı veya Adres </View>
+                <View mb="20px" as="p" fontSize="13px" color="gray">
+                  Sizi bırakacağımız adresi ya da otel ismini yazın veya
+                  listeden seçin
+                </View>
+                <TextField placeholder="Alanya" {...field}></TextField>
+              </FieldArea>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="flightno"
+            rules={{
+              required: {
+                value: true,
+                message: "Lütfen marka alanını doldurunuz",
+              },
+              minLength: {
+                value: 4,
+                message: "Lütfen en az 4 karakter giriniz",
+              },
+              maxLength: {
+                value: 50,
+                message: "Lütfen en fazla 50 karakter giriniz",
+              },
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <FieldArea
+                variant="bordered"
+                error="sadasd"
+                flexDirection="column"
+                alignItems="flex-start"
+              >
+                <View mb="20px">Uçuş No </View>
+
+                <TextField placeholder="TK1440" {...field}></TextField>
+              </FieldArea>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="message"
+            rules={{
+              required: {
+                value: true,
+                message: "Lütfen marka alanını doldurunuz",
+              },
+              minLength: {
+                value: 4,
+                message: "Lütfen en az 4 karakter giriniz",
+              },
+              maxLength: {
+                value: 50,
+                message: "Lütfen en fazla 50 karakter giriniz",
+              },
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <FieldArea
+                variant="bordered"
+                error="sadasd"
+                flexDirection="column"
+                alignItems="flex-start"
+              >
+                <View mb="20px">Şoföre Mesajınız </View>
+
+                <TextField
+                  placeholder="Transferiniz ile ilgili eklemek istediğiniz bilgi"
+                  {...field}
+                ></TextField>
+              </FieldArea>
+            )}
+          />
+        </View>
+
+        <Button as="button">Rezervasyon Oluştur</Button>
       </form>
     </View>
   );
