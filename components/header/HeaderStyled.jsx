@@ -15,7 +15,7 @@ export const NavLink = styled(Link)`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin:3px 0px;
+  margin: 3px 0px;
 
   ${({ theme }) => `  
     ${theme.mediaQueries.md} {
@@ -163,7 +163,7 @@ export const HeadNav = styled.nav`
   width: 100%;
   position: absolute;
   left: 0;
-  top: 80px;
+  top: 150px;
   padding: 15px 40px;
   border-bottom: 5px solid #e0c47d;
   background: ${({ theme }) => theme.colors.white};

@@ -32,7 +32,7 @@ const SelectToggle = ({ renderSelectToggle }) => {
   const viewArea = useMemo(() => {
     if (isEmpty)
       return (
-        <Text as="span" opacity=".4">
+        <Text as="span" color="white" opacity="1">
           {placeholder}
         </Text>
       );
@@ -82,7 +82,7 @@ const SelectToggle = ({ renderSelectToggle }) => {
       <span fontSize="1em" color="currentColor">
         {viewArea}
       </span>
-      <StyledIcon icon={isOpen ? "chevron-up" : "chevron-down"} />
+      <StyledIcon color="white" icon={isOpen ? "chevron-up" : "chevron-down"} />
     </View>
   );
 };

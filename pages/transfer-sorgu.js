@@ -526,11 +526,10 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
       name: "bb",
       isKvkk: false,
       phone: "cc",
-    
     },
   });
 
-  const onSubmit =  (data) => {
+  const onSubmit = (data) => {
     console.log(data);
   };
 
@@ -665,7 +664,6 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             )}
           />
         </View>
-       
 
         <Button type="submit" block rounded size="xl">
           Rezervasyon Oluştur
@@ -715,18 +713,16 @@ export default function Home() {
         <meta name="twitter:image" content="/logo.png" />
       </Head>
       <WizardProvider>
-        <Layout>
-          <Section
-            my={['100px','100px','200px']}
-            style={{
-              backgroundSize: "cover",
-            }}
-          >
-            <Container>
-              <Wizard />
-            </Container>
-          </Section>
-        </Layout>
+        <Section
+          my={["100px", "100px", "200px"]}
+          style={{
+            backgroundSize: "cover",
+          }}
+        >
+          <Container>
+            <Wizard />
+          </Container>
+        </Section>
       </WizardProvider>
     </>
   );

@@ -929,7 +929,13 @@ export default function Home({ pageProps }) {
           {testimonials?.map((testimonial) => (
             <Slider.Item key={testimonial?._id}>
               <CustomerCard py="13.5px">
-                {testimonial?.photoUrl ? <Image src={testimonial?.photoUrl} maxWidth="50%" width="auto" /> : null}
+                {testimonial?.photoUrl ? (
+                  <Image
+                    src={testimonial?.photoUrl}
+                    maxWidth="50%"
+                    width="auto"
+                  />
+                ) : null}
                 <View px="40px" py="26px">
                   <View lineHeight="1" pb="24px" fontSize="64px" as="h5">
                     {testimonial?.rating ? (
@@ -983,35 +989,40 @@ export default function Home({ pageProps }) {
             justifyContent="center"
           >
             {destinations?.map((destination) => (
-                          <Destinations key={destination?._id} borderRadius="32px !important">
-                          {
-                            destination?.imageUrl ? <View><Image src={destination?.imageUrl} /></View> : null
-                          }
-                          <View px="15px">
-                            <View
-                              fontSize="18px"
-                              pb="16px"
-                              color="#5E6282"
-                              as="h5"
-                              pt="25px"
-                            >
-                              {destination?.title}
-                            </View>
-                            <View
-                              as="span"
-                              display="flex"
-                              alignItems="center"
-                              fontSize="16px"
-                              pb="37px"
-                              color="#5E6282"
-                            >
-                              <View pr="10px">
-                                <Navigation />
-                              </View>
-                              {destination?.location}
-                            </View>
-                          </View>
-                        </Destinations>
+              <Destinations
+                key={destination?._id}
+                borderRadius="32px !important"
+              >
+                {destination?.imageUrl ? (
+                  <View>
+                    <Image src={destination?.imageUrl} />
+                  </View>
+                ) : null}
+                <View px="15px">
+                  <View
+                    fontSize="18px"
+                    pb="16px"
+                    color="#5E6282"
+                    as="h5"
+                    pt="25px"
+                  >
+                    {destination?.title}
+                  </View>
+                  <View
+                    as="span"
+                    display="flex"
+                    alignItems="center"
+                    fontSize="16px"
+                    pb="37px"
+                    color="#5E6282"
+                  >
+                    <View pr="10px">
+                      <Navigation />
+                    </View>
+                    {destination?.location}
+                  </View>
+                </View>
+              </Destinations>
             ))}
           </Grid>
 
@@ -1182,7 +1193,7 @@ export async function getStaticProps(params) {
       vehicles,
       transferPoints,
       testimonials,
-      destinations
+      destinations,
     },
   };
 }
