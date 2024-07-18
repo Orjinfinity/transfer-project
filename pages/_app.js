@@ -10,7 +10,7 @@ import { Layout } from "components";
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
-function CustomApp({ Component, pageProps, globalProps }) {
+function CustomApp({ Component, pageProps, globalProps, locale }) {
   const router = useRouter();
 
   return (
@@ -25,7 +25,7 @@ function CustomApp({ Component, pageProps, globalProps }) {
       </Head>
 
       <ThemeProviderComponent>
-        <Layout globalProps={globalProps}>
+        <Layout globalProps={globalProps} locale={locale}>
           <Component
             pageProps={{...pageProps, ...globalProps}}
             publicRuntimeConfig={publicRuntimeConfig}
@@ -48,7 +48,8 @@ CustomApp.getInitialProps = async (ctx) => {
     globalProps: {
       pages,
       mainNavigation,
-      footerNavigation
+      footerNavigation,
+      locale: ctx?.ctx?.locale
     }
   }
 }

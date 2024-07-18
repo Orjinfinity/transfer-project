@@ -1181,7 +1181,7 @@ export default function Home({ pageProps }) {
   );
 }
 
-export async function getStaticProps(params) {
+export async function getStaticProps({ locale }) {
   const vehicles = await getVehicles();
   // const transferPoints = await fetchTransferPoints()
   const transferPoints = await getTransferPoints();
@@ -1194,6 +1194,7 @@ export async function getStaticProps(params) {
       transferPoints,
       testimonials,
       destinations,
+      locale,
     },
   };
 }

@@ -1,6 +1,6 @@
 import { View, Header, Footer } from "@/components";
 
-const Layout = ({ children, globalProps }) => {
+const Layout = ({ children, globalProps, locale }) => {
   return (
     <View
       display="grid"
@@ -10,9 +10,9 @@ const Layout = ({ children, globalProps }) => {
       alignItems="start"
       width="100%"
     >
-      <Header mainNavigation={globalProps?.mainNavigation} pages={globalProps?.pages} />
+      <Header mainNavigation={globalProps?.mainNavigation} pages={globalProps?.pages} locale={locale} />
       <main style={{ maxWidth: "100vw", overflow: "hidden" }}>{children}</main>
-      <Footer footerNavigation={globalProps?.footerNavigation} pages={globalProps?.pages} />
+      <Footer footerNavigation={globalProps?.footerNavigation} pages={globalProps?.pages} locale={locale} />
     </View>
   );
 };
