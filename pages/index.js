@@ -6,6 +6,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes } from "date-fns";
 import { useSWR } from "swr";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import {
   fetchVehicles,
   getImageUrl,
@@ -88,10 +90,55 @@ const DateInput = (props) => {
 export default function Home({ pageProps }) {
   const { transferPoints, vehicles, testimonials, destinations } = pageProps;
 
-  const { control, handleSubmit, watch, setValue, getValues } = useForm({
+  const schema = yup.object().shape({
+    fromSearch: yup
+      .object()
+      .shape({
+        label: yup.string().required("Bu alan boş bırakılamaz"),
+        value: yup.string().required("Bu alan boş bırakılamaz"),
+      })
+      .required("Bu alan boş bırakılamaz")
+      .nullable(),
+    toSearch: yup.object().required("Gideceğiniz yer belirtilmelidir"),
+    pickupDate: yup
+      .date()
+      .required("Alış tarihi belirtilmelidir")
+      .min(new Date(), "Alış tarihi geçmişte olamaz"),
+    returnDate: yup
+      .date()
+      .required("Dönüş tarihi belirtilmelidir")
+      .min(yup.ref("pickupDate"), "Dönüş tarihi, alış tarihinden önce olamaz"),
+    passengers: yup
+      .object()
+      .required("Bu alan boş bırakılmaz")
+      .shape({
+        adult: yup
+          .number()
+          .min(1, "En az bir yetişkin yolcu belirtilmelidir")
+          .required("Yetişkin yolcu sayısı belirtilmelidir"),
+        child: yup
+          .number()
+          .min(0, "Çocuk yolcu sayısı negatif olamaz")
+          .required("Çocuk yolcu sayısı belirtilmelidir"),
+        baby: yup
+          .number()
+          .min(0, "Bebek yolcu sayısı negatif olamaz")
+          .required("Bebek yolcu sayısı belirtilmelidir"),
+      }),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
     defaultValues: {
-      fromSearch: "option1",
-      toSearch: "option1",
+      fromSearch: "",
+      toSearch: "",
       pickupDate: new Date(),
       returnDate: new Date(),
       passengers: {
@@ -101,6 +148,7 @@ export default function Home({ pageProps }) {
       },
     },
   });
+  console.log(errors, "errors");
 
   const pickupDate = watch("pickupDate");
 
@@ -118,6 +166,15 @@ export default function Home({ pageProps }) {
   };
 
   const onSubmit = (data) => {
+    // const queryParams = new URLSearchParams(data);
+    const { fromSearch, toSearch, passengers, pickupDate, returnDate } = data;
+    // const pess = Object.entries(passengers);
+    const passengerAdult = passengers?.adult;
+    const passengerBaby = passengers?.baby;
+    const passengerChild = passengers?.child;
+    router.push(
+      `/transfer-sorgu?fromSearch=${fromSearch?.label}&toSearch=${toSearch?.label}&passengerAdult=${passengerAdult}&passengerBaby=${passengerBaby}&passengerChild=${passengerChild}&pickupDate=${pickupDate}&returnDate=${returnDate}`
+    );
     console.log("Form Data:", data);
   };
 
@@ -240,6 +297,10 @@ export default function Home({ pageProps }) {
                       </View>
                     )}
                   />
+                  <View color="red" fontSize="11px" as="span">
+                    {" "}
+                    {errors.fromSearch && <p>{errors.fromSearch.message}</p>}
+                  </View>
                 </View>
               </View>
 
@@ -299,6 +360,7 @@ export default function Home({ pageProps }) {
                               }}
                             >
                               {transferPoints?.map((point) => {
+                                console.log(transferPoints);
                                 return (
                                   <Select.Option
                                     value={point?._id}
@@ -315,60 +377,85 @@ export default function Home({ pageProps }) {
                 </View>
               </View>
 
-              <View
-                afterLine
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Controller
-                  name="pickupDate"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <DatePicker
-                      selected={value}
-                      onChange={(date) => onChange(date)}
-                      showTimeSelect
-                      excludeTimes={[
-                        setHours(setMinutes(new Date(), 0), 17),
-                        setHours(setMinutes(new Date(), 30), 18),
-                        setHours(setMinutes(new Date(), 30), 19),
-                        setHours(setMinutes(new Date(), 30), 17),
-                      ]}
-                      dateFormat="dd:MM:yyyy h:mm"
-                      popperPlacement="bottom-start"
-                      placeholderText="Add Pickup Date"
-                      title="Pickup Date"
-                      customInput={<DateInput />}
-                    />
-                  )}
-                />
+              <View>
+                <View
+                  afterLine
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Controller
+                    name="pickupDate"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <DatePicker
+                        selected={value}
+                        onChange={(date) => onChange(date)}
+                        showTimeSelect
+                        excludeTimes={[
+                          setHours(setMinutes(new Date(), 0), 17),
+                          setHours(setMinutes(new Date(), 30), 18),
+                          setHours(setMinutes(new Date(), 30), 19),
+                          setHours(setMinutes(new Date(), 30), 17),
+                        ]}
+                        dateFormat="dd:MM:yyyy h:mm"
+                        popperPlacement="bottom-start"
+                        placeholderText="Add Pickup Date"
+                        title="Pickup Date"
+                        customInput={<DateInput />}
+                      />
+                    )}
+                  />
+                </View>
+                <View
+                  color="red"
+                  fontSize="11px"
+                  maxWidth="300px"
+                  display="inline-block"
+                  as="span"
+                >
+                  {" "}
+                  {errors.pickupDate && <p>{errors.pickupDate.message}</p>}
+                </View>
               </View>
 
-              <View
-                afterLine
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Controller
-                  name="returnDate"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <DatePicker
-                      selected={value}
-                      onChange={(date) => onChange(date)}
-                      showTimeSelect
-                      dateFormat="dd:MM:yyyy h:mm"
-                      popperPlacement="bottom-start"
-                      placeholderText="Add Return Date"
-                      title="Return Date"
-                      filterDate={filteredPassedDate}
-                      customInput={<DateInput />}
-                    />
-                  )}
-                />
+              <View>
+                <View
+                  afterLine
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Controller
+                    name="returnDate"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <DatePicker
+                        selected={value}
+                        onChange={(date) => onChange(date)}
+                        showTimeSelect
+                        dateFormat="dd:MM:yyyy h:mm"
+                        popperPlacement="bottom-start"
+                        placeholderText="Add Return Date"
+                        title="Return Date"
+                        filterDate={filteredPassedDate}
+                        customInput={<DateInput />}
+                      />
+                    )}
+                  />
+                </View>
+                <View
+                  color="red"
+                  fontSize="11px"
+                  maxWidth="300px"
+                  display="inline-block"
+                  as="span"
+                >
+                  {" "}
+                  {errors.returnDate && <p>{errors.returnDate.message}</p>}
+                </View>
               </View>
+
               {/* 
                 <View
                   afterLine
@@ -487,61 +574,20 @@ export default function Home({ pageProps }) {
                       </PersonSelect>
                     )}
                   />
+                  <View
+                    color="red"
+                    fontSize="11px"
+                    maxWidth="300px"
+                    display="inline-block"
+                    as="span"
+                  >
+                    {" "}
+                    {errors.passengers && <p>{errors.passengers.message}</p>}
+                  </View>
                 </View>
-                {/* 
-                  <View mb="20px">
-                    <Controller
-                      name="children"
-                      control={control}
-                      render={({ field: { value } }) => (
-                        <View
-                          display="flex"
-                          width="220px"
-                          justifyContent="space-between"
-                          alignItems="center"
-                        >
-                          <View
-                            display="flex"
-                            flexDirection="column"
-                            alignItems="start"
-                            ml="12px"
-                          >
-                            <View mr="10px">Children</View>
-                            <View fontSize="8px">+13 Age</View>
-                          </View>
-                          <View
-                            display="flex"
-                            alignItems="center"
-                            ml="20px"
-                            flexDirection="column"
-                          >
-                            <View display="flex" alignItems="center">
-                              <View display="flex" alignItems="center">
-                                <MinusVector
-                                  type="button"
-                                  onClick={() => decrement("children")}
-                                >
-                                  -
-                                </MinusVector>
-                                <View mx="10px">{value}</View>
-                                <PlusVector
-                                  type="button"
-                                  onClick={() => increment("children")}
-                                >
-                                  +
-                                </PlusVector>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                      )}
-                    />
-                  </View> */}
               </View>
 
-              <Button as="a" href="/transfer-sorgu">
-                Ara
-              </Button>
+              <Button as="button">Ara</Button>
             </View>
           </View>
         </form>

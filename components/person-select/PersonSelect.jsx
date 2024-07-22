@@ -18,17 +18,16 @@ const Counter = ({ value, onChange }) => {
 
   return (
     <View display="flex" alignItems="center">
-      <Button as="button" disabled={value <= 0} variant="link">
+      <Button type="button" as="button" disabled={value <= 0} variant="link">
         <MinusVector onClick={decrement}>-</MinusVector>
       </Button>
       <View mx="10px">{value}</View>
-      <Button as="button" variant="link">
+      <Button type="button" as="button" variant="link">
         <PlusVector onClick={increment}>+</PlusVector>
       </Button>
     </View>
   );
 };
-
 
 const PersonSelect = ({ children, onChange, value }) => {
   const [open, setOpen] = useState(false);

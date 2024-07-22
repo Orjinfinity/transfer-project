@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { WizardProvider } from "wizardcontext/WizardContext";
 import { useWizardContext } from "wizardcontext/WizardContext";
 import * as pattern from "../utils/pattern";
+import { useRouter } from "next/router";
 import {
   Layout,
   View,
@@ -35,7 +36,54 @@ import { Tabs, Tab, Content } from "../components/tab/Tab";
 import { alignItems, display, flexShrink, justifyContent } from "styled-system";
 
 const StepLeft = () => {
+  const router = useRouter();
+  const { query } = router;
+  console.log(query, "query");
+  const {
+    fromSearch,
+    passengerAdult,
+    passengerBaby,
+    passengerChild,
+    pickupDate,
+    returnDate,
+    toSearch,
+  } = router.query;
+
+  console.log(pickupDate, "pickupDate");
   const { total } = useWizardContext();
+  // Tarihin geçerliliğini kontrol eden fonksiyon
+
+  // Tarihi formatlayan fonksiyon
+  // const formatDate = (date) => {
+  //   if (!isValidDate(date)) {
+  //     console.error("Geçersiz tarih değeri");
+  //     return "";
+  //   }
+
+  //   const options = {
+  //     day: "2-digit",
+  //     month: "2-digit",
+  //     year: "numeric",
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     timeZone: "Europe/Istanbul", // Türkiye saat dilimi
+  //   };
+
+  //   // Tarihi formatla
+  //   const formattedDate = new Intl.DateTimeFormat("tr-TR", options).format(
+  //     date
+  //   );
+
+  //   // Formatı istenilen şekilde düzenle
+  //   const [day, month, year, hour, minute] = formattedDate.split(/[\.,\s]+/);
+  //   return `${day}.${month}.${year}, ${hour}:${minute}`;
+  // };
+
+  // Örnek tarih
+  // const date = new Date(pickupDate);
+
+  // const formattedDate = formatDate(date);
+
   return (
     <View>
       <View
@@ -76,7 +124,7 @@ const StepLeft = () => {
               >
                 Gidiş
                 <View as="span" fontWeight="500">
-                  16.05.2024,21:58
+                  {pickupDate}
                 </View>
               </li>
               <li
@@ -88,7 +136,7 @@ const StepLeft = () => {
               >
                 Alış Yeri
                 <View as="span" fontWeight="500">
-                  Antalya Havalimanı (AYT)
+                  {fromSearch === "undefined" ? "" : fromSearch}{" "}
                 </View>
               </li>
               <li
@@ -100,7 +148,7 @@ const StepLeft = () => {
               >
                 Varış Yeri
                 <View as="span" fontWeight="500">
-                  Alanya
+                  {toSearch === "undefined" ? "" : toSearch}{" "}
                 </View>
               </li>
               <li
@@ -112,7 +160,8 @@ const StepLeft = () => {
               >
                 Yolcular
                 <View as="span" fontWeight="500">
-                  1 Yetişkin
+                  {`${passengerAdult} Yetişkin`} / {`${passengerBaby} Bebek`} /{" "}
+                  {`${passengerChild} Çocuk`}
                 </View>
               </li>
             </ul>
@@ -151,7 +200,7 @@ const StepLeft = () => {
               >
                 Gidiş
                 <View as="span" fontWeight="500">
-                  18.05.2024,21:58
+                  {pickupDate}
                 </View>
               </li>
               <li
@@ -163,7 +212,7 @@ const StepLeft = () => {
               >
                 Alış Yeri
                 <View as="span" fontWeight="500">
-                  Alanya
+                  {fromSearch === "undefined" ? "" : fromSearch}{" "}
                 </View>
               </li>
               <li
@@ -175,7 +224,7 @@ const StepLeft = () => {
               >
                 Varış Yeri
                 <View as="span" fontWeight="500">
-                  Antalya Havaimanı
+                  {toSearch === "undefined" ? "" : toSearch}{" "}
                 </View>
               </li>
               <li
@@ -187,7 +236,8 @@ const StepLeft = () => {
               >
                 Yolcular
                 <View as="span" fontWeight="500">
-                  1 Yetişkin
+                  {`${passengerAdult} Yetişkin`} / {`${passengerBaby} Bebek`} /{" "}
+                  {`${passengerChild} Çocuk`}
                 </View>
               </li>
             </ul>

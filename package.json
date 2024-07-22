@@ -11,12 +11,12 @@
   "dependencies": {
     "@directus/sdk": "^10.3.1",
     "@fancyapps/ui": "^4.0.31",
+    "@hookform/resolvers": "^3.9.0",
     "@popperjs/core": "^2.11.8",
     "@sanity/client": "^6.21.0",
     "@styled-system/should-forward-prop": "^5.1.5",
     "@svgr/webpack": "^6.5.1",
     "axios": "^1.2.1",
-    "date-fns": "^3.6.0",
     "editorjs-parser": "^1.5.3",
     "editorjs-viewer": "^2.0.3",
     "embla-carousel-react": "^8.1.6",
@@ -42,6 +42,7 @@
     "styled-components": "^5.3.11",
     "styled-system": "^5.1.5",
     "swiper": "^8.4.7",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "yup": "^1.4.0"
   }
 }
