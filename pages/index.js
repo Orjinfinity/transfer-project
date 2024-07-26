@@ -1193,7 +1193,7 @@ export default function Home({ pageProps }) {
   );
 }
 
-export async function getStaticProps({ locale }) {
+export async function getServerSideProps({ locale }) {
   const [
     vehicles,
     transferPoints,

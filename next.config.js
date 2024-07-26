@@ -15,9 +15,6 @@ const nextConfig = {
     // ssr and displayName are configured by default
     styledComponents: true,
   },
-  experimental: {
-    jsconfigPaths: true,
-  },
   webpack: (config) => {
     config.resolve.alias["@"] = __dirname;
 
