@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import shouldForwardProp from "@styled-system/should-forward-prop";
-import { variant } from "styled-system";
+import { border, variant } from "styled-system";
 
 import { View, ErrorMessage } from "@/components";
 
@@ -26,6 +26,17 @@ const fieldAreaVariant = variant({
       borderRadius: "5px",
       padding: "10px",
     },
+    flat: {},
+  },
+});
+
+const statusVariant = variant({
+  prop: "status",
+  variants: {
+    error: {
+      borderBottom: "1px dashed red",
+    },
+    default: {},
   },
 });
 
@@ -33,19 +44,38 @@ const StyledFieldArea = styled(View, { shouldForwardProp })`
   width: 100%;
 
   ${fieldAreaVariant}
+  ${statusVariant}
 `;
 
 const FieldArea = ({ children, error, ...otherProps }) => (
-  <View>
-    <StyledFieldArea {...otherProps}>{children}</StyledFieldArea>
-    {error?.message ? <ErrorMessage>{error.message}</ErrorMessage> : null}
+  <View width="100%" flex="1">
+    <StyledFieldArea {...otherProps} status={error ? "error" : ""}>
+      {children}
+    </StyledFieldArea>
+    {error?.message ? (
+      <View position="relative" backgroundColor="#fff">
+        <ErrorMessage
+          as="span"
+          style={{
+            textWrap: "nowrap",
+          }}
+          left="0"
+          bottom="0"
+          minWidth="100%"
+          position={variant === "bordered" ? "absolute" : "relative"}
+          textAlign="left"
+        >
+          {error.message}
+        </ErrorMessage>
+      </View>
+    ) : null}
   </View>
 );
 
 FieldArea.defaultProps = {
   display: "flex",
   alignItems: "center",
-  variant: "contained",
+  variant: "flat",
   fontSize: "1rem",
 };
 

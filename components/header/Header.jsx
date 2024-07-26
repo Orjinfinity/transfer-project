@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/router";
 import { useLockedBody } from "@/hooks";
 import styled from "styled-components";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 
 import Icon from "../icon/Icon";
 
@@ -11,26 +12,28 @@ import {
   Link,
   Portal,
   Image,
-  Button,
-  ToggleButton,
   Text,
   Section,
+  Button,
+  Container,
+  Select,
 } from "@/components";
+
+import TrFlag from "@/assets/icons/tr-flag.svg";
+import EnFlag from "@/assets/icons/us-flag.svg";
+import DeFlag from "@/assets/icons/de-flag.svg";
+import RuFlag from "@/assets/icons/ru-flag.svg";
+import WpIcon from "@/assets/icons/wp.svg";
+
 const StyledIcon = styled(Icon)`
   flex-shrink: 0;
 `;
 
-import Arrow from "../../assets/icons/arrow.svg";
-import Hamburger from "../../assets/icons/hamburger.svg";
-import Mail from "../../assets/icons/mail.svg";
-import Phone from "../../assets/icons/phone.svg";
-
 import { HamburgerMenu, HamburgerItem, HeadNav, NavLink } from "./HeaderStyled";
-import { Container, Select } from "components";
 
 const Header = ({ ...props }) => {
-  const router = useRouter();
-  const url = router.pathname;
+  const t = useTranslations();
+  const { locale, route } = useRouter();
 
   const [navbar, setNavbar] = useState(false);
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
@@ -85,7 +88,6 @@ const Header = ({ ...props }) => {
       </Portal>
 
       <View
-        position="absolute"
         background="transparent"
         className={navbar ? "navbar active" : "navbar"}
         ref={ref}
@@ -96,6 +98,7 @@ const Header = ({ ...props }) => {
         width="100%"
         zIndex={isOpen ? "foremost" : "header"}
         {...props}
+        gridArea="header"
       >
         <Section p="0px" bg="#003F7D">
           <Container>
@@ -111,15 +114,50 @@ const Header = ({ ...props }) => {
                   Turkey Travel Agencies License No: 7528
                 </Text>
               </View>
-              <View display="flex" justifyContent="flex-end">
+              <View
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="center"
+              >
+                <View className="flags">
+                  <Link
+                    href={route}
+                    locale="tr"
+                    border={locale === "tr" ? "1px solid #fff" : "0"}
+                  >
+                    <TrFlag className="flag" />
+                  </Link>
+                  <Link
+                    href={route}
+                    locale="en"
+                    border={locale === "en" ? "1px solid #fff" : "0"}
+                  >
+                    <EnFlag className="flag" />
+                  </Link>
+                  <Link
+                    href={route}
+                    locale="de"
+                    border={locale === "de" ? "1px solid #fff" : "0"}
+                  >
+                    <DeFlag className="flag" />
+                  </Link>
+                  <Link
+                    href={route}
+                    locale="ru"
+                    border={locale === "ru" ? "1px solid #fff" : "0"}
+                  >
+                    <RuFlag className="flag" />
+                  </Link>
+                </View>
                 <View display="grid" gridTemplateColumns="1fr " gridGap="15px">
                   <Select
+                    center
                     buttonProps={{
                       p: "0",
                       color: "red",
                       fontSize: "14px",
                     }}
-                    placeholder="EUR"
+                    placeholder="Seçiniz"
                     renderSelectToggle={({
                       toggleSelect,
                       selectedOptions,
@@ -142,7 +180,7 @@ const Header = ({ ...props }) => {
                             marginLeft="10px"
                           >
                             {selectedOptions?.label || (
-                              <View color="white">€ EUR</View>
+                              <View color="white">₺ TRY</View>
                             )}
                           </View>
                           <StyledIcon
@@ -153,8 +191,9 @@ const Header = ({ ...props }) => {
                       );
                     }}
                   >
-                    <Select.Option value="€ EUR" label="€ EUR" />
-                    <Select.Option value="$ USD" label="$ USD" />
+                    <Select.Option value="TRY" label="₺ TRY" />
+                    <Select.Option value="EUR" label="€ EUR" />
+                    <Select.Option value="USD" label="$ USD" />
                   </Select>
                   {/* <Link href="tel:111111" display="flex" justifyContent="flex-end">
                 <View display="flex" alignItems="center">
@@ -169,20 +208,25 @@ const Header = ({ ...props }) => {
             </View>
           </Container>
         </Section>
-        <Container p="0px !important">
+        <Container position="relative">
           <View
-            mt={["0px", "0px", "25px"]}
+            top={["0px", "0px", "25px"]}
             height="80px"
             borderRadius={["0px", "0px", "100px"]}
             display="flex"
             justifyContent="space-between"
-            backgroundColor="#003F7D
-"
+            backgroundColor="#003F7DCC"
+            position="absolute"
+            width="calc(100% - 5rem)"
+            left="2.5rem"
+            px="45px"
+            style={{
+              backgroundBlendMode: "multiply",
+              backdropFilter: "brightness(0.3)",
+            }}
           >
             <View display="flex" alignItems="center">
               <Link
-                ml={["10px", "10px", "60px"]}
-                mr={["60px", "60px", "0px"]}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
@@ -199,25 +243,19 @@ const Header = ({ ...props }) => {
                 />
               </Link>
               <HeadNav className={isOpen ? "active" : ""}>
-                <NavLink href="/">Anasayfa</NavLink>
-                <NavLink href="/hakkimizda">Hakkımızda</NavLink>
+                <NavLink href="/">{t("home_page")}</NavLink>
+                <NavLink href="/aboutus">{t("about_page")}</NavLink>
                 {/* <NavLink href="/ekibimiz">Ekibimiz</NavLink> */}
-                <NavLink href="/hizmetler">Hizmetler</NavLink>
+                <NavLink href="/hizmetler">{t("services")}</NavLink>
                 {/* <NavLink href="/galeri">Fotoğraflar</NavLink> */}
                 {/* <NavLink href="/galeri/videolar">Videolar</NavLink> */}
-                <NavLink href="/iletisim">İletişim</NavLink>
+                <NavLink href="/iletisim">{t("contact")}</NavLink>
               </HeadNav>{" "}
             </View>
             <View display="flex" height="100%" alignItems="center">
-              <View paddingRight="20px">
-                <img src="/ae.png" />
-              </View>
-              <View paddingRight="20px">
-                <img src="/en.png" />
-              </View>
-              <View paddingRight="20px">
-                <img src="/wp.png" />
-              </View>
+              <Button as="button" variant="wp">
+                <WpIcon />
+              </Button>
             </View>
             <View
               display={["flex", "flex", "none"]}

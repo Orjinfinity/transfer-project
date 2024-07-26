@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { usePopper } from "react-popper";
 
-import { View } from "@/components";
+import { View, Button } from "@/components";
 
 import PlusVector from "../../assets/icons/plusVector.svg";
 import MinusVector from "../../assets/icons/minusVector.svg";
-import { Button } from "components";
+import { useTranslations } from "next-intl";
 
 const Counter = ({ value, onChange }) => {
   const decrement = () => {
@@ -36,12 +36,13 @@ const PersonSelect = ({ children, onChange, value }) => {
   const { styles, attributes } = usePopper(referenceElement, popperElement);
   const wrapperRef = useRef(null);
 
+  const t = useTranslations();
+
   const handleToggle = () => {
     setOpen((prev) => !prev);
   };
 
   const handleCounterChangeValue = (key, newValue) => {
-    console.log("key", key, "newValue", newValue);
     onChange({
       ...value,
       [key]: newValue,
@@ -61,6 +62,16 @@ const PersonSelect = ({ children, onChange, value }) => {
     };
   }, []);
 
+  const getMaxAge = (key) => {
+    if (key === "adult") {
+      return "18+";
+    } else if (key === "child") {
+      return "2-12";
+    } else if (key === "baby") {
+      return "0-2";
+    }
+  }
+
   return (
     <View position="relative" ref={wrapperRef}>
       <div role="button" ref={setReferenceElement} onClick={handleToggle}>
@@ -78,6 +89,8 @@ const PersonSelect = ({ children, onChange, value }) => {
             flexDirection="column"
             alignItems="center"
             backgroundColor="#fff"
+            marginTop="5px"
+            border="1px solid #EFEFEF"
           >
             {Object.entries(value).map(([key, value]) => (
               <View
@@ -86,14 +99,13 @@ const PersonSelect = ({ children, onChange, value }) => {
                 alignItems="center"
                 width="100%"
                 justifyContent="space-between"
-                borderBottom="1px solid #ccc"
                 px="16px"
                 py="12px"
               >
                 <View display="flex" flexDirection="column" alignItems="start">
-                  <span display="inline-block">Adult</span>
+                  <span display="inline-block">{t(key)}</span>
                   <span display="inline-block" fontSize="8px">
-                    +13 Age
+                    {getMaxAge(key)}
                   </span>
                 </View>
                 <Counter

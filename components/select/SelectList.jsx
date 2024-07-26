@@ -4,7 +4,7 @@ import { useSelectContext } from "./selectContext";
 
 import SelectOption from "./SelectOption";
 
-const SelectList = ({ children, searchArea }) => {
+const SelectList = ({ children, searchArea, center }) => {
   const { isOpen, value, allSelected } = useSelectContext();
 
   return isOpen ? (
@@ -14,18 +14,16 @@ const SelectList = ({ children, searchArea }) => {
       role="listbox"
       aria-activedescendant={value}
       tabIndex={-1}
-      p={5}
       position="absolute"
       top="100%"
-      marginTop={5}
-      left="0"
-      right="0"
+      left={center ? "50%" : 0}
+      transform={center ? "translate(-50%, 15px)" : "translateY(10px)"}
       zIndex={4}
       bg="white"
       borderRadius="5px"
-      maxHeight="300px"
-      minWidth="150px"
+      width="200px"
       overflowY="auto"
+      border="1px solid #EFEFEF"
     >
       {searchArea ? (
         <View position="sticky" top="0" bg="white">

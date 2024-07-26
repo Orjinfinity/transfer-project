@@ -37,13 +37,16 @@ const StyledView = styled("div", {
   ${(props) =>
     props.afterLine &&
     `
+    position: relative;
+
     &::after {
       content: '';
+      position: absolute;
       display: block;
-      margin-left:20px;
-      width: 2px;
-      height: 34px;
-      background-color: #00000033; /* Çizgi rengi */
+      right: 0;
+      width: 1px;
+      height: 50%;
+      background-color: #00000033;
     }
   `}
 `;

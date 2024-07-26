@@ -2,11 +2,12 @@ import App from "next/app";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import getConfig from "next/config";
+import { NextIntlClientProvider } from "next-intl";
 import { ThemeProviderComponent } from "@/theme";
-import { fetchFooterNavigation, fetchMainNavigaiton, fetchPages} from "../service"
 
 import "../styles/globals.css";
 import { Layout } from "components";
+import { getLocaleStatic } from "service";
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
@@ -25,33 +26,39 @@ function CustomApp({ Component, pageProps, globalProps, locale }) {
       </Head>
 
       <ThemeProviderComponent>
-        <Layout globalProps={globalProps} locale={locale}>
-          <Component
-            pageProps={{...pageProps, ...globalProps}}
-            publicRuntimeConfig={publicRuntimeConfig}
-            serverRuntimeConfig={serverRuntimeConfig}
-            key={router.asPath}
-          />
-        </Layout>
+        <NextIntlClientProvider
+          locale={locale}
+          timeZone="Europe/Istanbul"
+          messages={globalProps.messages}
+        >
+          <Layout globalProps={globalProps} locale={locale}>
+            <Component
+              pageProps={{ ...pageProps, ...globalProps }}
+              publicRuntimeConfig={publicRuntimeConfig}
+              serverRuntimeConfig={serverRuntimeConfig}
+              key={router.asPath}
+            />
+          </Layout>
+        </NextIntlClientProvider>
       </ThemeProviderComponent>
     </>
   );
 }
 
 CustomApp.getInitialProps = async (ctx) => {
-  const appProps = await App.getInitialProps(ctx)
-  const mainNavigation = await fetchMainNavigaiton(ctx?.ctx?.locale)
-  const pages = await fetchPages(ctx?.ctx?.locale)
-  const footerNavigation = await fetchFooterNavigation(ctx?.ctx?.locale)
+  const appProps = await App.getInitialProps(ctx);
+  const locale = ctx?.router?.locale || 'en'
+
+  const messages = await getLocaleStatic(locale);
+
   return {
     ...appProps,
+    locale,
     globalProps: {
-      pages,
-      mainNavigation,
-      footerNavigation,
-      locale: ctx?.ctx?.locale
-    }
-  }
-}
+      messages,
+      locale,
+    },
+  };
+};
 
 export default CustomApp;

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import Icon from "../icon/Icon";
+import Text from "../text/Text";
 
 import { useSelectContext } from "./selectContext";
 
@@ -9,13 +10,13 @@ const SelectButton = styled("button")`
   align-items: center;
   background-color: transparent;
   border: 0;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 16px;
   text-align: left;
+  border-bottom: 1px solid #efefef;
+  cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.white};
+    background-color: #efefef;
   }
 `;
 
@@ -25,12 +26,16 @@ const CheckIcon = styled(Icon)`
   font-size: 1em;
 `;
 
-const SelectOption = ({ value, label }) => {
+const SelectOption = ({ value, label, disabled }) => {
   const { setValue, getIsSelectedOption } = useSelectContext();
 
-  const handleClick = () => setValue({ value, label });
+  const handleClick = () => setValue({ label, value });
 
   const isChecked = getIsSelectedOption(value);
+
+  if (disabled) {
+    return <Text size="sm">{label}</Text>;
+  }
 
   return (
     <SelectButton

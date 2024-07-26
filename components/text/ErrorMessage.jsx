@@ -1,7 +1,7 @@
 import Text from './Text'
 
 const ErrorMessage = ({ children, ...otherProps }) => (
-  <Text size="xs" mt="2px" color="red" {...otherProps}>
+  <Text size="xxs" color="red" {...otherProps}>
     {children}
   </Text>
 )

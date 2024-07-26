@@ -1,40 +1,88 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const WizardContext = createContext();
 
-export const WizardProvider = ({ children }) => {
-    const [step,setStep] = useState(1);
-    const [product1, setProduct1] = useState({ quantity: 1, price: 150 });
-    const [product2, setProduct2] = useState({ quantity: 0, price: 150 });
-  
-    const incrementProduct1 = () => setProduct1({ ...product1, quantity: product1.quantity + 1 });
-    const decrementProduct1 = () => {
-      if (product1.quantity > 1) {
-        setProduct1({ ...product1, quantity: product1.quantity - 1 });
-      }
-    };
-  
-    const incrementProduct2 = () => setProduct2({ ...product2, quantity: product2.quantity + 1 });
-    const decrementProduct2 = () => {
-      if (product2.quantity > 1) {
-        setProduct2({ ...product2, quantity: product2.quantity - 1 });
-      }
-    };
-  
-    const total = (product1.quantity * product1.price) + (product2.quantity * product2.price);
+export const WizardProvider = ({
+  children,
+  initialData,
+  vehicles,
+  additionalServices,
+  locale,
+}) => {
+  const [step, setStep] = useState(1);
+  const [selectedService, setSelectedService] = useState({});
+  const [selectedVehicle, setSelectedVehicle] = useState({});
 
-  
   const gotoNextStep = () => {
-        setStep((prevStep) => prevStep + 1)
-  }
+    setStep((prevStep) => prevStep + 1);
+  };
 
   const gotoPrevStep = () => {
-    setStep((prevStep) => prevStep - 1)
-}
- 
+    setStep((prevStep) => prevStep - 1);
+  };
+
+  const changeStep = (stepNumber) => {
+    setStep(stepNumber);
+  };
+
+  const total = useMemo(() => {
+    const vehiclePrice = selectedVehicle?.price || 0;
+    const routePrice = initialData?.route?.price || 0;
+    const servicePrice = Object.values(selectedService).reduce(
+      (acc, service) =>
+        acc +
+        ((service?.outbound || 0) + service?.return || 0) * (service?.price || 0),
+      0
+    );
+
+    return vehiclePrice + routePrice + servicePrice;
+  }, [initialData.route, selectedService, selectedVehicle]);
+
+  const selectService = (service, type, tripType) => {
+    setSelectedService((currentService) => {
+      const updatedService = { ...currentService };
+      if (!updatedService[service._id]) {
+        updatedService[service._id] = { outbound: 0, return: 0, ...service };
+      }
+
+      updatedService[service._id][tripType] += type === "increment" ? 1 : -1;
+      updatedService[service._id][tripType] = Math.max(
+        updatedService[service._id][tripType],
+        0
+      );
+
+      return updatedService;
+    });
+  };
+
+  const selectVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+  };
 
   return (
-    <WizardContext.Provider value={{gotoNextStep,gotoPrevStep,step,setProduct1,product1,setProduct2,product2,incrementProduct1,decrementProduct1,incrementProduct2,decrementProduct2,total }}>
+    <WizardContext.Provider
+      value={{
+        locale,
+        gotoNextStep,
+        gotoPrevStep,
+        changeStep,
+        step,
+        total,
+        initialData,
+        vehicles,
+        additionalServices,
+        selectService,
+        selectVehicle,
+        selectedService,
+        selectedVehicle,
+      }}
+    >
       {children}
     </WizardContext.Provider>
   );
@@ -43,7 +91,7 @@ export const WizardProvider = ({ children }) => {
 export const useWizardContext = () => {
   const context = useContext(WizardContext);
   if (!context) {
-    throw new Error('useWizardContext must be used within a WizardProvider');
+    throw new Error("useWizardContext must be used within a WizardProvider");
   }
   return context;
 };

@@ -1,6 +1,6 @@
 const fonts = {
-  Main: "Barlow Condensed,sans-serif",
-  Secondary: "Barlow Condensed, sans-serif",
+  Main: "Poppins",
+  Secondary: "Poppins",
 };
 
 export default fonts;

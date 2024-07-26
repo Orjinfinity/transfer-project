@@ -11,6 +11,7 @@ import {
   border,
   shadow,
   background,
+  padding,
 } from "styled-system";
 
 const buttonVariants = ({ theme }) =>
@@ -29,11 +30,24 @@ const buttonVariants = ({ theme }) =>
         bg: theme.colors.outline,
         border: "1px solid black",
       },
+      small: {
+        padding: "8px 12px",
+        fontSize: "14px",
+        width: "auto",
+      },
       square: {
         width: "50px",
         height: "50px",
         minWidth: "50px",
         padding: "0",
+      },
+      wp: {
+        width: "45px",
+        height: "45px",
+        minWidth: "45px",
+        padding: "0",
+        background: "#23BF58",
+        borderRadius: "50%",
       },
       link: {
         width: "auto",
@@ -41,6 +55,16 @@ const buttonVariants = ({ theme }) =>
         minWidth: "auto",
         padding: "0",
         background: "transparent",
+      },
+    },
+  });
+
+const sizeVariants = ({ theme }) =>
+  variant({
+    sizes: {
+      sm: {
+        padding: "0 0",
+        background: "red",
       },
     },
   });
@@ -55,7 +79,7 @@ const Button = styled.a`
   align-items: center;
   justify-content: center;
   background-color: #003f7d;
-  border-radius: 16px;
+  border-radius: 8px;
   color: #fff;
   position: relative;
   cursor: pointer;
@@ -63,6 +87,7 @@ const Button = styled.a`
   ${space}
   ${color}
   ${typography}
+  ${padding}
   ${flexbox}
   ${layout}
   ${position}
@@ -70,6 +95,12 @@ const Button = styled.a`
   ${shadow}
   ${background}
   ${buttonVariants}
+  ${sizeVariants}
+
+  :disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+  }
 `;
 
 Button.propTypes = {

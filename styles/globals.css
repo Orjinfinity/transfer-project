@@ -326,3 +326,72 @@ ul.lead-list li + li {
 .embla__dot--selected:after {
   box-shadow: inset 0 0 0 0.2rem var(--text-body);
 }
+
+.react-datepicker {
+  display: flex !important;
+  min-width: 100%;
+}
+
+.vehicle-info {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-top: 10px;
+}
+
+.vehicle-info h3 {
+  grid-column: span 5;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.vehicle-info .label {
+  font-weight: bold;
+  text-align: center;
+}
+
+.vehicle-info .value {
+  text-align: center;
+}
+
+.vehicle-description {
+  margin-top: 20px;
+  font-size: 1.1em;
+}
+
+.text-container {
+  position: relative;
+  display: inline-block;
+  font-size: 1em;
+  color: #003F7D;
+}
+
+.text-container svg {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+.flags {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 30px;
+}
+
+.flags > * {
+  display: inline-flex;
+  align-items: center;
+}
+
+.flags > * + *{
+  margin-left: 20px;
+}
+
+.flag {
+  width: 2em;
+}

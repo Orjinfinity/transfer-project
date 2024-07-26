@@ -1,25 +1,23 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/router";
+import useSWRMutation from "swr/mutation";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { setHours, setMinutes } from "date-fns";
-import { useSWR } from "swr";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
-  fetchVehicles,
-  getImageUrl,
-  fetchTransferPoints,
+  getStartingPoints,
+  getDestinationPoints,
   getTransferPoints,
   getVehicles,
   getTestimonials,
-  getDestinations,
+  getSearchRoute,
+  postSearchQuery,
+  getTopDestinations,
 } from "../service";
-
 import {
-  Layout,
   View,
   Title,
   Container,
@@ -27,11 +25,7 @@ import {
   Grid,
   Image,
   Text,
-  Service,
-  News,
   Button,
-  Input,
-  Checkbox,
   Slider,
   BreadCrumb,
   LogisticsCard,
@@ -39,100 +33,122 @@ import {
   CustomerCard,
   Destinations,
   PersonSelect,
+  FieldArea,
 } from "@/components";
-import { Tabs, Tab, Content } from "../components/tab/Tab";
-import Background from "../assets/img/bg.jpeg";
-import Airplane from "../assets/icons/airplane.svg";
-import MoneyRecive from "../assets/icons/money-recive.svg";
-import Calendar from "../assets/icons/calendar.svg";
-import House from "../assets/icons/house.svg";
-import Door from "../assets/icons/door.svg";
-import Air from "../assets/icons/air.svg";
-import Auto from "../assets/icons/auto.svg";
-import User from "../assets/icons/user.svg";
-import Star from "../assets/icons/star.svg";
-import Navigation from "../assets/icons/navigation.svg";
-import ArrowRight from "../assets/icons/arrow-right.svg";
-import Wallet from "../assets/icons/wallet.svg";
-import UserTick from "../assets/icons/user-tick.svg";
-import Support from "../assets/icons/24-support.svg";
-import Messages from "../assets/icons/messages-2.svg";
-import UserForm from "../assets/icons/user-form.svg";
-import LocationForm from "../assets/icons/location-form.svg";
-import PlusForm from "../assets/icons/plus-form.svg";
-import CalendarForm from "../assets/icons/calendar-form.svg";
-import AirPlaneForm from "../assets/icons/airplane-form.svg";
-import Select from "components/select/Select";
-import { flexDirection, fontSize, marginLeft } from "styled-system";
-import SelectToggle from "components/select/SelectToggle";
-import PlusVector from "../assets/icons/plusVector.svg";
-import MinusVector from "../assets/icons/minusVector.svg";
+import trLocale from "date-fns/locale/tr";
+import enLocale from "date-fns/locale/en-US";
+import ruLocale from "date-fns/locale/ru";
+import deLocale from "date-fns/locale/de";
+import "react-datepicker/dist/react-datepicker.css";
+import Select from "@/components/select/Select";
+import Background from "@/assets/img/bg.jpeg";
+import Airplane from "@/assets/icons/airplane.svg";
+import MoneyRecive from "@/assets/icons/money-recive.svg";
+import Calendar from "@/assets/icons/calendar.svg";
+import House from "@/assets/icons/house.svg";
+import Air from "@/assets/icons/air.svg";
+import Auto from "@/assets/icons/auto.svg";
+import User from "@/assets/icons/user.svg";
+import Star from "@/assets/icons/star.svg";
+import Navigation from "@/assets/icons/navigation.svg";
+import ArrowRight from "@/assets/icons/arrow-right.svg";
+import Wallet from "@/assets/icons/wallet.svg";
+import UserTick from "@/assets/icons/user-tick.svg";
+import Support from "@/assets/icons/24-support.svg";
+import Messages from "@/assets/icons/messages-2.svg";
+import UserForm from "@/assets/icons/user-form.svg";
+import LocationForm from "@/assets/icons/location-form.svg";
+import LoadingIcon from "@/assets/icons/loading.svg";
+import PlusForm from "@/assets/icons/plus-form.svg";
+import CalendarForm from "@/assets/icons/calendar-form.svg";
+import HotelIcon from "@/assets/icons/hotel.svg";
+import StationIcon from "@/assets/icons/station.svg";
+import PortIcon from "@/assets/icons/port.svg";
+import CityCenterIcon from "@/assets/icons/city-center.svg";
+import OtherIcon from "@/assets/icons/other.svg";
+import { useTranslations } from "next-intl";
+
+const POINT_ICONS = {
+  airport: <Airplane width="16px" height="16px" />,
+  hotel: <HotelIcon width="16px" height="16px" />,
+  station: <StationIcon width="16px" height="16px" />,
+  port: <PortIcon width="16px" height="16px" />,
+  city_center: <CityCenterIcon width="16px" height="16px" />,
+  other: <OtherIcon width="16px" height="16px" />,
+};
 
 const DateInput = (props) => {
   return (
     <View
+      padding="20px"
       display="flex"
       alignItems="center"
       justifyContent="center"
       onClick={props.onClick}
     >
       <CalendarForm />
-      <View display="flex" alignItems="start" ml="20px" flexDirection="column">
-        <View>{props.title}</View>
-        <View fontSize="14px" color="#B6B6B6">
+      <View
+        display="flex"
+        alignItems="flex-start"
+        ml="10px"
+        flexDirection="column"
+      >
+        <Text as="span" textAlign="left">
+          {props.title}
+        </Text>
+        <Text as="span" fontSize="14px" color="#B6B6B6">
           {props.value || props.placeholder}
-        </View>
+        </Text>
       </View>
     </View>
   );
 };
 
-export default function Home({ pageProps }) {
-  const { transferPoints, vehicles, testimonials, destinations } = pageProps;
+const fnsLangs = {
+  tr: trLocale,
+  en: enLocale,
+  ru: ruLocale,
+  de: deLocale,
+};
 
-  const schema = yup.object().shape({
-    fromSearch: yup
-      .object()
-      .shape({
-        label: yup.string().required("Bu alan boş bırakılamaz"),
-        value: yup.string().required("Bu alan boş bırakılamaz"),
-      })
-      .required("Bu alan boş bırakılamaz")
-      .nullable(),
-    toSearch: yup.object().required("Gideceğiniz yer belirtilmelidir"),
-    pickupDate: yup
-      .date()
-      .required("Alış tarihi belirtilmelidir")
-      .min(new Date(), "Alış tarihi geçmişte olamaz"),
-    returnDate: yup
-      .date()
-      .required("Dönüş tarihi belirtilmelidir")
-      .min(yup.ref("pickupDate"), "Dönüş tarihi, alış tarihinden önce olamaz"),
-    passengers: yup
-      .object()
-      .required("Bu alan boş bırakılmaz")
-      .shape({
-        adult: yup
-          .number()
-          .min(1, "En az bir yetişkin yolcu belirtilmelidir")
-          .required("Yetişkin yolcu sayısı belirtilmelidir"),
-        child: yup
-          .number()
-          .min(0, "Çocuk yolcu sayısı negatif olamaz")
-          .required("Çocuk yolcu sayısı belirtilmelidir"),
-        baby: yup
-          .number()
-          .min(0, "Bebek yolcu sayısı negatif olamaz")
-          .required("Bebek yolcu sayısı belirtilmelidir"),
-      }),
-  });
+const schema = yup.object().shape({
+  fromSearch: yup.object().required("Gideceğiniz yer belirtilmelidir"),
+  toSearch: yup.object().required("Gideceğiniz yer belirtilmelidir"),
+  pickupDate: yup
+    .date()
+    .required("Alış tarihi belirtilmelidir")
+    .min(new Date(), "Alış tarihi geçmişte olamaz"),
+  passengers: yup
+    .object()
+    .required("Bu alan boş bırakılmaz")
+    .shape({
+      adult: yup
+        .number()
+        .min(1, "En az bir yetişkin yolcu belirtilmelidir")
+        .required("Yetişkin yolcu sayısı belirtilmelidir"),
+      child: yup
+        .number()
+        .min(0, "Çocuk yolcu sayısı negatif olamaz")
+        .required("Çocuk yolcu sayısı belirtilmelidir"),
+      baby: yup
+        .number()
+        .min(0, "Bebek yolcu sayısı negatif olamaz")
+        .required("Bebek yolcu sayısı belirtilmelidir"),
+    }),
+});
+
+export default function Home({ pageProps }) {
+  const { vehicles, testimonials, startingPoints, topDestinations, locale } =
+    pageProps;
+
+  const dateFnsLocale = fnsLangs[locale] || enLocale;
+
+  const t = useTranslations();
 
   const {
     control,
     handleSubmit,
     watch,
-    setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -142,40 +158,66 @@ export default function Home({ pageProps }) {
       pickupDate: new Date(),
       returnDate: new Date(),
       passengers: {
-        adult: 2,
-        child: 1,
-        baby: 1,
+        adult: 0,
+        child: 0,
+        baby: 0,
       },
     },
   });
-  console.log(errors, "errors");
 
-  const pickupDate = watch("pickupDate");
+  const [pickupDate, fromSearch] = watch(["pickupDate", "fromSearch"]);
+
+  const { trigger: postSearchQueryTrigger, isMutating: isMutatingSearchQuery } =
+    useSWRMutation("postSearchQuery", postSearchQuery);
+
+  const {
+    data: destinationPoints,
+    trigger: destinationPointTrigger,
+    isMutating,
+  } = useSWRMutation("destinationPoints", getDestinationPoints);
+
+  useEffect(() => {
+    destinationPointTrigger(fromSearch?.value);
+  }, [fromSearch]);
 
   const router = useRouter();
 
-  const filteredPassedDate = (date) => {
+  const filteredPassedDateFrom = (date) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(date);
+
+    return currentDate < selectedDate;
+  };
+
+  const filteredPassedDateTo = (date) => {
     const currentDate = pickupDate;
     const selectedDate = new Date(date);
 
     return currentDate < selectedDate;
   };
 
-  const handleSearch = () => {
-    router.push("/transfer-sorgu");
-  };
-
-  const onSubmit = (data) => {
-    // const queryParams = new URLSearchParams(data);
+  const onSubmit = async (data) => {
     const { fromSearch, toSearch, passengers, pickupDate, returnDate } = data;
-    // const pess = Object.entries(passengers);
     const passengerAdult = passengers?.adult;
     const passengerBaby = passengers?.baby;
     const passengerChild = passengers?.child;
-    router.push(
-      `/transfer-sorgu?fromSearch=${fromSearch?.label}&toSearch=${toSearch?.label}&passengerAdult=${passengerAdult}&passengerBaby=${passengerBaby}&passengerChild=${passengerChild}&pickupDate=${pickupDate}&returnDate=${returnDate}`
-    );
-    console.log("Form Data:", data);
+
+    const routes = await getSearchRoute(fromSearch.value, toSearch.value);
+    if (!routes.length) {
+      return;
+    }
+    const route = routes[0];
+
+    const query = await postSearchQueryTrigger({
+      routeId: route._id,
+      fromDate: pickupDate,
+      toDate: returnDate,
+      adults: passengerAdult,
+      children: passengerChild,
+      baby: passengerBaby,
+    });
+
+    router.push(`route/${query._id}`);
   };
 
   return (
@@ -192,14 +234,47 @@ export default function Home({ pageProps }) {
         <meta name="twitter:image" content="/logo.png" />
       </Head>
 
-      <BreadCrumb
+      <View
         backgroundImage={`url(${Background.src})`}
+        backgroundSize="cover"
+        backgroundPosition="center left"
         height="calc(100vh - 80px)"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
       >
-        <Title mt="100px" fontSize={["40px", "40px", "60px"]}>
-          Find and book your transfer in Antalya easily
+        <Title
+          fontFamily="Poppins"
+          fontWeight="600"
+          lineHeight="1em"
+          color="#fff"
+          fontSize={["40px", "40px", "60px"]}
+          mb="150px"
+        >
+          {t.rich("promo", {
+            br: <br />,
+            code: (chunks) => (
+              <span className="text-container">
+                {chunks}
+                <svg
+                  width="135"
+                  height="20"
+                  viewBox="0 0 135 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M134.061 2.39267C56.7892 -2.64373 23.5141 5.85991 1.17627 9.37998C0.829113 12.3173 0.960959 14.7333 0.591235 19.4C60.4865 -0.0556588 100.416 3.14161 134.017 4.381C134.03 4.01153 134.02 3.50108 134.061 2.39267Z"
+                    fill="#003F7D"
+                  />
+                </svg>
+              </span>
+            ),
+          })}
         </Title>
-        <View
+        {/* <View
           as="p"
           m="0 auto"
           mt="68px"
@@ -212,120 +287,50 @@ export default function Home({ pageProps }) {
         >
           If you buy the return transfer now, your return will be rewarded 10%
           discount
-        </View>
+        </View> */}
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <View
-            backgroundColor="white"
-            margin="0 auto"
-            padding="20px"
-            borderRadius="10px"
-            width="1100px"
-            mt="30px"
-          >
+        <Container>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <View
-              display="grid"
-              gridGap="10px"
-              gridTemplateColumns={[
-                "1fr 1fr",
-                "1fr 1fr",
-                "1fr 1fr 1fr 1fr 1fr 1fr",
-              ]}
-              justifyContent="space-between"
+              backgroundColor="white"
+              margin="0 auto"
+              borderRadius="8px"
+              width="100%"
+              mt="30px"
             >
               <View
-                afterLine
-                style={{ cursor: "pointer" }}
-                display="flex"
-                position="relative"
-                alignItems="center"
+                display="grid"
+                gridGap="10px"
+                gridTemplateColumns={[
+                  "1fr 1fr",
+                  "1fr 1fr",
+                  "1fr 1fr 1fr 1fr 1fr 1fr",
+                ]}
                 justifyContent="space-between"
-                flexDirection="row"
+                alignItems="stretch"
               >
-                <View>
+                <View
+                  afterLine
+                  style={{ cursor: "pointer" }}
+                  display="flex"
+                  position="relative"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  flexDirection="row"
+                >
                   <Controller
                     name="fromSearch"
                     control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <View display="flex" alignItems="center">
-                        <View fontSize="14px" color="#B6B6B6">
-                          <Select
-                            id="from"
-                            buttonProps={{
-                              p: "0",
-                              color: "red",
-                              fontSize: "14px",
-                            }}
-                            value={value}
-                            onChange={onChange}
-                            placeholder="Search"
-                            renderSelectToggle={({
-                              toggleSelect,
-                              selectedOptions,
-                              placeholder,
-                            }) => {
-                              return (
-                                <View
-                                  display="flex"
-                                  alignItems="center"
-                                  onClick={toggleSelect}
-                                >
-                                  <AirPlaneForm />
-                                  <View
-                                    display="flex"
-                                    alignItems="flex-start"
-                                    flexDirection="column"
-                                    marginLeft="10px"
-                                  >
-                                    <View>From</View>
-                                    {selectedOptions?.label || placeholder}
-                                  </View>
-                                </View>
-                              );
-                            }}
-                          >
-                            {transferPoints?.map((point) => {
-                              return (
-                                <Select.Option
-                                  value={point?._id}
-                                  label={point?.name}
-                                />
-                              );
-                            })}
-                          </Select>
-                        </View>
-                      </View>
-                    )}
-                  />
-                  <View color="red" fontSize="11px" as="span">
-                    {" "}
-                    {errors.fromSearch && <p>{errors.fromSearch.message}</p>}
-                  </View>
-                </View>
-              </View>
-
-              <View
-                afterLine
-                style={{ cursor: "pointer" }}
-                display="flex"
-                position="relative"
-                alignItems="center"
-                justifyContent="space-between"
-                flexDirection="row"
-              >
-                <View>
-                  <Controller
-                    name="toSearch"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <View display="flex" alignItems="center">
-                        <View
-                          display="flex"
-                          alignItems="flex-start"
-                          flexDirection="column"
-                        >
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FieldArea error={error}>
+                        <View display="flex" alignItems="center">
                           <View fontSize="14px" color="#B6B6B6">
                             <Select
+                              id="from"
+                              padding="20px"
                               buttonProps={{
                                 p: "0",
                                 color: "red",
@@ -345,39 +350,163 @@ export default function Home({ pageProps }) {
                                     alignItems="center"
                                     onClick={toggleSelect}
                                   >
-                                    <LocationForm />
+                                    <LocationForm width="32px" height="32px" />
                                     <View
                                       display="flex"
                                       alignItems="flex-start"
                                       flexDirection="column"
                                       marginLeft="10px"
                                     >
-                                      <View>To</View>
-                                      {selectedOptions?.label || placeholder}
+                                      <View>{t("from")}</View>
+                                      <View color="#747474">
+                                        {selectedOptions?.label || placeholder}
+                                      </View>
                                     </View>
                                   </View>
                                 );
                               }}
                             >
-                              {transferPoints?.map((point) => {
-                                console.log(transferPoints);
-                                return (
-                                  <Select.Option
-                                    value={point?._id}
-                                    label={point?.name}
-                                  />
-                                );
-                              })}
+                              {Object.entries(startingPoints)?.map(
+                                ([type, points]) =>
+                                  points.map((point) => (
+                                    <Select.Option
+                                      value={point?._id}
+                                      label={
+                                        <View
+                                          display="flex"
+                                          alignItems="center"
+                                          color="#747474"
+                                        >
+                                          {POINT_ICONS[type || "other"]}
+                                          <Text as="span" size="sm" ml="10px">
+                                            {point?.name}
+                                          </Text>
+                                        </View>
+                                      }
+                                    />
+                                  ))
+                              )}
                             </Select>
                           </View>
                         </View>
-                      </View>
+                      </FieldArea>
                     )}
                   />
                 </View>
-              </View>
 
-              <View>
+                <View
+                  afterLine
+                  style={{ cursor: "pointer" }}
+                  display="flex"
+                  position="relative"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  flexDirection="row"
+                >
+                  <Controller
+                    name="toSearch"
+                    control={control}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FieldArea error={error}>
+                        <View display="flex" alignItems="center">
+                          <View
+                            display="flex"
+                            alignItems="flex-start"
+                            flexDirection="column"
+                          >
+                            <View fontSize="14px" color="#B6B6B6">
+                              <Select
+                                padding="20px"
+                                buttonProps={{
+                                  p: "0",
+                                  color: "red",
+                                  fontSize: "14px",
+                                }}
+                                value={value}
+                                onChange={onChange}
+                                placeholder="Search"
+                                renderSelectToggle={({
+                                  toggleSelect,
+                                  selectedOptions,
+                                  placeholder,
+                                }) => {
+                                  return (
+                                    <View
+                                      display="flex"
+                                      alignItems="center"
+                                      opacity={
+                                        !Object.keys(destinationPoints || {})
+                                          ?.length
+                                          ? "0.3"
+                                          : "1"
+                                      }
+                                      onClick={toggleSelect}
+                                    >
+                                      {isMutating ? (
+                                        <LoadingIcon />
+                                      ) : (
+                                        <LocationForm
+                                          width="32px"
+                                          height="32px"
+                                        />
+                                      )}
+                                      <View
+                                        display="flex"
+                                        alignItems="flex-start"
+                                        flexDirection="column"
+                                        marginLeft="10px"
+                                      >
+                                        <View>{t("to")}</View>
+                                        {selectedOptions?.label || placeholder}
+                                      </View>
+                                    </View>
+                                  );
+                                }}
+                              >
+                                {Object.keys(destinationPoints || {})
+                                  ?.length ? (
+                                  Object.entries(destinationPoints)?.map(
+                                    ([type, points]) =>
+                                      points.map((point) => (
+                                        <Select.Option
+                                          value={point?._id}
+                                          label={
+                                            <View
+                                              display="flex"
+                                              alignItems="center"
+                                              color="#747474"
+                                            >
+                                              {POINT_ICONS[type || "other"]}
+                                              <Text
+                                                as="span"
+                                                size="sm"
+                                                ml="10px"
+                                              >
+                                                {point?.name}
+                                              </Text>
+                                            </View>
+                                          }
+                                        />
+                                      ))
+                                  )
+                                ) : (
+                                  <Select.Option
+                                    disabled
+                                    label="Select a starting point"
+                                  />
+                                )}
+                              </Select>
+                            </View>
+                          </View>
+                        </View>
+                      </FieldArea>
+                    )}
+                  />
+                </View>
+
                 <View
                   afterLine
                   display="flex"
@@ -387,39 +516,42 @@ export default function Home({ pageProps }) {
                   <Controller
                     name="pickupDate"
                     control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <DatePicker
-                        selected={value}
-                        onChange={(date) => onChange(date)}
-                        showTimeSelect
-                        excludeTimes={[
-                          setHours(setMinutes(new Date(), 0), 17),
-                          setHours(setMinutes(new Date(), 30), 18),
-                          setHours(setMinutes(new Date(), 30), 19),
-                          setHours(setMinutes(new Date(), 30), 17),
-                        ]}
-                        dateFormat="dd:MM:yyyy h:mm"
-                        popperPlacement="bottom-start"
-                        placeholderText="Add Pickup Date"
-                        title="Pickup Date"
-                        customInput={<DateInput />}
-                      />
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FieldArea error={error}>
+                        <DatePicker
+                          locale={dateFnsLocale}
+                          selected={value}
+                          value={value}
+                          onChange={(date) => onChange(date)}
+                          showTimeSelect
+                          filterDate={filteredPassedDateFrom}
+                          filterTime={(time) => {
+                            const currentDate = new Date();
+                            const selectedDate = new Date(value);
+                            if (
+                              currentDate.toDateString() ===
+                              selectedDate.toDateString()
+                            ) {
+                              return (
+                                setHours(setMinutes(new Date(), 0), 17) < time
+                              );
+                            }
+                            return true;
+                          }}
+                          dateFormat="dd:MM:yyyy hh:mm"
+                          popperPlacement="bottom-start"
+                          placeholderText="Add Pickup Date"
+                          title={t("pickup-date")}
+                          customInput={<DateInput />}
+                        />
+                      </FieldArea>
                     )}
                   />
                 </View>
-                <View
-                  color="red"
-                  fontSize="11px"
-                  maxWidth="300px"
-                  display="inline-block"
-                  as="span"
-                >
-                  {" "}
-                  {errors.pickupDate && <p>{errors.pickupDate.message}</p>}
-                </View>
-              </View>
 
-              <View>
                 <View
                   afterLine
                   display="flex"
@@ -429,290 +561,124 @@ export default function Home({ pageProps }) {
                   <Controller
                     name="returnDate"
                     control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <DatePicker
-                        selected={value}
-                        onChange={(date) => onChange(date)}
-                        showTimeSelect
-                        dateFormat="dd:MM:yyyy h:mm"
-                        popperPlacement="bottom-start"
-                        placeholderText="Add Return Date"
-                        title="Return Date"
-                        filterDate={filteredPassedDate}
-                        customInput={<DateInput />}
-                      />
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FieldArea error={error}>
+                        <DatePicker
+                          selected={value}
+                          locale={dateFnsLocale}
+                          onChange={(date) => onChange(date)}
+                          showTimeSelect
+                          dateFormat="dd:MM:yyyy hh:mm"
+                          popperPlacement="bottom-start"
+                          placeholderText="Add Return Date"
+                          title={t("return-date")}
+                          filterDate={filteredPassedDateTo}
+                          filterTime={(time) => {
+                            const currentDate = new Date();
+                            const selectedDate = new Date(time);
+                            if (
+                              currentDate.toDateString() ===
+                              selectedDate.toDateString()
+                            ) {
+                              return (
+                                setHours(setMinutes(new Date(), 0), 17) < time
+                              );
+                            }
+                            if (
+                              selectedDate.toDateString() ===
+                              pickupDate.toDateString()
+                            ) {
+                              const oneHourLater = new Date(pickupDate);
+                              oneHourLater.setHours(pickupDate.getHours() + 1);
+                              return time >= oneHourLater;
+                            }
+                            return true;
+                          }}
+                          customInput={<DateInput />}
+                        />
+                      </FieldArea>
                     )}
                   />
                 </View>
-                <View
-                  color="red"
-                  fontSize="11px"
-                  maxWidth="300px"
-                  display="inline-block"
-                  as="span"
-                >
-                  {" "}
-                  {errors.returnDate && <p>{errors.returnDate.message}</p>}
-                </View>
-              </View>
 
-              {/* 
                 <View
-                  afterLine
                   display="flex"
-                  alignItems="center"
-                  justifyContent="center"
+                  flexDirection="column"
+                  alignItems="flex-start"
+                  justifyContent={["space-between", "space-between", "center"]}
                 >
-                  <Controller
-                    name="passenger"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <View display="flex">
-                        <Select
-                          id="from"
-                          buttonProps={{
-                            p: "0",
-                            color: "red",
-                            fontSize: "14px",
-                          }}
-                          multiple
-                          value={value}
-                          onChange={(newValue) => {
-                            console.log("Selected option:", newValue);
-                            onChange(newValue);
-                          }}
-                          placeholder="Transport"
-                          renderSelectToggle={({
-                            toggleSelect,
-                            selectedOptions,
-                            placeholder,
-                          }) => {
-                            console.log("Selected options:", selectedOptions);
-                            console.log("Placeholder:", placeholder);
-                            return (
-                              <View
-                                display="flex"
-                                alignItems="center"
-                                onClick={toggleSelect}
-                              >
-                                <UserForm />
-                                <View
-                                  display="flex"
-                                  alignItems="flex-start"
-                                  flexDirection="column"
-                                  marginLeft="10px"
-                                >
-                                  <View>Passengers</View>
-
-                                  <View
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                  >
-                                    <View fontSize="10px" mr="8px">
-                                      {" "}
-                                      {selectedOptions?.label || placeholder}
-                                    </View>
-                                    <PlusForm />
-                                  </View>
-                                </View>
-                              </View>
-                            );
-                          }}
-                        >
-                          <Select.Option value="option1" label="Option 1" />
-                          <Select.Option value="option2" label="Option 2" />
-                          <Select.Option value="option3" label="Option 3" />
-                        </Select>
-                      </View>
-                    )}
-                  />
-                </View> */}
-
-              <View
-                display="flex"
-                flexDirection="column"
-                alignItems="flex-start"
-                justifyContent={["space-between", "space-between", "center"]}
-              >
-                <View mb="20px">
-                  <Controller
-                    name="passengers"
-                    control={control}
-                    render={({ field }) => (
-                      <PersonSelect {...field}>
-                        <View display="flex" alignItems="center">
-                          <UserForm />
-                          <View
-                            display="flex"
-                            alignItems="flex-start"
-                            flexDirection="column"
-                            marginLeft="10px"
-                          >
-                            <span>Passengers</span>
-
+                  <View>
+                    <Controller
+                      name="passengers"
+                      control={control}
+                      render={({ field, fieldState: { error } }) => (
+                        <FieldArea error={error}>
+                          <PersonSelect {...field}>
                             <View
                               display="flex"
                               alignItems="center"
-                              justifyContent="center"
+                              padding="20px"
                             >
-                              <Text
-                                as="span"
-                                mr="5px"
-                                fontSize="1em"
-                                display="block"
+                              <UserForm />
+                              <View
+                                display="flex"
+                                alignItems="flex-start"
+                                flexDirection="column"
+                                marginLeft="10px"
                               >
-                                {Object.values(field.value).reduce(
-                                  (acc, p) => acc + p,
-                                  0
-                                )}
-                              </Text>
-                              <PlusForm />
+                                <span>{t("passengers")}</span>
+
+                                <View
+                                  display="flex"
+                                  alignItems="center"
+                                  justifyContent="center"
+                                >
+                                  <Text
+                                    as="span"
+                                    mr="5px"
+                                    fontSize="1em"
+                                    display="block"
+                                  >
+                                    {Object.values(field.value).reduce(
+                                      (acc, p) => acc + p,
+                                      0
+                                    )}
+                                  </Text>
+                                  <PlusForm />
+                                </View>
+                              </View>
                             </View>
-                          </View>
-                        </View>
-                      </PersonSelect>
+                          </PersonSelect>
+                        </FieldArea>
+                      )}
+                    />
+                  </View>
+                </View>
+
+                <View p="20px">
+                  <Button
+                    as="button"
+                    disabled={
+                      Object.keys(errors).length || isMutatingSearchQuery
+                    }
+                  >
+                    {isMutatingSearchQuery ? (
+                      <LoadingIcon width="25px" height="25px" />
+                    ) : (
+                      t("search")
                     )}
-                  />
-                  <View
-                    color="red"
-                    fontSize="11px"
-                    maxWidth="300px"
-                    display="inline-block"
-                    as="span"
-                  >
-                    {" "}
-                    {errors.passengers && <p>{errors.passengers.message}</p>}
-                  </View>
+                  </Button>
                 </View>
               </View>
-
-              <Button as="button">Ara</Button>
             </View>
-          </View>
-        </form>
-        {/* <View
-            backgroundColor="white"
-            margin="0 auto"
-            padding="20px"
-            borderRadius="10px"
-            width="1100px"
-            mt="30px"
-          >
-            <View
-              display="grid"
-              gridGap="10px"
-              gridTemplateColumns="auto auto auto auto auto auto"
-            >
-              <View display="flex" alignItems="center" justifyContent="center">
-                <AirPlaneForm />
-                <View
-                  display="flex"
-                  alignItems="start"
-                  ml="20px"
-                  flexDirection="column"
-                >
-                  <View>From</View>
-                  <View fontSize="14px" color="#B6B6B6">
-                    Search
-                  </View>
-                </View>
-              </View>
-
-              <View
-                style={{ cursor: "pointer" }}
-                display="flex"
-                position="relative"
-                ml="20px"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="row"
-              >
-                <LocationForm />
-                <View>
-                  <View>To</View>
-                  <View fontSize="14px" color="#B6B6B6">
-                    Search
-                  </View>
-                  <Select>
-                    <Select.Option
-                      value="option1"
-                      label="Option 1"
-                    ></Select.Option>
-                    <Select.Option
-                      value="option2"
-                      label="Option 2"
-                    ></Select.Option>
-                  </Select>
-                </View>
-              </View>
-
-              <View display="flex" alignItems="center" justifyContent="center">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  showTimeSelect
-                  excludeTimes={[
-                    setHours(setMinutes(new Date(), 0), 17),
-                    setHours(setMinutes(new Date(), 30), 18),
-                    setHours(setMinutes(new Date(), 30), 19),
-                    setHours(setMinutes(new Date(), 30), 17),
-                  ]}
-                  dateFormat="dd:MM:yyyy h:mm"
-                  popperPlacement="bottom-start"
-                  placeholderText="Add Pickup Date"
-                  title="Pickup Date"
-                  customInput={<DateInput />}
-                />
-              </View>
-
-              <View display="flex" alignItems="center" justifyContent="center">
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  showTimeSelect
-                  excludeTimes={[
-                    setHours(setMinutes(new Date(), 0), 17),
-                    setHours(setMinutes(new Date(), 30), 18),
-                    setHours(setMinutes(new Date(), 30), 19),
-                    setHours(setMinutes(new Date(), 30), 17),
-                  ]}
-                  dateFormat="dd:MM:yyyy h:mm"
-                  popperPlacement="bottom-start"
-                  placeholderText="Add Return Date"
-                  title="Return Date"
-                  filterDate={filteredPassedDate}
-                  customInput={<DateInput />}
-                />
-              </View>
-
-              <View display="flex" alignItems="center" justifyContent="center">
-                <UserForm />
-                <View
-                  display="flex"
-                  alignItems="start"
-                  ml="20px"
-                  flexDirection="column"
-                >
-                  <View>Passengers</View>
-                  <View
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    fontSize="14px"
-                    color="#B6B6B6"
-                  >
-                    0 <PlusForm />
-                  </View>
-                </View>
-              </View>
-
-              <Button onClick={handleSearch}>Search</Button>
-            </View>
-          </View> */}
-      </BreadCrumb>
+          </form>
+        </Container>
+      </View>
       <Section
-        my="55px"
+        py="55px"
         style={{
           backgroundSize: "cover",
         }}
@@ -747,8 +713,9 @@ export default function Home({ pageProps }) {
                 alignItems="center"
                 justifyContent="center"
                 backgroundColor="#ECF5FF"
+                color="#1572D3"
               >
-                <Airplane />{" "}
+                <Airplane width="35px" height="35 px" />
               </View>
               <View>
                 <View pt="40px" pb="20px" as="h5" fontSize="20px" color="#000">
@@ -847,8 +814,9 @@ export default function Home({ pageProps }) {
                 alignItems="center"
                 justifyContent="center"
                 backgroundColor="#ECF5FF"
+                color="#1572D3"
               >
-                <House />{" "}
+                <House width="49px" height="49px" />
               </View>
               <View>
                 <View pt="40px" pb="20px" as="h5" fontSize="20px" color="#000">
@@ -870,8 +838,7 @@ export default function Home({ pageProps }) {
       </Section>
 
       <Section
-        my="55px"
-        py="100px"
+        py="55px"
         style={{
           backgroundSize: "cover",
           backgroundColor: "#ECF5FF",
@@ -952,7 +919,7 @@ export default function Home({ pageProps }) {
       </Section>
 
       <Section
-        my="55px"
+        py="55px"
         style={{
           backgroundSize: "cover",
           backgroundColor: "#F7FBFF",
@@ -1015,7 +982,7 @@ export default function Home({ pageProps }) {
       </Section>
 
       <Section
-        my="55px"
+        py="55px"
         style={{
           backgroundSize: "cover",
           backgroundColor: "#fff",
@@ -1034,7 +1001,7 @@ export default function Home({ pageProps }) {
             gridGap="64px"
             justifyContent="center"
           >
-            {destinations?.map((destination) => (
+            {topDestinations?.map((destination) => (
               <Destinations
                 key={destination?._id}
                 borderRadius="32px !important"
@@ -1085,7 +1052,6 @@ export default function Home({ pageProps }) {
 
       <Section
         display="flex"
-        my="55px"
         alignItems={["center", "center", "left"]}
         flexDirection={["column", "column", "row"]}
         style={{
@@ -1228,18 +1194,27 @@ export default function Home({ pageProps }) {
 }
 
 export async function getStaticProps({ locale }) {
-  const vehicles = await getVehicles();
-  // const transferPoints = await fetchTransferPoints()
-  const transferPoints = await getTransferPoints();
-  const testimonials = await getTestimonials();
-  const destinations = await getDestinations();
+  const [
+    vehicles,
+    transferPoints,
+    testimonials,
+    topDestinations,
+    startingPoints,
+  ] = await Promise.all([
+    getVehicles(),
+    getTransferPoints(),
+    getTestimonials(),
+    getTopDestinations(),
+    getStartingPoints(),
+  ]);
 
   return {
     props: {
       vehicles,
       transferPoints,
       testimonials,
-      destinations,
+      startingPoints,
+      topDestinations,
       locale,
     },
   };

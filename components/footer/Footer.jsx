@@ -28,8 +28,6 @@ import Mail from "../../assets/icons/sms.svg";
 import { FooterWrapper } from "./FooterStyled";
 
 const Footer = ({footerNavigation,...props}) => {
-  console.log(footerNavigation,"footerNavigation");
-
   function divideArray(arr){
 
      const firstHalf = arr?.slice(0,6)
@@ -42,13 +40,13 @@ const Footer = ({footerNavigation,...props}) => {
 
   }
   const{firstHalf,secondHalf}=divideArray(footerNavigation)
-  console.log(firstHalf,secondHalf);
 
   return (
     <FooterWrapper
       as="footer"
-      id="footer"
+      id="footer" 
       borderTop="2px solid rgba(0, 0, 0, .1)"
+      gridArea="footer"
     >
       <Section py="80px" backgroundColor="#051C34">
         <Container>

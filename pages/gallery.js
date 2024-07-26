@@ -39,45 +39,43 @@ const GalleryPage = () => {
         <title>VICTORIA TRANSFER - </title>
         <meta name="description" content="VICTORIA TRANSFER , " />
       </Head>
-      <Layout>
-        <BreadCrumb>
-          <Title
-            mt={["40px", "40px", "100px"]}
-            fontSize={["45px", "45px", "60px"]}
-          >
-            Who we are?
-          </Title>
-          <View
-            as="p"
-            maxWidth="642px"
-            m="0 auto"
-            mt="68px"
-            fontSize={["17px", "17px", "24px"]}
-            color="#fff"
-          >
-            At Victoria Transfer, we pride ourselves on exceeding expectations
-            with every journey
-          </View>
-        </BreadCrumb>
-        <Section
-          my="55px"
-          style={{
-            backgroundSize: "cover",
-          }}
+      <BreadCrumb>
+        <Title
+          mt={["40px", "40px", "100px"]}
+          fontSize={["45px", "45px", "60px"]}
         >
-          <View display="grid" px="50px" alignItems="center">
-            <Masonry columnsCount={3} gutter="10px">
-              {images.map((image, i) => (
-                <img
-                  key={i}
-                  src={image}
-                  style={{ width: "100%", display: "block" }}
-                />
-              ))}
-            </Masonry>
-          </View>
-        </Section>
-      </Layout>
+          Who we are?
+        </Title>
+        <View
+          as="p"
+          maxWidth="642px"
+          m="0 auto"
+          mt="68px"
+          fontSize={["17px", "17px", "24px"]}
+          color="#fff"
+        >
+          At Victoria Transfer, we pride ourselves on exceeding expectations
+          with every journey
+        </View>
+      </BreadCrumb>
+      <Section
+        my="55px"
+        style={{
+          backgroundSize: "cover",
+        }}
+      >
+        <View display="grid" px="50px" alignItems="center">
+          <Masonry columnsCount={3} gutter="10px">
+            {images.map((image, i) => (
+              <img
+                key={i}
+                src={image}
+                style={{ width: "100%", display: "block" }}
+              />
+            ))}
+          </Masonry>
+        </View>
+      </Section>
     </>
   );
 };

@@ -8,8 +8,8 @@ const nextConfig = {
     domains: ["127.0.0.1", "localhost", "cdn.sanity.io"],
   },
   i18n: {
-    locales: ["en", "tr", "ru"],
-    defaultLocale: "ru",
+    locales: ["en", "tr", "ru", "de"],
+    defaultLocale: "en",
   },
   compiler: {
     // ssr and displayName are configured by default

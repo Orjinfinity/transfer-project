@@ -7,11 +7,15 @@ import {
   variant,
   flexbox,
   layout,
+  position
 } from "styled-system";
 
 const sizeVariant = variant({
   prop: "size",
   variants: {
+    xxs: {
+      fontSize: "0.7rem",
+    },
     xs: {
       fontSize: "0.75rem",
     },
@@ -34,12 +38,10 @@ const Text = styled("p", { shouldForwardProp })`
   text-decoration: none !important;
   font-family: "Open Sans", sans-serif;
   color: #000;
-  line-height: 24px;
   font-size: 16px;
 
   @media (max-width: 600px) {
     font-size: 18px;
-    line-height: 27px;
   }
 
   ${({ theme, underLineColor, size }) => {
@@ -59,6 +61,7 @@ const Text = styled("p", { shouldForwardProp })`
   ${space}
   ${typography}
   ${color}
+  ${position}
   ${flexbox}
   ${layout}
 `;

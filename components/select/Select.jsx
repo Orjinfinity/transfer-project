@@ -15,6 +15,7 @@ const Select = ({
   placeholder,
   allSelected,
   renderSelectToggle,
+  center,
   ...styledSystemProps
 }) => {
   return (
@@ -27,7 +28,7 @@ const Select = ({
     >
       <SelectWrapper {...styledSystemProps}>
         <SelectToggle renderSelectToggle={renderSelectToggle} />
-        <SelectList searchArea={searchArea}>{children}</SelectList>
+        <SelectList searchArea={searchArea} center={center}>{children}</SelectList>
       </SelectWrapper>
     </SelectContextProviderComponent>
   );
