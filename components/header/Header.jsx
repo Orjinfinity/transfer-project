@@ -109,8 +109,20 @@ const Header = ({ ...props }) => {
               alignItems="center"
               px={["0px", "0px", "10px"]}
             >
-              <View display="flex" alignItems="center">
-                <Text fontSize="14px" color="#fff">
+              <View
+                display="flex"
+                alignItems="center"
+                flexShrink="1"
+                width={["150px", "150px", "100%"]}
+              >
+                <Text
+                  fontSize={[
+                    "12px !important;",
+                    "12px !important",
+                    "14px !important",
+                  ]}
+                  color="#fff"
+                >
                   Turkey Travel Agencies License No: 7528
                 </Text>
               </View>
@@ -120,13 +132,6 @@ const Header = ({ ...props }) => {
                 alignItems="center"
               >
                 <View className="flags">
-                  <Link
-                    href={route}
-                    locale="tr"
-                    border={locale === "tr" ? "1px solid #fff" : "0"}
-                  >
-                    <TrFlag className="flag" />
-                  </Link>
                   <Link
                     href={route}
                     locale="en"
@@ -141,15 +146,13 @@ const Header = ({ ...props }) => {
                   >
                     <DeFlag className="flag" />
                   </Link>
-                  <Link
-                    href={route}
-                    locale="ru"
-                    border={locale === "ru" ? "1px solid #fff" : "0"}
-                  >
-                    <RuFlag className="flag" />
-                  </Link>
                 </View>
-                <View display="grid" gridTemplateColumns="1fr " gridGap="15px">
+                <View
+                  display="grid"
+                  flexShrink="0"
+                  gridTemplateColumns="1fr "
+                  gridGap="15px"
+                >
                   <Select
                     center
                     buttonProps={{
@@ -208,7 +211,10 @@ const Header = ({ ...props }) => {
             </View>
           </Container>
         </Section>
-        <Container position="relative">
+        <Container
+          p={["0px !important;", "0px !important", "0 2.5rem !important"]}
+          position="relative"
+        >
           <View
             top={["0px", "0px", "25px"]}
             height="80px"
@@ -216,10 +222,11 @@ const Header = ({ ...props }) => {
             display="flex"
             justifyContent="space-between"
             backgroundColor="#003F7DCC"
-            position="absolute"
-            width="calc(100% - 5rem)"
+            position={["static", "static", "absolute"]}
+            width={["100%", "100%", "calc(100% - 5rem)"]}
             left="2.5rem"
             px="45px"
+            pr={["0px !important;", "0px !important;", "45px !important"]}
             style={{
               backgroundBlendMode: "multiply",
               backdropFilter: "brightness(0.3)",

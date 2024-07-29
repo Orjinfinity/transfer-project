@@ -163,7 +163,7 @@ export const HeadNav = styled.nav`
   width: 100%;
   position: absolute;
   left: 0;
-  top: 150px;
+  top: 80px;
   padding: 15px 40px;
   border-bottom: 5px solid #e0c47d;
   background: ${({ theme }) => theme.colors.white};
