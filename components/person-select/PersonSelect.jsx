@@ -70,7 +70,7 @@ const PersonSelect = ({ children, onChange, value }) => {
     } else if (key === "baby") {
       return "0-2";
     }
-  }
+  };
 
   return (
     <View position="relative" ref={wrapperRef}>
@@ -80,7 +80,7 @@ const PersonSelect = ({ children, onChange, value }) => {
       {open ? (
         <div
           ref={setPopperElement}
-          style={styles.popper}
+          style={{ ...styles.popper, zIndex: "9999" }}
           {...attributes.popper}
         >
           <View
@@ -102,7 +102,7 @@ const PersonSelect = ({ children, onChange, value }) => {
                 px="16px"
                 py="12px"
               >
-                <View display="flex" flexDirection="column" alignItems="start">
+                <View display="flex" flexDirection="column" alignItems="start ">
                   <span display="inline-block">{t(key)}</span>
                   <span display="inline-block" fontSize="8px">
                     {getMaxAge(key)}

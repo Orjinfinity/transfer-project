@@ -65,7 +65,7 @@ const FieldArea = ({ children, error, ...otherProps }) => (
           position={variant === "bordered" ? "absolute" : "relative"}
           textAlign="left"
         >
-          {error.message}
+          {error?.message}
         </ErrorMessage>
       </View>
     ) : null}

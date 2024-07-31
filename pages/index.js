@@ -112,28 +112,24 @@ const fnsLangs = {
 };
 
 const schema = yup.object().shape({
-  fromSearch: yup.object().required("Gideceğiniz yer belirtilmelidir"),
-  toSearch: yup.object().required("Gideceğiniz yer belirtilmelidir"),
+  fromSearch: yup
+    .mixed()
+    .test("required", "Alış yeri belirtilmelidir", (field) => {
+      return !!field.value;
+    }),
+  toSearch: yup
+    .mixed()
+    .test("required", "Gideceğiniz yer belirtilmelidir", (field) => {
+      return !!field.value;
+    }),
   pickupDate: yup
     .date()
     .required("Alış tarihi belirtilmelidir")
     .min(new Date(), "Alış tarihi geçmişte olamaz"),
   passengers: yup
-    .object()
-    .required("Bu alan boş bırakılmaz")
-    .shape({
-      adult: yup
-        .number()
-        .min(1, "En az bir yetişkin yolcu belirtilmelidir")
-        .required("Yetişkin yolcu sayısı belirtilmelidir"),
-      child: yup
-        .number()
-        .min(0, "Çocuk yolcu sayısı negatif olamaz")
-        .required("Çocuk yolcu sayısı belirtilmelidir"),
-      baby: yup
-        .number()
-        .min(0, "Bebek yolcu sayısı negatif olamaz")
-        .required("Bebek yolcu sayısı belirtilmelidir"),
+    .mixed()
+    .test("required", "Gideceğiniz yer belirtilmelidir", (field) => {
+      return field.adult > 0;
     }),
 });
 
@@ -153,8 +149,8 @@ export default function Home({ pageProps }) {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      fromSearch: "",
-      toSearch: "",
+      fromSearch: { value: "" },
+      toSearch: { value: "" },
       pickupDate: new Date(),
       returnDate: new Date(),
       passengers: {
@@ -251,7 +247,7 @@ export default function Home({ pageProps }) {
           lineHeight="1em"
           color="#fff"
           fontSize={["40px", "40px", "60px"]}
-          mb="150px"
+          mb={["0px", "0px", "150px"]}
         >
           {t.rich("promo", {
             br: <br />,
@@ -302,8 +298,8 @@ export default function Home({ pageProps }) {
                 display="grid"
                 gridGap="10px"
                 gridTemplateColumns={[
-                  "1fr 1fr",
-                  "1fr 1fr",
+                  "1fr ",
+                  "1fr ",
                   "1fr 1fr 1fr 1fr 1fr 1fr",
                 ]}
                 justifyContent="space-between"
@@ -324,73 +320,80 @@ export default function Home({ pageProps }) {
                     render={({
                       field: { onChange, value },
                       fieldState: { error },
-                    }) => (
-                      <FieldArea error={error}>
-                        <View display="flex" alignItems="center">
-                          <View fontSize="14px" color="#B6B6B6">
-                            <Select
-                              id="from"
-                              padding="20px"
-                              buttonProps={{
-                                p: "0",
-                                color: "red",
-                                fontSize: "14px",
-                              }}
-                              value={value}
-                              onChange={onChange}
-                              placeholder="Search"
-                              renderSelectToggle={({
-                                toggleSelect,
-                                selectedOptions,
-                                placeholder,
-                              }) => {
-                                return (
-                                  <View
-                                    display="flex"
-                                    alignItems="center"
-                                    onClick={toggleSelect}
-                                  >
-                                    <LocationForm width="32px" height="32px" />
+                    }) => {
+                      console.log(error, "error");
+                      return (
+                        <FieldArea error={error}>
+                          <View display="flex" alignItems="center">
+                            <View fontSize="14px" color="#B6B6B6">
+                              <Select
+                                id="from"
+                                padding="20px"
+                                buttonProps={{
+                                  p: "0",
+                                  color: "red",
+                                  fontSize: "14px",
+                                }}
+                                value={value}
+                                onChange={onChange}
+                                placeholder="Search"
+                                renderSelectToggle={({
+                                  toggleSelect,
+                                  selectedOptions,
+                                  placeholder,
+                                }) => {
+                                  return (
                                     <View
                                       display="flex"
-                                      alignItems="flex-start"
-                                      flexDirection="column"
-                                      marginLeft="10px"
+                                      alignItems="center"
+                                      onClick={toggleSelect}
                                     >
-                                      <View>{t("from")}</View>
-                                      <View color="#747474">
-                                        {selectedOptions?.label || placeholder}
+                                      <LocationForm
+                                        width="32px"
+                                        height="32px"
+                                      />
+                                      <View
+                                        display="flex"
+                                        alignItems="flex-start"
+                                        flexDirection="column"
+                                        marginLeft="10px"
+                                      >
+                                        <View>{t("from")}</View>
+                                        <View color="#747474">
+                                          {selectedOptions?.label ||
+                                            placeholder}
+                                        </View>
                                       </View>
                                     </View>
-                                  </View>
-                                );
-                              }}
-                            >
-                              {Object.entries(startingPoints)?.map(
-                                ([type, points]) =>
-                                  points.map((point) => (
-                                    <Select.Option
-                                      value={point?._id}
-                                      label={
-                                        <View
-                                          display="flex"
-                                          alignItems="center"
-                                          color="#747474"
-                                        >
-                                          {POINT_ICONS[type || "other"]}
-                                          <Text as="span" size="sm" ml="10px">
-                                            {point?.name}
-                                          </Text>
-                                        </View>
-                                      }
-                                    />
-                                  ))
-                              )}
-                            </Select>
+                                  );
+                                }}
+                              >
+                                {Object.entries(startingPoints)?.map(
+                                  ([type, points]) =>
+                                    points.map((point) => (
+                                      <Select.Option
+                                        value={point?._id}
+                                        label={
+                                          <View
+                                            display="flex"
+                                            alignItems="center"
+                                            color="#747474"
+                                          >
+                                            {POINT_ICONS[type || "other"]}
+                                            <Text as="span" size="sm" ml="10px">
+                                              {point?.name}
+                                            </Text>
+                                          </View>
+                                        }
+                                      />
+                                    ))
+                                )}
+                              </Select>
+                            </View>
                           </View>
-                        </View>
-                      </FieldArea>
-                    )}
+                        </FieldArea>
+                      );
+                    }}
                   />
                 </View>
 
@@ -610,7 +613,7 @@ export default function Home({ pageProps }) {
                   alignItems="flex-start"
                   justifyContent={["space-between", "space-between", "center"]}
                 >
-                  <View>
+                  <View width="100%">
                     <Controller
                       name="passengers"
                       control={control}
