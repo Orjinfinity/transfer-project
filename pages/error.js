@@ -1,11 +1,13 @@
 import Head from "next/head";
 import { Section, Title, Container, View, Image, Text, Link } from "components";
+import { useTranslations } from "next-intl";
 
 const ErrorPage = () => {
+  const t = useTranslations();
   return (
     <>
       <Head>
-        <title>VICTORIA TRANSFER - Success</title>
+        <title>VICTORIA TRANSFER - Error</title>
         <meta name="description" content="VICTORIA TRANSFER , " />
       </Head>
 
@@ -35,15 +37,14 @@ const ErrorPage = () => {
                 fontWeight="bold"
                 color="#FF4B55"
               >
-                Reservation Unsuccessful!
+                {t("reservation_error")}
               </Title>
 
               <Text color="#000" mt="0px" fontSize="18px" lineHeight="2">
-                Please try again or contact us
+                {t("reservation_try_again")}
               </Text>
 
               <View mt="50px">
-                {" "}
                 <Link
                   color="#fff"
                   borderRadius="16px"
@@ -52,8 +53,8 @@ const ErrorPage = () => {
                   display="inline-block"
                   href="/"
                 >
-                  Home Page
-                </Link>{" "}
+                  {t("home_page")}
+                </Link>
               </View>
             </View>
           </View>

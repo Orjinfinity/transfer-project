@@ -1,7 +1,9 @@
 import Head from "next/head";
 import { Section, Title, Container, View, Image, Text, Link } from "components";
+import { useTranslations } from "next-intl";
 
 const SuccessPage = () => {
+  const t = useTranslations();
   return (
     <>
       <Head>
@@ -32,15 +34,14 @@ const SuccessPage = () => {
                 fontWeight="bold"
                 color="#003F7D"
               >
-                Reservation Successful!
+                {t("reservation_success")}
               </Title>
 
               <Text color="#000" mt="0px" fontSize="18px" lineHeight="2">
-                You will get a confirmation e-mail shortly!
+                {t("emai_send_success_message")}
               </Text>
 
               <View mt="50px">
-                {" "}
                 <Link
                   color="#fff"
                   borderRadius="16px"
@@ -49,8 +50,8 @@ const SuccessPage = () => {
                   display="inline-block"
                   href="/"
                 >
-                  Home Page
-                </Link>{" "}
+                  {t("home_page")}
+                </Link>
               </View>
             </View>
           </View>
