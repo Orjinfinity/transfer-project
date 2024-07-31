@@ -328,6 +328,7 @@ const TimeText = ({ duration, distance }) => (
 );
 
 const StepLeft = () => {
+  const t = useTranslations();
   const formatDateTime = useFormatter();
   const {
     total,
@@ -369,10 +370,10 @@ const StepLeft = () => {
             p="20px"
             display="flex"
             alignItems="center"
-            justifyContent="space-between"
+            justifyContent="space-between"  
           >
             <View color="#fff" fontWeight="bold">
-              Gidiş Transferi
+              {t("from")}
             </View>
             <View color="#fff" fontWeight="bold">
               {time}
@@ -453,7 +454,7 @@ const StepLeft = () => {
             justifyContent="space-between"
           >
             <View color="#fff" fontWeight="bold">
-              Dönüş Transferi
+              {t("to")}
             </View>
             <View color="#fff" fontWeight="bold">
               {time}
@@ -544,7 +545,7 @@ const StepLeft = () => {
               left="10px"
               onClick={() => changeStep(1)}
             >
-              Değiştir
+              {t("change")}
             </Button>
             <Image
               src={selectedVehicle?.imageUrl}
@@ -593,7 +594,7 @@ const StepLeft = () => {
                   left="10px"
                   onClick={() => changeStep(2)}
                 >
-                  Değiştir
+                  {t("change")}
                 </Button>
                 <Image
                   src={service?.image}
@@ -648,7 +649,7 @@ const StepLeft = () => {
         m="30px auto"
         width={["350px", "350px", "100%"]}
       >
-        <View>Toplam</View>
+        <View>{t("total")}</View>
         <View fontWeight="bold">{total} TL</View>
       </View>
       <View width={["350px", "350px", "100%"]} m="30px auto">
@@ -927,7 +928,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
         </View>
         <View background="#ffebc7" p="20px">
           <Title fontSize="20px" fontWeight="regular">
-            1. Gidiş Transferi
+            {t("from")}
           </Title>
           <Text display="block" as="span">
             {initialData?.route?.startingPoint?.name}

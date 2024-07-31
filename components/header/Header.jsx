@@ -183,7 +183,7 @@ const Header = ({ ...props }) => {
                             marginLeft="10px"
                           >
                             {selectedOptions?.label || (
-                              <View color="white">₺ TRY</View>
+                              <View color="white">€ EUR</View>
                             )}
                           </View>
                           <StyledIcon
@@ -194,7 +194,7 @@ const Header = ({ ...props }) => {
                       );
                     }}
                   >
-                    <Select.Option value="TRY" label="₺ TRY" />
+                    {/* <Select.Option value="TRY" label="₺ TRY" /> */}
                     <Select.Option value="EUR" label="€ EUR" />
                     <Select.Option value="USD" label="$ USD" />
                   </Select>
