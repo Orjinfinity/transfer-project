@@ -201,10 +201,18 @@ ul.lead-list li + li {
   margin: auto;
   --slide-height: 19rem;
   --slide-spacing: 5vw;
-  --slide-size: 65%;
+  --slide-size: 90%;
   --detail-medium-contrast: #000;
   position: relative;
 }
+
+@media screen and (min-width: 576px) {
+  .embla {
+    --slide-size: 65%;
+  }
+  
+}
+
 .embla__viewport {
   overflow: hidden;
 }

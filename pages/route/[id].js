@@ -68,7 +68,7 @@ const ServiceItem = ({ service }) => {
           Fiyat: <Price value={service.price} />
         </Text>
         <Text color="red" fontWeight="bold">
-          {t('total')}:
+          {t("total")}:
           <Price
             value={
               service.price *
@@ -363,12 +363,7 @@ const StepLeft = () => {
 
   return (
     <View>
-      <View
-        mb="50px"
-        width={["350px", "350px", "100%"]}
-        m="0 auto"
-        border="1px solid #ccc"
-      >
+      <View border="1px solid #ccc">
         <View>
           <View
             backgroundColor="#1572D3"
@@ -660,9 +655,11 @@ const StepLeft = () => {
         width={["350px", "350px", "100%"]}
       >
         <View>{t("total")}</View>
-        <View fontWeight="bold"><Price value={total} /></View>
+        <View fontWeight="bold">
+          <Price value={total} />
+        </View>
       </View>
-      <View width={["350px", "350px", "100%"]} m="30px auto">
+      <View>
         <View as="h5" my="10px" fontSize="20px" fontWeight="bold">
           7/24 Destek
         </View>
@@ -1131,12 +1128,7 @@ export default function Home({ pageProps }) {
         additionalServices={additionalServices}
         locale={locale}
       >
-        <Section
-          my={["100px", "100px", "200px"]}
-          style={{
-            backgroundSize: "cover",
-          }}
-        >
+        <Section my={["100px", "100px", "150px"]}>
           <Container>
             <Wizard />
           </Container>
