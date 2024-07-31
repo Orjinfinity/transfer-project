@@ -219,7 +219,7 @@ export default function Home({ pageProps }) {
   return (
     <>
       <Head>
-        <title>VICTORIA TRANSFER - Ana sayfa</title>
+        <title>VICTORIA TRANSFER</title>
         <meta name="description" content="VICTORIA TRANSFER " />
         <meta name="keywords" content="VICTORIA TRANSFER" />
         <meta property="og:title" content="VICTORIA TRANSFER" />
@@ -234,7 +234,7 @@ export default function Home({ pageProps }) {
         backgroundImage={`url(${Background.src})`}
         backgroundSize="cover"
         backgroundPosition="center left"
-        height="calc(100vh - 80px)"
+        minHeight="100vh"
         display="flex"
         flexDirection="column"
         justifyContent="center"
@@ -247,7 +247,7 @@ export default function Home({ pageProps }) {
           lineHeight="1em"
           color="#fff"
           fontSize={["40px", "40px", "60px"]}
-          mb={["0px", "0px", "150px"]}
+          mb={["0px", "0px", "0px", "0px", "150px"]}
         >
           {t.rich("promo", {
             br: <br />,
@@ -298,8 +298,10 @@ export default function Home({ pageProps }) {
                 display="grid"
                 gridGap="10px"
                 gridTemplateColumns={[
-                  "1fr ",
-                  "1fr ",
+                  "1fr",
+                  "1fr",
+                  "1fr 1fr",
+                  "1fr 1fr",
                   "1fr 1fr 1fr 1fr 1fr 1fr",
                 ]}
                 justifyContent="space-between"

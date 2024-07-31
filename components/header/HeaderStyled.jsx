@@ -1,12 +1,10 @@
 import styled from "styled-components";
-
 import Link from "../link/Link";
 
 export const NavLink = styled(Link)`
   position: relative;
-  padding: 0px 0px;
-  color: #000;
-
+  padding: 0;
+  color: #fff;
   height: 100%;
   font-weight: 500;
   font-size: 16px;
@@ -15,26 +13,12 @@ export const NavLink = styled(Link)`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin: 3px 0px;
+  padding: 5px 0;
 
-  ${({ theme }) => `  
-    ${theme.mediaQueries.md} {
-      color: #fff;
-      flex-direction: row;
-      
-    }`}
-
-  /* &:after {
-    content: "";
-    position: absolute;
-    background-color: #fff;
-    height: 4px;
-    width: 100%;
-    top: 0;
-    left: -100%;
-    z-index: 99;
-    transition: all 0.2s ease-in;
-  } */
+  ${({ theme }) => theme.mediaQueries.md} {
+    flex-direction: row;
+    padding: 3px;
+  }
 
   & ul {
     display: none;
@@ -47,10 +31,9 @@ export const NavLink = styled(Link)`
     background-color: #fff;
     transition: all 0.3s ease-in;
 
-    ${({ theme }) => `
-      ${theme.mediaQueries.md} {
-        position: absolute;
-    }`}
+    ${({ theme }) => theme.mediaQueries.md} {
+      position: absolute;
+    }
   }
 
   & li {
@@ -74,10 +57,6 @@ export const NavLink = styled(Link)`
     margin-left: 40px;
   }
 
-  &:hover:after {
-    left: 0;
-  }
-
   &:hover ul {
     display: block;
     opacity: 1;
@@ -91,32 +70,42 @@ export const NavLink = styled(Link)`
     color: #fff;
   }
 `;
+
 export const HamburgerItem = styled.span`
-  display: block;
-  width: 33px;
-  height: 4px;
-  margin-bottom: 5px;
-  position: relative;
-  background: #000;
-  border-radius: 3px;
-  z-index: 1;
-  transform-origin: 4px 0px;
-  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
+    background-color: #fff;
+    display: inline-block;
+    position: absolute;
+    left: 13px;
+    height: 2px;
+    transition: all .4s;
+    &:nth-of-type(1) {
+        top: 22px;
+        width: 50%;
+    }
+    &:nth-of-type(2) {
+        top: 29px;
+        width: 30%;
+    }
 `;
 
 export const HamburgerMenu = styled.button`
   user-select: none;
   outline: none;
   border: none;
-  box-shadow: none;
   background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
 
   &:focus,
   &:hover {
     outline: none;
     border: none;
-    box-shadow: none;
     background: transparent;
   }
 
@@ -124,34 +113,21 @@ export const HamburgerMenu = styled.button`
     display: none;
   }
 
-  ${({ isOpen }) => `
+  ${({ isOpen }) =>
+    isOpen &&
+    `
     ${HamburgerItem} {
-      &:first-child {
-        transform-origin: 0% 0%;
+      &:nth-of-type(1) {
+          top: 18px;
+          left: 14px;
+          transform: translateY(6px) rotate(-45deg);
+          width: 45%;
       }
-
-      &:last-child {
-        transform-origin: 0% 100%;
-      }
-
-      ${
-        isOpen
-          ? `
-        opacity: 1;
-        transform: rotate(45deg) translate(-3px, -3px);
-        background: #000;
-
-        &:nth-last-child(2) {
-          opacity: 0;
-          transform: rotate(0deg) scale(0.2, 0.2);
-          visibility:hidden;
-        }
-
-        &:last-child {
-          transform: rotate(-45deg) translate(0, -1px);
-        }
-      `
-          : ""
+      &:nth-of-type(2) {
+          top: 30px;
+          left: 14px;
+          transform: translateY(-6px) rotate(45deg);
+          width: 45%;
       }
     }
   `}
@@ -162,17 +138,18 @@ export const HeadNav = styled.nav`
   flex-direction: column;
   width: 100%;
   position: absolute;
-  left: 0;
-  top: 80px;
-  padding: 15px 40px;
+  left: -100%;
+  top: 0;
+  padding: 100px 40px;
+  z-index: -1;
   border-bottom: 5px solid #e0c47d;
-  background: ${({ theme }) => theme.colors.white};
+  background: #003f7d;
   font-size: 20px;
   font-weight: normal;
   line-height: normal;
   justify-content: flex-end;
   transform-origin: 0% 0%;
-  transform: translate(-100%, 0);
+  transform: translateX(-100%);
   transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
 
   ${({ theme }) => theme.mediaQueries.lg} {
@@ -194,6 +171,7 @@ export const HeadNav = styled.nav`
   }
 
   &.active {
-    transform: none;
+    transform: translateX(0);
+    left: 0;
   }
 `;

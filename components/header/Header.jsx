@@ -24,7 +24,7 @@ import { HamburgerMenu, HamburgerItem, HeadNav, NavLink } from "./HeaderStyled";
 import CurrencySelector from "./CurrencySelector";
 
 const Header = ({ ...props }) => {
-  const { locale } = props
+  const { locale } = props;
   const t = useTranslations();
   const pathName = usePathname();
 
@@ -206,27 +206,19 @@ const Header = ({ ...props }) => {
                 {/* <NavLink href="/galeri">Fotoğraflar</NavLink> */}
                 {/* <NavLink href="/galeri/videolar">Videolar</NavLink> */}
                 <NavLink href="/iletisim">{t("contact")}</NavLink>
-              </HeadNav>{" "}
+              </HeadNav>
             </View>
-            <View display="flex" height="100%" alignItems="center">
-              <Button as="button" variant="wp">
-                <WpIcon />
-              </Button>
-            </View>
-            <View
-              display={["flex", "flex", "none"]}
-              alignItems="center"
-              justifyContent="center"
-              height="100%"
-              width="80px"
-              backgroundColor="#fff"
-            >
+            <View display="flex" alignItems="center">
+              <View display="flex" height="100%" alignItems="center">
+                <Button as="button" variant="wp">
+                  <WpIcon />
+                </Button>
+              </View>
               <HamburgerMenu
-                aria-label="Menü"
+                aria-label="Menu"
                 isOpen={isOpen}
                 onClick={toggleMenu}
               >
-                <HamburgerItem />
                 <HamburgerItem />
                 <HamburgerItem />
               </HamburgerMenu>
