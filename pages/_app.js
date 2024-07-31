@@ -46,10 +46,9 @@ function CustomApp({ Component, pageProps, globalProps, locale }) {
 }
 
 CustomApp.getInitialProps = async (ctx) => {
-  const appProps = await App.getInitialProps(ctx);
   const locale = ctx?.router?.locale || 'en'
 
-  const messages = await getLocaleStatic(locale);
+  const [appProps, messages] = await Promise.all([App.getInitialProps(ctx), getLocaleStatic(locale)]);
 
   return {
     ...appProps,

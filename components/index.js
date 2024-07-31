@@ -35,3 +35,5 @@ export { default as FieldArea } from "./field-area/FieldArea";
 export { default as Icon } from "./icon/Icon";
 export { default as TextField } from "./text-field/TextField";
 export { default as PersonSelect } from "./person-select/PersonSelect";
+export { default as Price } from "./price/Price";
+export { default as Skeleton } from "./skeleton/Skeleton";

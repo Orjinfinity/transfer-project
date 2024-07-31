@@ -16,6 +16,7 @@ import {
   TextField,
   FieldArea,
   Icon,
+  Price,
 } from "@/components";
 import { WizardProvider } from "wizardcontext/WizardContext";
 import { useWizardContext } from "wizardcontext/WizardContext";
@@ -38,6 +39,7 @@ const FEATURES_ICON = {
 };
 
 const ServiceItem = ({ service }) => {
+  const t = useTranslations();
   const { selectService, selectedService, locale = "tr" } = useWizardContext();
   const currentService = selectedService[service._id] || {
     outbound: 0,
@@ -63,13 +65,16 @@ const ServiceItem = ({ service }) => {
         <View as="h5">{service.name[locale]}</View>
         <View as="p">{service.description[locale]}</View>
         <Text mt="10px" color="red" fontWeight="bold">
-          Fiyat: {service.price} TL
+          Fiyat: <Price value={service.price} />
         </Text>
         <Text color="red" fontWeight="bold">
-          Toplam:
-          {service.price *
-            (currentService.outbound + currentService.return || 1)}
-          TL
+          {t('total')}:
+          <Price
+            value={
+              service.price *
+              (currentService.outbound + currentService.return || 1)
+            }
+          />
         </Text>
       </View>
       <View display="flex" justifyContent="flex-end">
@@ -244,7 +249,7 @@ const VehicleItem = ({ vehicle, onSelect }) => {
                 display="inline-block"
                 backgroundColor="orange"
               >
-                {vehiclePrice?.price} ₺
+                <Price value={vehiclePrice?.price} />
               </View>
             </View>
 
@@ -370,7 +375,7 @@ const StepLeft = () => {
             p="20px"
             display="flex"
             alignItems="center"
-            justifyContent="space-between"  
+            justifyContent="space-between"
           >
             <View color="#fff" fontWeight="bold">
               {t("from")}
@@ -570,7 +575,7 @@ const StepLeft = () => {
               </View>
             </View>
             <Text textAlign="right" as="span" fontWeight="bold">
-              {selectedVehicle?.price} ₺
+              <Price value={selectedVehicle?.price} />
             </Text>
           </View>
         </View>
@@ -619,16 +624,21 @@ const StepLeft = () => {
                   <table>
                     <tr>
                       <td>Price :</td>
-                      <td>{service?.price} ₺</td>
+                      <td>
+                        <Price value={service?.price} />
+                      </td>
                     </tr>
                     <tr>
                       <td>Total Price :</td>
                       <td>
                         <Text as="span" fontWeight="bold">
-                          {service?.price *
-                            ((service?.outbound || 0) +
-                              (service?.return || 0))}{" "}
-                          ₺
+                          <Price
+                            value={
+                              service?.price *
+                              ((service?.outbound || 0) +
+                                (service?.return || 0))
+                            }
+                          />
                         </Text>
                       </td>
                     </tr>
@@ -650,7 +660,7 @@ const StepLeft = () => {
         width={["350px", "350px", "100%"]}
       >
         <View>{t("total")}</View>
-        <View fontWeight="bold">{total} TL</View>
+        <View fontWeight="bold"><Price value={total} /></View>
       </View>
       <View width={["350px", "350px", "100%"]} m="30px auto">
         <View as="h5" my="10px" fontSize="20px" fontWeight="bold">

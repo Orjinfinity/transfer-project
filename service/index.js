@@ -124,3 +124,12 @@ export const createTransfer = async (transferData) => {
 
   return await response.json();
 };
+
+export const getExchangeRates = async () => {
+  const response = await fetch(`${baseUrl}/getExchangeRates`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch destinations services');
+  }
+
+  return response.json();
+};

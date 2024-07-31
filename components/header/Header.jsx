@@ -1,11 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useLockedBody } from "@/hooks";
-import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/router";
-
-import Icon from "../icon/Icon";
-
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   View,
@@ -16,7 +12,6 @@ import {
   Section,
   Button,
   Container,
-  Select,
 } from "@/components";
 
 import TrFlag from "@/assets/icons/tr-flag.svg";
@@ -25,15 +20,13 @@ import DeFlag from "@/assets/icons/de-flag.svg";
 import RuFlag from "@/assets/icons/ru-flag.svg";
 import WpIcon from "@/assets/icons/wp.svg";
 
-const StyledIcon = styled(Icon)`
-  flex-shrink: 0;
-`;
-
 import { HamburgerMenu, HamburgerItem, HeadNav, NavLink } from "./HeaderStyled";
+import CurrencySelector from "./CurrencySelector";
 
 const Header = ({ ...props }) => {
+  const { locale } = props
   const t = useTranslations();
-  const { locale, route } = useRouter();
+  const pathName = usePathname();
 
   const [navbar, setNavbar] = useState(false);
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
@@ -133,14 +126,14 @@ const Header = ({ ...props }) => {
               >
                 <View className="flags">
                   <Link
-                    href={route}
+                    href={pathName}
                     locale="en"
                     border={locale === "en" ? "1px solid #fff" : "0"}
                   >
                     <EnFlag className="flag" />
                   </Link>
                   <Link
-                    href={route}
+                    href={pathName}
                     locale="de"
                     border={locale === "de" ? "1px solid #fff" : "0"}
                   >
@@ -153,51 +146,7 @@ const Header = ({ ...props }) => {
                   gridTemplateColumns="1fr "
                   gridGap="15px"
                 >
-                  <Select
-                    center
-                    buttonProps={{
-                      p: "0",
-                      color: "red",
-                      fontSize: "14px",
-                    }}
-                    placeholder="Seçiniz"
-                    renderSelectToggle={({
-                      toggleSelect,
-                      selectedOptions,
-                      placeholder,
-                      isOpen,
-                    }) => {
-                      return (
-                        <View
-                          background="rgba(255, 255, 255, 0.2)"
-                          borderRadius="100px"
-                          p="4px"
-                          display="flex"
-                          alignItems="center"
-                          onClick={toggleSelect}
-                        >
-                          <View
-                            display="flex"
-                            alignItems="flex-start"
-                            flexDirection="column"
-                            marginLeft="10px"
-                          >
-                            {selectedOptions?.label || (
-                              <View color="white">€ EUR</View>
-                            )}
-                          </View>
-                          <StyledIcon
-                            color="white"
-                            icon={isOpen ? "chevron-up" : "chevron-down"}
-                          />
-                        </View>
-                      );
-                    }}
-                  >
-                    {/* <Select.Option value="TRY" label="₺ TRY" /> */}
-                    <Select.Option value="EUR" label="€ EUR" />
-                    <Select.Option value="USD" label="$ USD" />
-                  </Select>
+                  <CurrencySelector />
                   {/* <Link href="tel:111111" display="flex" justifyContent="flex-end">
                 <View display="flex" alignItems="center">
                   <Location />

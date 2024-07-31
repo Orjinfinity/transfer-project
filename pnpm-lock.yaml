@@ -38,6 +38,9 @@ dependencies:
   date-fns:
     specifier: ^3.6.0
     version: 3.6.0
+  dinero.js:
+    specifier: ^1.9.1
+    version: 1.9.1
   editorjs-parser:
     specifier: ^1.5.3
     version: 1.5.3
@@ -56,6 +59,9 @@ dependencies:
   icomoon-react:
     specifier: ^3.0.0
     version: 3.0.0
+  js-cookie:
+    specifier: ^3.0.5
+    version: 3.0.5
   moment:
     specifier: ^2.29.4
     version: 2.29.4
@@ -2790,6 +2796,10 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: false
 
+  /dinero.js@1.9.1:
+    resolution: {integrity: sha512-1HXiF2vv3ZeRQ23yr+9lFxj/PbZqutuYWJnE0qfCB9xYBPnuaJ8lXtli1cJM0TvUXW1JTOaePldmqN5JVNxKSA==}
+    dev: false
+
   /dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
@@ -3917,6 +3927,11 @@ packages:
       has-symbols: 1.0.3
       reflect.getprototypeof: 1.0.6
       set-function-name: 2.0.2
+    dev: false
+
+  /js-cookie@3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
     dev: false
 
   /js-sdsl@4.4.2:

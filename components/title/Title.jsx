@@ -46,13 +46,12 @@ const titleVariant = variant({
 
 const Title = styled("h1", { shouldForwardProp })`
   color: #000;
+  line-height: 1em;
   ${({ theme, underLineColor, size }) => {
     if (underLineColor) {
       return `
-       
-      
-        border-bottom:3px solid ${theme.colors[underLineColor]};
-        padding-bottom:5px;
+        border-bottom: 3px solid ${theme.colors[underLineColor]};
+        padding-bottom: 5px;
       `;
     }
 
@@ -60,7 +59,12 @@ const Title = styled("h1", { shouldForwardProp })`
       return sizeVariant;
     }
   }}
-  ${titleVariant} ${space} ${typography} ${color} ${position} ${flexbox};
+  ${titleVariant}
+  ${space}
+  ${typography}
+  ${color}
+  ${position}
+  ${flexbox}
 `;
 
 Title.defaultProps = {
