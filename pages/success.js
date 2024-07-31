@@ -38,7 +38,7 @@ const SuccessPage = () => {
               </Title>
 
               <Text color="#000" mt="0px" fontSize="18px" lineHeight="2">
-                {t("emai_send_success_message")}
+                {t("email_send_success_message")}
               </Text>
 
               <View mt="50px">
