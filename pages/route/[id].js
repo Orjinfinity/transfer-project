@@ -277,11 +277,11 @@ const VehicleItem = ({ vehicle, onSelect }) => {
       <View>
         <div className="vehicle-info">
           <h3>Hizmet Bilgileri</h3>
-          <div className="label">{t('brand')}</div>
-          <div className="label">{t('model')}</div>
-          <div className="label">{t('type')}</div>
-          <div className="label">{t('passengers-count')}</div>
-          <div className="label">{t('type')}</div>
+          <div className="label">{t("brand")}</div>
+          <div className="label">{t("model")}</div>
+          <div className="label">{t("type")}</div>
+          <div className="label">{t("passengers-count")}</div>
+          <div className="label">{t("type")}</div>
           <div className="value">{vehicle.brand}</div>
           <div className="value">{vehicle.model}</div>
           <div className="value">{vehicle.type}</div>
@@ -291,7 +291,7 @@ const VehicleItem = ({ vehicle, onSelect }) => {
         <div className="vehicle-description">
           {vehicle.features && (
             <div>
-              <h5>{t('features')}:</h5>
+              <h5>{t("features")}:</h5>
               <ul>
                 {vehicle.features.map((feature, index) => (
                   <li key={index}>
@@ -784,7 +784,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
         router.push(`/success?reservationId=${res.reservationCode}`);
       }
     } catch (error) {
-      alert(error.message);
+      router.push(`/error?reservationId=${res.reservationCode}`);
       console.error(error);
     } finally {
       setIsLoad(false);

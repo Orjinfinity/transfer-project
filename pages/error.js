@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Section, Title, Container, View, Image, Text, Link } from "components";
 
-const SuccessPage = () => {
+const ErrorPage = () => {
   return (
     <>
       <Head>
@@ -19,7 +19,10 @@ const SuccessPage = () => {
             alignItems="center"
           >
             <View mt="50px">
-              <Image width={["100%", "100%", "505px"]} src="/success-img.png" />
+              <Image
+                width={["100%", "100%", "505px"]}
+                src="/unsuccessfull-img.png"
+              />
             </View>
             <View
               height="100%"
@@ -30,13 +33,13 @@ const SuccessPage = () => {
                 mt="20px"
                 fontSize={["30px", "30px", "32px"]}
                 fontWeight="bold"
-                color="#003F7D"
+                color="#FF4B55"
               >
-                Reservation Successful!
+                Reservation Unsuccessful!
               </Title>
 
               <Text color="#000" mt="0px" fontSize="18px" lineHeight="2">
-                You will get a confirmation e-mail shortly!
+                Please try again or contact us
               </Text>
 
               <View mt="50px">
@@ -60,4 +63,4 @@ const SuccessPage = () => {
   );
 };
 
-export default SuccessPage;
+export default ErrorPage;
