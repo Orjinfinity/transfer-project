@@ -202,7 +202,6 @@ const Header = ({ ...props }) => {
                 <NavLink href="/">{t("home_page")}</NavLink>
                 <NavLink href="/aboutus">{t("about_page")}</NavLink>
                 {/* <NavLink href="/ekibimiz">Ekibimiz</NavLink> */}
-                <NavLink href="/hizmetler">{t("services")}</NavLink>
                 <NavLink href="/gallery">{t("gallery")}</NavLink>
                 {/* <NavLink href="/galeri/videolar">Videolar</NavLink> */}
                 <NavLink href="/iletisim">{t("contact")}</NavLink>

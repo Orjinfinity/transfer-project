@@ -55,154 +55,154 @@ const ServiceItem = ({ service }) => {
       border="1px solid #adadad"
       pt="0px"
       pr="0px"
-     display="flex"
-     flexDirection={["column", "column", "column"]}
+      display="flex"
+      flexDirection={["column", "column", "column"]}
     >
-           <View display="flex" order="3" >
-            
-           <View
-        borderTop="1px solid #adadad"
-        p="10px 44px"
+      <View display="flex" order="3">
+        <View
+          borderTop="1px solid #adadad"
+          p="10px 44px"
+          display="flex"
+          width="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <View textAlign="center">
+            {t("departure")}
+            <View
+              display="flex"
+              alignItems="stretch"
+              border="1px solid #ccc"
+              borderRadius="3px"
+              padding="5px"
+              overflow="hidden"
+            >
+              <Button
+                style={{
+                  background: "red",
+                  border: "none",
+                  color: "#fff",
+                  borderRadius: "3px",
+                  width: "30px",
+                  height: "30px",
+                  flexShrink: "0",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() => handleSelectService("decrement", "outbound")}
+              >
+                -
+              </Button>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  border: "none",
+                  padding: "1px 10px",
+                  width: "30px",
+                }}
+              >
+                {currentService.outbound}
+              </span>
+              <Button
+                style={{
+                  padding: "5px 10px",
+                  background: "green",
+                  border: "none",
+                  color: "#fff",
+                  borderRadius: "3px",
+                  width: "30px",
+                  height: "30px",
+                  flexShrink: "0",
+                }}
+                onClick={() => handleSelectService("increment", "outbound")}
+              >
+                +
+              </Button>
+            </View>
+          </View>
+          <View textAlign="center" ml="20px">
+            {t("return")}
+
+            <View
+              display="flex"
+              alignItems="stretch"
+              border="1px solid #ccc"
+              borderRadius="3px"
+              padding="5px"
+              overflow="hidden"
+            >
+              <Button
+                style={{
+                  background: "red",
+                  border: "none",
+                  color: "#fff",
+                  borderRadius: "3px",
+                  width: "30px",
+                  height: "30px",
+                  flexShrink: "0",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() => handleSelectService("decrement", "return")}
+              >
+                -
+              </Button>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  border: "none",
+                  padding: "1px 10px",
+                  width: "30px",
+                }}
+              >
+                {currentService.return}
+              </span>
+              <Button
+                style={{
+                  padding: "5px 10px",
+                  background: "green",
+                  border: "none",
+                  color: "#fff",
+                  borderRadius: "3px",
+                  width: "30px",
+                  height: "30px",
+                  flexShrink: "0",
+                }}
+                onClick={() => handleSelectService("increment", "return")}
+              >
+                +
+              </Button>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
         display="flex"
-        width="100%"
+        flexDirection={["column", "column", "row"]}
         alignItems="center"
-        justifyContent="center"
-        
       >
-        <View textAlign="center">
-          Gidiş
-          <View
-            display="flex"
-            alignItems="stretch"
-            border="1px solid #ccc"
-            borderRadius="3px"
-            padding="5px"
-            overflow="hidden"
-          >
-            <Button
-              style={{
-                background: "red",
-                border: "none",
-                color: "#fff",
-                borderRadius: "3px",
-                width: "30px",
-                height: "30px",
-                flexShrink: "0",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={() => handleSelectService("decrement", "outbound")}
-            >
-              -
-            </Button>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                border: "none",
-                padding: "1px 10px",
-                width: "30px",
-              }}
-            >
-              {currentService.outbound}
-            </span>
-            <Button
-              style={{
-                padding: "5px 10px",
-                background: "green",
-                border: "none",
-                color: "#fff",
-                borderRadius: "3px",
-                width: "30px",
-                height: "30px",
-                flexShrink: "0",
-              }}
-              onClick={() => handleSelectService("increment", "outbound")}
-            >
-              +
-            </Button>
-          </View>
-        </View>
-        <View textAlign="center" ml="20px">
-          Dönüş
-          <View
-            display="flex"
-            alignItems="stretch"
-            border="1px solid #ccc"
-            borderRadius="3px"
-            padding="5px"
-            overflow="hidden"
-          >
-            <Button
-              style={{
-                background: "red",
-                border: "none",
-                color: "#fff",
-                borderRadius: "3px",
-                width: "30px",
-                height: "30px",
-                flexShrink: "0",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={() => handleSelectService("decrement", "return")}
-            >
-              -
-            </Button>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                border: "none",
-                padding: "1px 10px",
-                width: "30px",
-              }}
-            >
-              {currentService.return}
-            </span>
-            <Button
-              style={{
-                padding: "5px 10px",
-                background: "green",
-                border: "none",
-                color: "#fff",
-                borderRadius: "3px",
-                width: "30px",
-                height: "30px",
-                flexShrink: "0",
-              }}
-              onClick={() => handleSelectService("increment", "return")}
-            >
-              +
-            </Button>
-          </View>
-        </View>
-      </View>
-       
-      </View>
-      <View display="flex" flexDirection={["column","column","row"]} alignItems="center"  >
-        <Image  width={["100%", "100%", "250px"]} src={service.image} />
+        <Image width={["100%", "100%", "250px"]} src={service.image} />
         <View p="10px">
-        <View as="h5">{service.name[locale]}</View>
-        <View as="p">{service.description[locale]}</View>
-        <Text mt="10px" color="red" fontWeight="bold">
-          Fiyat: <Price value={service.price} />
-        </Text>
-        <Text color="red" fontWeight="bold">
-          {t("total")}:
-          <Price
-            value={
-              service.price *
-              (currentService.outbound + currentService.return || 1)
-            }
-          />
-        </Text>
+          <View as="h5">{service.name[locale]}</View>
+          <View as="p">{service.description[locale]}</View>
+          <Text mt="10px" color="red" fontWeight="bold">
+            {t("price")}: <Price value={service.price} />
+          </Text>
+          <Text color="red" fontWeight="bold">
+            {t("total")}:
+            <Price
+              value={
+                service.price *
+                (currentService.outbound + currentService.return || 1)
+              }
+            />
+          </Text>
+        </View>
       </View>
-      </View>
-    
- 
     </View>
   );
 };
@@ -240,8 +240,12 @@ const VehicleItem = ({ vehicle, onSelect }) => {
           </View>
         ) : null}
 
-        <View flex="1" pl={["0px","0px","15px"]}justifyContent="space-between">
-          <Title as="h5" size={["md","md","xl"]} pt="15px">
+        <View
+          flex="1"
+          pl={["0px", "0px", "15px"]}
+          justifyContent="space-between"
+        >
+          <Title as="h5" size={["md", "md", "xl"]} pt="15px">
             {vehicle?.name}
           </Title>
           <View boxShadow="0 4px 8px rgba(0,0,0,0.4)" p="20px" mt="10px">
@@ -251,10 +255,10 @@ const VehicleItem = ({ vehicle, onSelect }) => {
               justifyContent="space-between"
             >
               <View>
-                <View>Çift Yön</View>
-                <View>Özel Transfer</View>
+                <View>{t("two_way")}</View>
+                <View>{t("private_transfer")}</View>
                 <View color="red" fontSize="13px" fontWeight="bold">
-                  Araç Toplam Ücret
+                {t("total_vehicle_fee")}
                 </View>
               </View>
               <View
@@ -271,8 +275,8 @@ const VehicleItem = ({ vehicle, onSelect }) => {
 
             <View mt="20px">
               <ul>
-                <li>Araçta şoföre ödeme opsiyonu</li>
-                <li>Koşulsuz iptal hakkı</li>
+                <li> {t("payment_driver_vehicle")}</li>
+                <li>{t("cancel_right")}</li>
               </ul>
             </View>
             <Button
@@ -289,15 +293,15 @@ const VehicleItem = ({ vehicle, onSelect }) => {
               p="10px 20px"
               color="#fff"
             >
-              Bu Aracı Seç
+             {t("pick_vehicle")}
             </Button>
           </View>
         </View>
       </View>
 
-      <View >
-        <View overflow="scroll" className="vehicle-info" >
-          <h3>{t('service_information')}</h3>
+      <View>
+        <View overflow="scroll" className="vehicle-info">
+          <h3>{t("service_information")}</h3>
           <div className="label">{t("brand")}</div>
           <div className="label">{t("model")}</div>
           <div className="label">{t("type")}</div>
@@ -328,25 +332,30 @@ const VehicleItem = ({ vehicle, onSelect }) => {
   );
 };
 
-const TimeText = ({ duration, distance }) => (
-  <View
-    display="flex"
-    alignItems="start"
-    justifyContent="start"
-    flexDirection="column"
-  >
-    {distance && (
-      <Text as="span" size="sm" color="white">
-        {distance} KM
-      </Text>
-    )}
-    {duration && (
-      <Text as="span" size="xs" color="white">
-        {duration.hours} saat {duration.minutes} dakika
-      </Text>
-    )}
-  </View>
-);
+const TimeText = ({ duration, distance }) => {
+  const t = useTranslations();
+  return (
+  
+    <View
+      display="flex"
+      alignItems="start"
+      justifyContent="start"
+      flexDirection="column"
+    >
+      {distance && (
+        <Text as="span" size="sm" color="white">
+          {distance} KM
+        </Text>
+      )}
+      {duration && (
+        <Text as="span" size="xs" color="white">
+          {duration.hours} {t("hour")} {duration.minutes} {t("minute")}
+        </Text>
+      )}
+    </View>
+  );
+}
+
 
 const StepLeft = () => {
   const t = useTranslations();
@@ -378,11 +387,10 @@ const StepLeft = () => {
   );
 
   return (
-    <View >
-      <View border="1px solid #ccc" >
-        <View >
+    <View>
+      <View border="1px solid #ccc">
+        <View>
           <View
-          
             backgroundColor="#1572D3"
             p="20px"
             display="flex"
@@ -410,7 +418,8 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Gidiş
+                {t("departure")}
+
                 <View as="span" fontWeight="500">
                   {formatDateTime.dateTime(new Date(initialData?.fromDate), {
                     year: "numeric",
@@ -428,7 +437,7 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Alış Yeri
+                {t("shopping_place")}
                 <View as="span" fontWeight="500">
                   {initialData?.route?.startingPoint?.name}
                 </View>
@@ -440,7 +449,7 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Varış Yeri
+                {t("destination")}
                 <View as="span" fontWeight="500">
                   {initialData?.route?.destinationPoint?.name}
                 </View>
@@ -452,10 +461,11 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Yolcular
+                {t("passengers")}
                 <View as="span" fontWeight="500">
-                  {`${passengerAdult} Yetişkin`} / {`${passengerBaby} Bebek`} /{" "}
-                  {`${passengerChild} Çocuk`}
+                  {`${passengerAdult} ${t("adult")}`} /{" "}
+                  {`${passengerBaby} ${t("baby")}`} /{" "}
+                  {`${passengerChild} ${t("child")}`}
                 </View>
               </li>
             </ul>
@@ -491,7 +501,7 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Gidiş
+                {t("departure")}
                 <View as="span" fontWeight="500">
                   {formatDateTime.dateTime(new Date(initialData?.toDate), {
                     year: "numeric",
@@ -509,7 +519,7 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Alış Yeri
+                {t("shopping_place")}
                 <View as="span" fontWeight="500">
                   {initialData?.route?.destinationPoint?.name}
                 </View>
@@ -521,7 +531,7 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Varış Yeri
+                {t("destination")}
                 <View as="span" fontWeight="500">
                   {initialData?.route?.startingPoint?.name}
                 </View>
@@ -533,10 +543,12 @@ const StepLeft = () => {
                   fontWeight: "bold",
                 }}
               >
-                Yolcular
+                {t("passengers")}
+
                 <View as="span" fontWeight="500">
-                  {`${passengerAdult} Yetişkin`} / {`${passengerBaby} Bebek`} /{" "}
-                  {`${passengerChild} Çocuk`}
+                  {`${passengerAdult} ${t("adult")}`} /{" "}
+                  {`${passengerBaby} ${t("baby")}`} /{" "}
+                  {`${passengerChild} ${t("child")}`}
                 </View>
               </li>
             </ul>
@@ -629,19 +641,24 @@ const StepLeft = () => {
               >
                 <View pt="20px">
                   <Text fontWeight="bold">{service?.name?.[locale]}</Text>
-                  <Text>Gidiş: {service?.outbound}</Text>
-                  <Text>Dönüş: {service?.return}</Text>
+                  <Text>
+                    {" "}
+                    {t("departure")}: {service?.outbound}
+                  </Text>
+                  <Text>
+                    {t("return")}: {service?.return}
+                  </Text>
                 </View>
                 <View display="flex" justifyContent="flex-end">
                   <table>
                     <tr>
-                      <td>Price :</td>
+                      <td>{t("price")} :</td>
                       <td>
                         <Price value={service?.price} />
                       </td>
                     </tr>
                     <tr>
-                      <td>Total Price :</td>
+                      <td>{t("total_price")} :</td>
                       <td>
                         <Text as="span" fontWeight="bold">
                           <Price
@@ -678,12 +695,12 @@ const StepLeft = () => {
       </View>
       <View>
         <View as="h5" my="10px" fontSize="20px" fontWeight="bold">
-          7/24 Destek
+          24/7 {t("support")}
         </View>
         <View backgroundColor="#ffebc7" p="15px">
           <View mb="5px">
             <View display="block" pb="5px" fontWeight="bold" as="span">
-              Sorularınız için
+              {t("questions_about")}
             </View>
             <View>info@info.com</View>
           </View>
@@ -695,9 +712,9 @@ const StepLeft = () => {
               pb="10px"
               fontWeight="bold"
             >
-              Mevcut rezervasyonla ilgili soru
-            </View>
-            <View>7/24 hizmetinizdeyiz</View>
+              {t("question_about_reservation")}
+              </View>
+            <View> 24/7 {t("support")}</View>
             <View>0542 222 11 33</View>
           </View>
         </View>
@@ -731,8 +748,7 @@ const Step2 = () => {
   const { additionalServices, gotoNextStep } = useWizardContext();
 
   return (
-    <View >
-     
+    <View>
       {additionalServices?.map((service) => (
         <ServiceItem key={service._id} service={service} />
       ))}
@@ -808,7 +824,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
   };
 
   return (
-    <View width="100%"  p="0 15px" {...otherProps}>
+    <View width="100%" p="0 15px" {...otherProps}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <View background="#ffebc7" p="20px">
           <Title fontSize="20px" fontWeight="regular">
@@ -821,7 +837,6 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
           display="grid"
           overflow="hidden"
           gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
-      
           gridRowGap="20px"
           gridColumnGap="50px"
           ref={ref}
@@ -1102,8 +1117,12 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
 const Wizard = () => {
   const { step } = useWizardContext();
   return (
-    <Grid gridTemplateColumns={["1fr", "1fr", "400px 1fr"]}   alignItems="flex-start"
-    justifyContent="center" gridGap="30px">
+    <Grid
+      gridTemplateColumns={["1fr", "1fr", "400px 1fr"]}
+      alignItems="flex-start"
+      justifyContent="center"
+      gridGap="30px"
+    >
       <View m="0 auto">
         <StepLeft />
       </View>
