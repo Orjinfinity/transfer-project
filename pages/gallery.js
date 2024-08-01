@@ -4,18 +4,8 @@ import Head from "next/head";
 import React from "react";
 import Masonry from "react-responsive-masonry";
 
-import {
-  Layout,
-  Section,
-  BreadCrumb,
-  Title,
-  Container,
-  View,
-  Image,
-  Text,
-  Tag,
-  Link,
-} from "components";
+import { Section, BreadCrumb, Title, View } from "components";
+import { getGallery } from "service";
 
 const images = [
   "/img1.png",
@@ -32,7 +22,11 @@ const images = [
   "/img11.png",
 ];
 
-const GalleryPage = () => {
+const GalleryPage = ({ pageProps }) => {
+  const { gallery } = pageProps;
+
+  console.log(gallery);
+
   return (
     <>
       <Head>
@@ -64,20 +58,32 @@ const GalleryPage = () => {
           backgroundSize: "cover",
         }}
       >
-        <View display="grid" px="50px" alignItems="center">
-          <Masonry columnsCount={3} gutter="10px">
-            {images.map((image, i) => (
-              <img
-                key={i}
-                src={image}
-                style={{ width: "100%", display: "block" }}
-              />
-            ))}
-          </Masonry>
-        </View>
+        {gallery?.map?.((g) => (
+          <View display="grid" key={g._id} px="50px" alignItems="center">
+            <Masonry columnsCount={3} gutter="10px">
+              {g?.images?.map((image, i) => (
+                <img
+                  key={image?._key}
+                  src={image?.url}
+                  style={{ width: "100%", display: "block" }}
+                />
+              ))}
+            </Masonry>
+          </View>
+        ))}
       </Section>
     </>
   );
 };
 
 export default GalleryPage;
+
+export async function getServerSideProps() {
+  const gallery = await getGallery();
+
+  return {
+    props: {
+      gallery,
+    },
+  };
+}

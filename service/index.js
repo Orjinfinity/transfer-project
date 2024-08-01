@@ -33,6 +33,15 @@ export const getDestinations = async () => {
   return await response.json();
 };
 
+export const getGallery = async () => {
+  const response = await fetch(`${baseUrl}/getGallery`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch destinations');
+  }
+  return await response.json();
+};
+
+
 export const getFaqs = async (locale) => {
   const response = await fetch(`${baseUrl}/getFaqs`, {
     headers: {
