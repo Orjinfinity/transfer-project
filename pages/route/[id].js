@@ -240,8 +240,8 @@ const VehicleItem = ({ vehicle, onSelect }) => {
           </View>
         ) : null}
 
-        <View flex="1" pl="15px" justifyContent="space-between">
-          <Title as="h5" size="xl">
+        <View flex="1" pl={["0px","0px","15px"]}justifyContent="space-between">
+          <Title as="h5" size={["md","md","xl"]} pt="15px">
             {vehicle?.name}
           </Title>
           <View boxShadow="0 4px 8px rgba(0,0,0,0.4)" p="20px" mt="10px">
@@ -295,8 +295,8 @@ const VehicleItem = ({ vehicle, onSelect }) => {
         </View>
       </View>
 
-      <View>
-        <div className="vehicle-info">
+      <View >
+        <View overflow="scroll" className="vehicle-info" >
           <h3>{t('service_information')}</h3>
           <div className="label">{t("brand")}</div>
           <div className="label">{t("model")}</div>
@@ -308,7 +308,7 @@ const VehicleItem = ({ vehicle, onSelect }) => {
           <div className="value">{t(vehicle.type)}</div>
           <div className="value">{vehicle.passengerCapacity}</div>
           <div className="value">{t(vehicle.transmission)}</div>
-        </div>
+        </View>
         <div className="vehicle-description">
           {vehicle.features && (
             <div>
@@ -715,7 +715,7 @@ const Step1 = () => {
   };
 
   return (
-    <View>
+    <View p="0 20px">
       {vehicles?.map((vehicle) => (
         <VehicleItem
           key={vehicle._id}
@@ -808,7 +808,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
   };
 
   return (
-    <View width="100%" {...otherProps}>
+    <View width="100%"  p="0 15px" {...otherProps}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <View background="#ffebc7" p="20px">
           <Title fontSize="20px" fontWeight="regular">
@@ -819,6 +819,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
           mt="20px"
           mb="20px"
           display="grid"
+          overflow="hidden"
           gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
       
           gridRowGap="20px"
