@@ -2,30 +2,13 @@ import { useState } from "react";
 import Head from "next/head";
 
 import React from "react";
-import Masonry from "react-responsive-masonry";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 import { Section, BreadCrumb, Title, View } from "components";
 import { getGallery } from "service";
 
-const images = [
-  "/img1.png",
-
-  "/img2.png",
-  "/img3.png",
-  "/img4.png",
-  "/img5.png",
-  "/img6.png",
-  "/img7.png",
-  "/img8.png",
-  "/img9.png",
-  "/img10.png",
-  "/img11.png",
-];
-
 const GalleryPage = ({ pageProps }) => {
   const { gallery } = pageProps;
-
-  console.log(gallery);
 
   return (
     <>
@@ -52,15 +35,16 @@ const GalleryPage = ({ pageProps }) => {
           with every journey
         </View>
       </BreadCrumb>
-      <Section
-        my="55px"
-        style={{
-          backgroundSize: "cover",
-        }}
-      >
+      <Section my="55px">
         {gallery?.map?.((g) => (
-          <View display="grid" key={g._id} px="50px" alignItems="center">
-            <Masonry columnsCount={3} gutter="10px">
+          <ResponsiveMasonry
+            columnsCountBreakPoints={{
+              350: 1,
+              750: 2,
+              900: 3,
+            }}
+          >
+            <Masonry gutter="10px">
               {g?.images?.map((image, i) => (
                 <img
                   key={image?._key}
@@ -69,7 +53,7 @@ const GalleryPage = ({ pageProps }) => {
                 />
               ))}
             </Masonry>
-          </View>
+          </ResponsiveMasonry>
         ))}
       </Section>
     </>
