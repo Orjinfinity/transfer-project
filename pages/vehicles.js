@@ -30,8 +30,6 @@ const VehiclesPage = ({ pageProps }) => {
   const t = useTranslations();
   const { vehicles } = pageProps;
 
-  console.log(vehicles, "vehicles");
-
   return (
     <>
       <Head>
@@ -101,7 +99,7 @@ const VehiclesPage = ({ pageProps }) => {
 
 export default VehiclesPage;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const vehicles = await getVehicles();
 
   return {
