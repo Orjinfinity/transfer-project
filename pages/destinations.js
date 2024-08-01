@@ -131,7 +131,7 @@ const DestinationsPage = ({ pageProps }) => {
 
 export default DestinationsPage;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const destinations = await getDestinations();
 
   return {
