@@ -12,7 +12,6 @@ import { getFaqs } from "service";
 const FaqPage = ({ pageProps }) => {
   const { faqs } = pageProps;
 
-  console.log(faqs);
   const [activeTab, setActiveTab] = useState("During the Transfer");
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -512,8 +511,8 @@ const FaqPage = ({ pageProps }) => {
 
 export default FaqPage;
 
-export async function getStaticProps() {
-  const faqs = await getFaqs();
+export async function getServerSideProps({ locale }) {
+  const faqs = await getFaqs(locale);
 
   return {
     props: {
