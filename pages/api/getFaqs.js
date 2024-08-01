@@ -13,9 +13,12 @@ export default async function handler(req, res) {
   try {
     const faqs = await client.fetch(query);
 
+    let categories = []
+
     const groupedFaqs = faqs.reduce((acc, faq) => {
       if (!acc[faq.category]) {
         acc[faq.category] = [];
+        categories.push(faq.category);
       }
       acc[faq.category].push({
         question: faq.question,
@@ -24,7 +27,10 @@ export default async function handler(req, res) {
       return acc;
     }, {});
 
-    res.status(200).json(groupedFaqs);
+    res.status(200).json({
+      categories,
+      faqs: groupedFaqs
+    });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: 'Internal Server Error' });

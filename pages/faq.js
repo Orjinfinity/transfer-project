@@ -1,344 +1,60 @@
 import { useState } from "react";
 import Head from "next/head";
-import {
-  Section,
-  BreadCrumb,
-  Title,
-  Container,
-  View,
-} from "components";
+import { Section, BreadCrumb, Title, Container, View } from "components";
 import { getFaqs } from "service";
+import { useTranslations } from "next-intl";
 
 const FaqPage = ({ pageProps }) => {
-  const { faqs } = pageProps;
+  const { faq } = pageProps;
 
-  const [activeTab, setActiveTab] = useState("During the Transfer");
+  const t = useTranslations();
+  const [activeTab, setActiveTab] = useState();
   const [activeIndex, setActiveIndex] = useState(null);
 
   const handleToggle = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "Making a booking":
-        return (
+  const renderContent = (category, values) => {
+    if (activeTab !== category) return null;
+
+    return values.map(({ question, answer }, index) => (
+      <View
+        key={question}
+        width="100%"
+        fontSize="22px"
+        py="48px"
+        borderBottom="1px solid #D9DBE9"
+      >
+        <View
+          width="100%"
+          display="flex"
+          fontWeight="bold"
+          color={activeIndex === index ? "#FD7702" : "#000"}
+          justifyContent="space-between"
+          onClick={() => handleToggle(index)}
+          style={{ cursor: "pointer" }}
+        >
+          {question}
+          {activeIndex === index ? (
+            <span style={{ cursor: "pointer" }}> - </span>
+          ) : (
+            <span style={{ cursor: "pointer" }}> + </span>
+          )}
+        </View>
+        {activeIndex === index && (
           <View
-            width={["300px", "300px", "700px"]}
-            display="flex"
-            m="0 auto"
-            alignItems="center"
-            justifyContent="center"
+            maxWidth="545px"
+            fontSize="18px"
+            color="#8E8E8E"
+            as="p"
+            mt="13px"
           >
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 0 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(0)}
-              >
-                How do I make a booking?{" "}
-                {activeIndex === 0 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 0 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  You can make a booking through our website or mobile app.
-                </View>
-              )}
-            </View>
-            {/* Add more FAQ items for 'Making a booking' */}
+            {answer}
           </View>
-        );
-      case "Payment & Refund":
-        return (
-          <View
-            width={["300px", "300px", "700px"]}
-            display="flex"
-            m="0 auto"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 0 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(0)}
-              >
-                How can I get a refund?{" "}
-                {activeIndex === 0 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 0 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  Refunds are processed within 5-7 business days.
-                </View>
-              )}
-            </View>
-            {/* Add more FAQ items for 'Payment & Refund' */}
-          </View>
-        );
-      case "Amending & Cancellation":
-        return (
-          <View
-            width={["300px", "300px", "700px"]}
-            display="flex"
-            m="0 auto"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 0 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(0)}
-              >
-                How can I amend my booking?{" "}
-                {activeIndex === 0 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 0 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  You can amend your booking through your account dashboard.
-                </View>
-              )}
-            </View>
-            {/* Add more FAQ items for 'Amending & Cancellation' */}
-          </View>
-        );
-      case "During the Transfer":
-        return (
-          <View
-            width={["300px", "300px", "700px"]}
-            display="flex"
-            flexDirection="column"
-            m="0 auto"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 0 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(0)}
-              >
-                What Should I Do If The Plane Delays?{" "}
-                {activeIndex === 0 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 0 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  We track the plane with the Flight Number. In any case, the
-                  driver will be waiting at the exit.
-                </View>
-              )}
-            </View>
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 1 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(1)}
-              >
-                How can I find you at the airport?{" "}
-                {activeIndex === 1 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 1 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  Our driver will be holding a sign with your name at the
-                  arrivals hall.
-                </View>
-              )}
-            </View>
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 2 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(2)}
-              >
-                How can I find the car in the hotel?{" "}
-                {activeIndex === 2 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 2 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  Our car will be waiting at the hotel entrance.
-                </View>
-              )}
-            </View>
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 3 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(3)}
-              >
-                What happens if I've lost my luggage?{" "}
-                {activeIndex === 3 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 3 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  Please contact our support team immediately for assistance.
-                </View>
-              )}
-            </View>
-            <View
-              fontSize="22px"
-              width="100%"
-              py="48px"
-              borderBottom="1px solid #D9DBE9"
-            >
-              <View
-                width="100%"
-                display="flex"
-                fontWeight="bold"
-                color={activeIndex === 4 ? "#FD7702" : "#000"}
-                justifyContent="space-between"
-                onClick={() => handleToggle(4)}
-              >
-                Is There a Baby Seat in the Car?{" "}
-                {activeIndex === 4 ? (
-                  <span style={{ cursor: "pointer" }}> - </span>
-                ) : (
-                  <span style={{ cursor: "pointer" }}> + </span>
-                )}
-              </View>
-              {activeIndex === 4 && (
-                <View
-                  maxWidth="545px"
-                  fontSize="18px"
-                  color="#8E8E8E"
-                  as="p"
-                  mt="13px"
-                >
-                  Yes, we provide baby seats upon request. Please mention this
-                  during your booking.
-                </View>
-              )}
-            </View>
-          </View>
-        );
-      default:
-        return null;
-    }
+        )}
+      </View>
+    ));
   };
 
   return (
@@ -381,43 +97,35 @@ const FaqPage = ({ pageProps }) => {
               <View
                 className="faq-tabs"
                 display="flex"
+                justifyContent="space-around"
                 flexDirection={["column", "column", "row"]}
-                mr={["20px", "20px", "0px"]}
               >
-                <button
-                  className={`faq-tab ${
-                    activeTab === "Making a booking" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("Making a booking")}
-                >
-                  Making a booking
-                </button>
-                <button
-                  className={`faq-tab ${
-                    activeTab === "Payment & Refund" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("Payment & Refund")}
-                >
-                  Payment & Refund
-                </button>
-                <button
-                  className={`faq-tab ${
-                    activeTab === "Amending & Cancellation" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("Amending & Cancellation")}
-                >
-                  Amending & Cancellation
-                </button>
-                <button
-                  className={`faq-tab ${
-                    activeTab === "During the Transfer" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("During the Transfer")}
-                >
-                  During the Transfer
-                </button>
+                {faq?.categories?.map((category) => (
+                  <button
+                    className={`faq-tab ${
+                      activeTab === category ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveTab(category);
+                      setActiveIndex(null);
+                    }}
+                  >
+                    {t(category)}
+                  </button>
+                ))}
               </View>
-              {renderContent()}
+              <View
+                maxWidth="700px"
+                display="flex"
+                flexDirection="column"
+                m="0 auto"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {faq?.categories?.map((category) =>
+                  renderContent(category, faq?.faqs[category])
+                )}
+              </View>
               <style jsx>{`
                 .faq-container {
                   width: 100%;
@@ -429,6 +137,7 @@ const FaqPage = ({ pageProps }) => {
                   justify-content: space-around;
                   margin-bottom: 20px;
                 }
+
                 .faq-item {
                   border-bottom: 1px solid #ddd;
                   width: 100%;
@@ -512,11 +221,11 @@ const FaqPage = ({ pageProps }) => {
 export default FaqPage;
 
 export async function getServerSideProps({ locale }) {
-  const faqs = await getFaqs(locale);
+  const faq = await getFaqs(locale);
 
   return {
     props: {
-      faqs,
+      faq,
     },
   };
 }
