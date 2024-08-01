@@ -281,7 +281,7 @@ const VehicleItem = ({ vehicle, onSelect }) => {
 
       <View>
         <div className="vehicle-info">
-          <h3>Hizmet Bilgileri</h3>
+          <h3>{t('service_information')}</h3>
           <div className="label">{t("brand")}</div>
           <div className="label">{t("model")}</div>
           <div className="label">{t("type")}</div>
@@ -289,9 +289,9 @@ const VehicleItem = ({ vehicle, onSelect }) => {
           <div className="label">{t("type")}</div>
           <div className="value">{vehicle.brand}</div>
           <div className="value">{vehicle.model}</div>
-          <div className="value">{vehicle.type}</div>
+          <div className="value">{t(vehicle.type)}</div>
           <div className="value">{vehicle.passengerCapacity}</div>
-          <div className="value">{vehicle.transmission}</div>
+          <div className="value">{t(vehicle.transmission)}</div>
         </div>
         <div className="vehicle-description">
           {vehicle.features && (

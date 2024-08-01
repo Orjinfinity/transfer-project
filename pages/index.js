@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import { setHours, setMinutes } from "date-fns";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+
 import {
   getStartingPoints,
   getDestinationPoints,
@@ -70,6 +71,16 @@ import CityCenterIcon from "@/assets/icons/city-center.svg";
 import OtherIcon from "@/assets/icons/other.svg";
 import { useTranslations } from "next-intl";
 import { Link, Price } from "components";
+
+import WifiIcon from "@/assets/icons/wifi.svg";
+import DriverIcon from "@/assets/icons/driver.svg";
+import AirIcon from "@/assets/icons/air.svg";
+
+const FEATURES_ICON = {
+  airConditioning: <AirIcon width="15px" height="15px" />,
+  wifi: <WifiIcon width="15px" height="15px" />,
+  driverInformation: <DriverIcon width="15px" height="15px" />,
+};
 
 const POINT_ICONS = {
   airport: <Airplane width="16px" height="16px" />,
@@ -870,49 +881,35 @@ export default function Home({ pageProps }) {
             justifyContent="center"
             gridGap="32px"
           >
-            {vehicles?.map((vehicle) => (
-              <LogisticsCard key={vehicle._id}>
-                {vehicle?.imageUrl ? <Image src={vehicle.imageUrl} /> : null}
-                <LogisticsCard.Title>{vehicle?.type}</LogisticsCard.Title>
+            {vehicles?.map?.((vehicle) => (
+              <LogisticsCard key={vehicle?._id}>
+                {vehicle?.imageUrl ? <Image src={vehicle?.imageUrl} /> : null}
+                <LogisticsCard.Title>{vehicle?.name}</LogisticsCard.Title>
+                <Text>{t(vehicle?.type)}</Text>
                 <View
                   display="flex"
-                  flexWrap="wrap"
+                  flexDirection="column"
                   justifyContent="space-between"
                 >
                   <LogisticsCard.Desc>
-                    <View mr="5px">
                       <User />
-                    </View>
-                    {vehicle?.passengerCapacity} Passagers
+                    {vehicle?.passengerCapacity} {t("passengers")}
                   </LogisticsCard.Desc>
                   <LogisticsCard.Desc>
-                    <View mr="5px">
                       <Auto />
-                    </View>
-                    {vehicle?.transmission}
+                    {t(vehicle?.transmission)}
                   </LogisticsCard.Desc>
-                  <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Air />
-                    </View>
-                    {vehicle?.features.includes("airConditioning")
-                      ? "Air Conditioning"
-                      : "No Air Conditioning"}
-                  </LogisticsCard.Desc>
-                  {/* <LogisticsCard.Desc>
-                    <View mr="5px">
-                      <Door />
-                    </View>
-                    {vehicle?.attributes?.has_ac} Doors
-                  </LogisticsCard.Desc> */}
+                  {vehicle.features.map((feature, index) => (
+                    <LogisticsCard.Desc key={feature}>
+                      {FEATURES_ICON[feature]} {t(feature)}
+                    </LogisticsCard.Desc>
+                  ))}
                 </View>
               </LogisticsCard>
             ))}
           </Grid>
           <View textAlign="center" mt={["30px", "30px", "64px"]}>
             <View
-              as="a"
-              href="#"
               p="19px 34px"
               display="inline-block"
               borderRadius="8px"
@@ -920,7 +917,9 @@ export default function Home({ pageProps }) {
               color="#4E4E4E"
               fontSize="14px"
             >
-              Show all vehicles{" "}
+             <Link href="/vehicles">
+             Show all vehicles
+             </Link>
             </View>
           </View>
         </Container>
