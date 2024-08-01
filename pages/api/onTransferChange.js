@@ -33,7 +33,7 @@ const handler = async (req, res) => {
   }
 
   const currentStatus = await client.fetch(
-    `*[_type == "route" && _id == $id][0]{
+    `*[_type == "transfer" && _id == $id][0]{
     status,
     user {
       _id
