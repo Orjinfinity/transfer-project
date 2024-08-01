@@ -53,32 +53,24 @@ const ServiceItem = ({ service }) => {
   return (
     <View
       border="1px solid #adadad"
-      pt="30px"
-      pr="20px"
-      display="grid"
-      gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr"]}
+      pt="0px"
+      pr="0px"
+     display="flex"
+     flexDirection={["column", "column", "column"]}
     >
-      <View width={["100%", "100%", "250px"]}>
-        <Image src={service.image} width="100%" />
-      </View>
-      <View>
-        <View as="h5">{service.name[locale]}</View>
-        <View as="p">{service.description[locale]}</View>
-        <Text mt="10px" color="red" fontWeight="bold">
-          Fiyat: <Price value={service.price} />
-        </Text>
-        <Text color="red" fontWeight="bold">
-          {t("total")}:
-          <Price
-            value={
-              service.price *
-              (currentService.outbound + currentService.return || 1)
-            }
-          />
-        </Text>
-      </View>
-      <View display="flex" justifyContent="flex-end">
+           <View display="flex" order="3" >
+            
+           <View
+        borderTop="1px solid #adadad"
+        p="10px 44px"
+        display="flex"
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        
+      >
         <View textAlign="center">
+          Gidiş
           <View
             display="flex"
             alignItems="stretch"
@@ -133,6 +125,7 @@ const ServiceItem = ({ service }) => {
           </View>
         </View>
         <View textAlign="center" ml="20px">
+          Dönüş
           <View
             display="flex"
             alignItems="stretch"
@@ -187,6 +180,29 @@ const ServiceItem = ({ service }) => {
           </View>
         </View>
       </View>
+       
+      </View>
+      <View display="flex" flexDirection={["column","column","row"]} alignItems="center"  >
+        <Image  width={["100%", "100%", "250px"]} src={service.image} />
+        <View p="10px">
+        <View as="h5">{service.name[locale]}</View>
+        <View as="p">{service.description[locale]}</View>
+        <Text mt="10px" color="red" fontWeight="bold">
+          Fiyat: <Price value={service.price} />
+        </Text>
+        <Text color="red" fontWeight="bold">
+          {t("total")}:
+          <Price
+            value={
+              service.price *
+              (currentService.outbound + currentService.return || 1)
+            }
+          />
+        </Text>
+      </View>
+      </View>
+    
+ 
     </View>
   );
 };
@@ -362,10 +378,11 @@ const StepLeft = () => {
   );
 
   return (
-    <View>
-      <View border="1px solid #ccc">
-        <View>
+    <View >
+      <View border="1px solid #ccc" >
+        <View >
           <View
+          
             backgroundColor="#1572D3"
             p="20px"
             display="flex"
@@ -714,18 +731,8 @@ const Step2 = () => {
   const { additionalServices, gotoNextStep } = useWizardContext();
 
   return (
-    <View>
-      <View
-        border="1px solid #adadad"
-        p="10px 44px"
-        display="flex"
-        justifyContent="flex-end"
-      >
-        <View display="flex">
-          <View>Gidiş</View>
-          <View ml="50px">Dönüş</View>
-        </View>
-      </View>
+    <View >
+     
       {additionalServices?.map((service) => (
         <ServiceItem key={service._id} service={service} />
       ))}
@@ -813,6 +820,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
           mb="20px"
           display="grid"
           gridTemplateColumns={["1fr", "1fr", "1fr 1fr"]}
+      
           gridRowGap="20px"
           gridColumnGap="50px"
           ref={ref}
@@ -1093,8 +1101,9 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
 const Wizard = () => {
   const { step } = useWizardContext();
   return (
-    <Grid gridTemplateColumns={["1fr", "1fr", "400px 1fr"]} gridGap="30px">
-      <View>
+    <Grid gridTemplateColumns={["1fr", "1fr", "400px 1fr"]}   alignItems="flex-start"
+    justifyContent="center" gridGap="30px">
+      <View m="0 auto">
         <StepLeft />
       </View>
       <View>
@@ -1129,7 +1138,7 @@ export default function Home({ pageProps }) {
         additionalServices={additionalServices}
         locale={locale}
       >
-        <Section my={["100px", "100px", "150px"]}>
+        <Section my={["50px", "50px", "150px"]}>
           <Container>
             <Wizard />
           </Container>
