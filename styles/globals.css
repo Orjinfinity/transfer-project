@@ -403,3 +403,44 @@ ul.lead-list li + li {
 .flag {
   width: 2em;
 }
+
+.whatsapp-chatbox {
+  position: fixed !important;
+  bottom: 0 !important; 
+  top: 0px !important;
+  right: 0 !important;
+  left: auto !important;
+  max-width: 500px !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.whatsapp-chatbox header {
+  height: 150px;
+}
+
+.whatsapp-open::before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+}
+
+#header-content {
+  transition: background-color 0.3s;
+}
+
+.whatsapp-open #header-content {
+  background-color: #045e54;
+}
+
+.whatsapp-open header nav {
+  display: none;
+}

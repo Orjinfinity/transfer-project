@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLockedBody } from "@/hooks";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
+import { FloatingWhatsApp } from "react-floating-whatsapp";
 import {
   Sidebar,
   View,
@@ -24,7 +25,7 @@ import { HamburgerMenu, HamburgerItem, HeadNav, NavLink } from "./HeaderStyled";
 import CurrencySelector from "./CurrencySelector";
 
 const Header = ({ ...props }) => {
-  const { locale } = props;
+  const { locale, contact } = props;
   const t = useTranslations();
   const pathName = usePathname();
 
@@ -165,6 +166,7 @@ const Header = ({ ...props }) => {
           position="relative"
         >
           <View
+            id="header-content"
             top={["0px", "0px", "25px"]}
             height="80px"
             borderRadius={["0px", "0px", "100px"]}
@@ -209,9 +211,29 @@ const Header = ({ ...props }) => {
             </View>
             <View display="flex" alignItems="center">
               <View display="flex" height="100%" alignItems="center">
-                <Button as="button" variant="wp">
+                <FloatingWhatsApp
+                  style={{
+                    height: "auto",
+                  }}
+                  chatboxClassName="whatsapp-chatbox"
+                  buttonStyle={{ position: "static" }}
+                  avatar="/logo-icon.png"
+                  phoneNumber={contact?.phoneNumber}
+                  accountName="Victoria Travel"
+                  chatMessage="Merhaba! 🤝 Nasıl yardımcı olabiliriz?"
+                  placeholder="Mesaj"
+                  statusMessage="Genellikle yarım saat içinde yanıt verir"
+                  notificationSound
+                  onClose={() => {
+                    document.documentElement.classList.remove("whatsapp-open");
+                  }}
+                  onClick={() => {
+                    document.documentElement.classList.add("whatsapp-open");
+                  }}
+                />
+                {/* <Button as="button" variant="wp">
                   <WpIcon />
-                </Button>
+                </Button> */}
               </View>
               <HamburgerMenu
                 aria-label="Menu"
