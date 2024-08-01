@@ -408,7 +408,7 @@ ul.lead-list li + li {
   position: fixed !important;
   bottom: 0 !important; 
   top: 0px !important;
-  right: 30px !important;
+  right: 0px !important;
   left: auto !important;
   max-width: 500px !important;
   width: 100vw !important;
@@ -416,6 +416,12 @@ ul.lead-list li + li {
   background-color: transparent !important;
   box-shadow: none !important;
   justify-content: flex-start;
+}
+
+@media (max-width: 576px) {
+  .whatsapp-chatbox {
+    right: 30px !important;
+  }
 }
 
 .whatsapp-chatbox header {
