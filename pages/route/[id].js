@@ -744,6 +744,7 @@ const Step2 = () => {
 };
 
 const Step3 = forwardRef(({ ...otherProps }, ref) => {
+  const t = useTranslations();
   const router = useRouter();
   const formatDateTime = useFormatter();
   const [isLoad, setIsLoad] = useState(false);
