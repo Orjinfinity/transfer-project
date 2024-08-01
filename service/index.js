@@ -33,6 +33,14 @@ export const getDestinations = async () => {
   return await response.json();
 };
 
+export const getFaqs = async () => {
+  const response = await fetch(`${baseUrl}/getFaqs`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch destinations');
+  }
+  return await response.json();
+};
+
 export const getSearchRoute = async (fromId, toId) => {
   const response = await fetch(`${baseUrl}/getSearchRoute?fromId=${fromId}&toId=${toId}`);
   if (!response.ok) {
@@ -127,6 +135,15 @@ export const createTransfer = async (transferData) => {
 
 export const getExchangeRates = async () => {
   const response = await fetch(`${baseUrl}/getExchangeRates`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch destinations services');
+  }
+
+  return response.json();
+};
+
+export const getContact = async () => {
+  const response = await fetch(`${baseUrl}/getContact`);
   if (!response.ok) {
     throw new Error('Failed to fetch destinations services');
   }

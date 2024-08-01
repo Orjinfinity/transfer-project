@@ -12,6 +12,10 @@ const SocialBoxItem = styled.a`
   ${layout}
   ${color}
   ${border}
+
+  &:hover {
+    color: #d6d6d689;
+  }
 `;
 
 export default SocialBoxItem;

@@ -35,7 +35,6 @@ const handler = async (req, res) => {
   // }
 
   const { body } = req;
-  console.log(body);
 
   const { _id, _type, startingPoint, destinationPoint, duration, distance } =
     body;

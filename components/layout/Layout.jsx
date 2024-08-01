@@ -11,19 +11,11 @@ const Layout = ({ children, globalProps, locale }) => {
       width="100%"
       gridTemplateAreas={`"header" "main" "footer"`}
     >
-      <Header
-        mainNavigation={globalProps?.mainNavigation}
-        pages={globalProps?.pages}
-        locale={locale}
-      />
+      <Header {...globalProps} locale={locale} />
       <main style={{ maxWidth: "100vw", overflow: "hidden", gridArea: "main" }}>
         {children}
       </main>
-      <Footer
-        footerNavigation={globalProps?.footerNavigation}
-        pages={globalProps?.pages}
-        locale={locale}
-      />
+      <Footer {...globalProps} locale={locale} />
     </View>
   );
 };

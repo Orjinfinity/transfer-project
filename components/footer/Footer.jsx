@@ -24,27 +24,35 @@ import Instagram from "../../assets/icons/instagram.svg";
 import Location from "../../assets/icons/location.svg";
 import Phone from "../../assets/icons/call.svg";
 import Mail from "../../assets/icons/sms.svg";
+import Linkedin from "../../assets/icons/linkedin.svg";
+import Social from "../../assets/icons/social.svg";
 
 import { FooterWrapper } from "./FooterStyled";
 
-const Footer = ({footerNavigation,...props}) => {
-  function divideArray(arr){
+const SOCIAL_ICONS = {
+  facebook: <Facebook />,
+  twitter: <Twitter />,
+  youtube: <Youtube />,
+  instagram: <Instagram />,
+  linkedin: <Linkedin />,
+};
 
-     const firstHalf = arr?.slice(0,6)
-     const secondHalf = arr?.slice(6,12)
+const Footer = ({ contact }) => {
+  function divideArray(arr) {
+    const firstHalf = arr?.slice(0, 6);
+    const secondHalf = arr?.slice(6, 12);
 
-     return{
+    return {
       firstHalf,
-      secondHalf
-     }
-
+      secondHalf,
+    };
   }
-  const{firstHalf,secondHalf}=divideArray(footerNavigation)
+  const { firstHalf, secondHalf } = divideArray([]);
 
   return (
     <FooterWrapper
       as="footer"
-      id="footer" 
+      id="footer"
       borderTop="2px solid rgba(0, 0, 0, .1)"
       gridArea="footer"
     >
@@ -63,40 +71,46 @@ const Footer = ({footerNavigation,...props}) => {
                 gridTemplateColumns="1fr"
                 gridRowGap="10px"
               >
-                <Link
-                  color="#D6D6D6 !important;"
-                  href="#"
-                  display="flex"
-                  alignItems="center"
-                >
-                  <Text as="span" mr="7px">
-                    <Location />
-                  </Text>
-                  ViktoryaTranfer, Central, Antalya
-                </Link>
+                {contact?.physicalAddress ? (
+                  <Link
+                    color="#D6D6D6 !important;"
+                    href="#"
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Text as="span" mr="7px">
+                      <Location />
+                    </Text>
+                    {contact.physicalAddress}
+                  </Link>
+                ) : null}
 
-                <Link
-                  color="#D6D6D6 !important;"
-                  href="tel:05336809963"
-                  display="flex"
-                  alignItems="center"
-                >
-                  <Text as="span" mr="7px">
-                    <Phone />
-                  </Text>
-                  +90 533 680 99 63
-                </Link>
-                <Link
-                  color="#D6D6D6 !important;"
-                  href="mailto:info@victoriatransfers.com"
-                  display="flex"
-                  alignItems="center"
-                >
-                  <Text as="span" mr="7px">
-                    <Mail />
-                  </Text>
-                  info@victoriatransfers.com
-                </Link>
+                {contact?.phoneNumber ? (
+                  <Link
+                    color="#D6D6D6 !important;"
+                    href={`tel:${contact.phoneNumber}`}
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Text as="span" mr="7px">
+                      <Phone />
+                    </Text>
+                    {contact.phoneNumber}
+                  </Link>
+                ) : null}
+                {contact?.emailAddress ? (
+                  <Link
+                    color="#D6D6D6 !important;"
+                    href={`mailto:${contact.emailAddress}`}
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Text as="span" mr="7px">
+                      <Mail />
+                    </Text>
+                    {contact.emailAddress}
+                  </Link>
+                ) : null}
               </View>
             </View>
             <View
@@ -114,18 +128,13 @@ const Footer = ({footerNavigation,...props}) => {
                   gridRowGap="10px"
                   color="#D6D6D6"
                 >
-                  {
-                    firstHalf?.map((item)=>{
-                      return(
-                        <Link color="#D6D6D6 !important;" href={item?.path}>
-                    
-                    {item?.title}
-                  </Link>
-                      )
-                    })
-                  }
-                  
-                
+                  {firstHalf?.map((item) => {
+                    return (
+                      <Link color="#D6D6D6 !important;" href={item?.path}>
+                        {item?.title}
+                      </Link>
+                    );
+                  })}
                 </View>
               </View>
 
@@ -138,16 +147,13 @@ const Footer = ({footerNavigation,...props}) => {
                   gridTemplateColumns="1fr"
                   gridRowGap="10px"
                 >
-                {
-                    secondHalf?.map((item)=>{
-                      return(
-                        <Link color="#D6D6D6 !important;" href={item?.path}>
-                    
-                    {item?.title}
-                  </Link>
-                      )
-                    })
-                  }
+                  {secondHalf?.map((item) => {
+                    return (
+                      <Link color="#D6D6D6 !important;" href={item?.path}>
+                        {item?.title}
+                      </Link>
+                    );
+                  })}
                 </View>
               </View>
 
@@ -165,15 +171,16 @@ const Footer = ({footerNavigation,...props}) => {
                   Follow Us
                 </Title>
                 <SocialBox>
-                  <SocialBox.Item href="/">
-                    <Facebook />
-                  </SocialBox.Item>
-                  <SocialBox.Item href="/">
-                    <Youtube />
-                  </SocialBox.Item>
-                  <SocialBox.Item href="/">
-                    <Instagram />
-                  </SocialBox.Item>
+                  {contact?.socialMedia?.map((item) => (
+                    <SocialBox.Item
+                      key={item?._key}
+                      href={item?.url}
+                      label={item?.platform}
+                      title={item?.platform}
+                    >
+                      {SOCIAL_ICONS[item?.platform] || <Social />}
+                    </SocialBox.Item>
+                  ))}
                 </SocialBox>
               </View>
             </View>

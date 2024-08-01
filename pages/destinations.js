@@ -1,30 +1,35 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
+import useSWRMutation from "swr/mutation";
 
-import React from "react";
-import Km from "../assets/icons/km.svg";
-import Clock from "../assets/icons/clock.svg";
+import Km from "assets/icons/km.svg";
+import Clock from "assets/icons/clock.svg";
 
 import {
-  Layout,
   Section,
   BreadCrumb,
   Title,
   Container,
   View,
   Image,
-  Text,
   Tag,
-  Link,
   Destinations,
   Button,
+  Price,
+  Text,
 } from "components";
+import { getDestinations, postSearchQuery } from "service";
 
-const DestinationsPage = () => {
+const DestinationsPage = ({ pageProps }) => {
+  const { trigger: postSearchQueryTrigger, isMutating: isMutatingSearchQuery } =
+  useSWRMutation("postSearchQuery", postSearchQuery);
+
+  const { destinations } = pageProps;
+
   return (
     <>
       <Head>
-        <title>VICTORIA TRANSFER - </title>
+        <title>VICTORIA TRANSFER - Destinations </title>
         <meta name="description" content="VICTORIA TRANSFER" />
       </Head>
       <BreadCrumb background="#1059A0 !important;">
@@ -52,430 +57,71 @@ const DestinationsPage = () => {
           <View
             display="grid"
             gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr 1fr"]}
-            gridGap={["30px", "30px", "16px"]}
-            gridRowGap="40px !important"
+            gridGap="16px"
             alignItems="center"
           >
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
+            {destinations?.map((destination) => (
+              <Destinations
+                key={destination?._id}
+                onClick={async () => {
+                  // const query = await postSearchQueryTrigger({
+                  //   routeId: destination._id,
+                  //   fromDate: pickupDate,
+                  //   toDate: returnDate,
+                  //   adults: passengerAdult,
+                  //   children: passengerChild,
+                  //   baby: passengerBaby,
+                  // });
+
+                  // router.push(`route/${destination._id}`);
+                }}
+              >
+                <View>
+                  <Image src={destination?.imageUrl} />
                 </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
+                <View textAlign="center" px="15px">
+                  <View fontSize="22px" color="#333333" as="h5" pt="39px">
+                    {destination?.title}
+                  </View>
                   <View
                     as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
+                    py="16px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    fontSize="22px"
                   >
-                    € 40.00
+                    Min
+                    <View
+                      as="span"
+                      ml="7px"
+                      color="#FD7702"
+                      fontSize="42px"
+                      fontWeight="bold"
+                    >
+                      <Price value={destination?.minPrice} />
+                    </View>
                   </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
+                  <View pb="30px" display="flex" justifyContent="space-between">
+                    <View>
+                      <View display="flex" alignItems="center">
+                        <Clock />
+                        <Text ml="5px">{destination?.minutes} Minutes</Text>
+                      </View>
+                    </View>
+
+                    <View>
+                      <View display="flex" alignItems="center">
+                        <Km />
+                        <Text ml="5px">{destination?.distance} KM</Text>
+                      </View>
                     </View>
                   </View>
 
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
+                  <Button mb="25px">Book Now</Button>
                 </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
-                </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
-                  <View
-                    as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
-                  >
-                    € 40.00
-                  </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
-                    </View>
-                  </View>
-
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
-                </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
-                </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
-                  <View
-                    as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
-                  >
-                    € 40.00
-                  </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
-                    </View>
-                  </View>
-
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
-                </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
-                </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
-                  <View
-                    as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
-                  >
-                    € 40.00
-                  </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
-                    </View>
-                  </View>
-
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
-                </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
-                </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
-                  <View
-                    as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
-                  >
-                    € 40.00
-                  </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
-                    </View>
-                  </View>
-
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
-                </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
-                </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
-                  <View
-                    as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
-                  >
-                    € 40.00
-                  </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
-                    </View>
-                  </View>
-
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
-                </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
-                </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
-                  <View
-                    as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
-                  >
-                    € 40.00
-                  </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
-                    </View>
-                  </View>
-
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
-                </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-            <Destinations>
-              <View>
-                <Image src="/des-img.png" />
-              </View>
-              <View textAlign="center" px="15px">
-                <View fontSize="22px" color="#333333" as="h5" pt="39px">
-                  Gazipaşa Transfer
-                </View>
-                <View
-                  as="span"
-                  py="16px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="22px"
-                >
-                  From{" "}
-                  <View
-                    as="span"
-                    ml="7px"
-                    color="#FD7702"
-                    fontSize="42px"
-                    fontWeight="bold"
-                  >
-                    € 40.00
-                  </View>
-                </View>
-                <View pb="30px" display="flex" justifyContent="space-between">
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Clock />{" "}
-                      </View>{" "}
-                      175 Min
-                    </View>
-                  </View>
-
-                  <View>
-                    <View fontSize="18px" as="span" display="flex">
-                      <View mr="5px">
-                        {" "}
-                        <Km />{" "}
-                      </View>{" "}
-                      180 Km{" "}
-                    </View>
-                  </View>
-                </View>
-
-                <Button>Book Now</Button>
-              </View>
-            </Destinations>
-          </View>
-
-          <View my="125px" textAlign="center">
-            <Tag>LOAD MORE</Tag>
+              </Destinations>
+            ))}
           </View>
         </Container>
       </Section>
@@ -484,3 +130,13 @@ const DestinationsPage = () => {
 };
 
 export default DestinationsPage;
+
+export async function getStaticProps() {
+  const destinations = await getDestinations();
+
+  return {
+    props: {
+      destinations,
+    },
+  };
+}

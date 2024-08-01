@@ -7,7 +7,7 @@ import { ThemeProviderComponent } from "@/theme";
 
 import "../styles/globals.css";
 import { Layout } from "components";
-import { getLocaleStatic } from "service";
+import { getLocaleStatic, getContact } from "service";
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
@@ -48,7 +48,7 @@ function CustomApp({ Component, pageProps, globalProps, locale }) {
 CustomApp.getInitialProps = async (ctx) => {
   const locale = ctx?.router?.locale || 'en'
 
-  const [appProps, messages] = await Promise.all([App.getInitialProps(ctx), getLocaleStatic(locale)]);
+  const [appProps, messages, contact] = await Promise.all([App.getInitialProps(ctx), getLocaleStatic(locale), getContact()]);
 
   return {
     ...appProps,
@@ -56,6 +56,7 @@ CustomApp.getInitialProps = async (ctx) => {
     globalProps: {
       messages,
       locale,
+      contact,
     },
   };
 };

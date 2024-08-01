@@ -50,6 +50,8 @@ import Air from "@/assets/icons/air.svg";
 import Auto from "@/assets/icons/auto.svg";
 import User from "@/assets/icons/user.svg";
 import Star from "@/assets/icons/star.svg";
+import Km from "assets/icons/km.svg";
+import Clock from "assets/icons/clock.svg";
 import Navigation from "@/assets/icons/navigation.svg";
 import ArrowRight from "@/assets/icons/arrow-right.svg";
 import Wallet from "@/assets/icons/wallet.svg";
@@ -67,6 +69,7 @@ import PortIcon from "@/assets/icons/port.svg";
 import CityCenterIcon from "@/assets/icons/city-center.svg";
 import OtherIcon from "@/assets/icons/other.svg";
 import { useTranslations } from "next-intl";
+import { Link, Price } from "components";
 
 const POINT_ICONS = {
   airport: <Airplane width="16px" height="16px" />,
@@ -1002,55 +1005,68 @@ export default function Home({ pageProps }) {
           </View>
 
           <Grid
-            gridTemplateColumns={["1fr", "1fr", "275px 275px 275px"]}
-            gridGap="64px"
-            justifyContent="center"
+            gridTemplateColumns={["1fr", "1fr", "1fr 1fr 1fr 1fr"]}
+            gridGap="16px"
           >
             {topDestinations?.map((destination) => (
-              <Destinations
-                key={destination?._id}
-                borderRadius="32px !important"
-              >
-                {destination?.imageUrl ? (
-                  <View>
-                    <Image src={destination?.imageUrl} />
-                  </View>
-                ) : null}
-                <View px="15px">
-                  <View
-                    fontSize="18px"
-                    pb="16px"
-                    color="#5E6282"
-                    as="h5"
-                    pt="25px"
-                  >
+              <Destinations key={destination?._id} onClick={() => {
+                router.push(`route/${destination._id}`);
+              }}>
+                <View>
+                  <Image src={destination?.imageUrl} />
+                </View>
+                <View textAlign="center" px="15px">
+                  <View fontSize="22px" color="#333333" as="h5" pt="39px">
                     {destination?.title}
                   </View>
                   <View
                     as="span"
+                    py="16px"
                     display="flex"
                     alignItems="center"
-                    fontSize="16px"
-                    pb="37px"
-                    color="#5E6282"
+                    justifyContent="center"
+                    fontSize="22px"
                   >
-                    <View pr="10px">
-                      <Navigation />
+                    Min
+                    <View
+                      as="span"
+                      ml="7px"
+                      color="#FD7702"
+                      fontSize="42px"
+                      fontWeight="bold"
+                    >
+                      <Price value={destination?.minPrice} />
                     </View>
-                    {destination?.location}
                   </View>
+                  <View pb="30px" display="flex" justifyContent="space-between">
+                    <View>
+                      <View display="flex" alignItems="center">
+                        <Clock />
+                        <Text ml="5px">{destination?.minutes} Minutes</Text>
+                      </View>
+                    </View>
+
+                    <View>
+                      <View display="flex" alignItems="center">
+                        <Km />
+                        <Text ml="5px">{destination?.distance} KM</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  <Button mb="25px">Book Now</Button>
                 </View>
               </Destinations>
             ))}
           </Grid>
 
           <View display="flex" justifyContent="center" mt="64px">
-            <View display="flex" as="a" href="#" fontSize="14px">
-              Show all destinations{" "}
+            <Link display="flex" href="/destinations" fontSize="14px">
+              Show all destinations
               <View pl="8px">
                 <ArrowRight />
               </View>
-            </View>
+            </Link>
           </View>
         </Container>
       </Section>

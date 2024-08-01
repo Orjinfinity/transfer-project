@@ -1,37 +1,44 @@
+import { min } from 'date-fns';
 import { client } from '../../lib/sanity';
 
 const getTopTransferPoints = async () => {
-  const query = `*[_type == "query"]{
+  const query = `*[_type == "query" && route->startingPoint->type == $type]{
     "_id": _id,
-    "id": route->destinationPoint->_id,
-    "name": route->destinationPoint->name
+    "startingPointId": route->startingPoint->_id,
+    "destinationPointId": route->destinationPoint->_id,
+    "distance": route->distance,
+    "duration": route->duration,
+    "name": route->destinationPoint->name,
+    "vehiclePrices": route->vehiclePrices[]{
+        price,
+        "id": vehicle->_id
+      }
   }`;
 
-  const results = await client.fetch(query);
+  const params = { type: 'airport' };
+  const results = await client.fetch(query, params);
 
   // Transfer noktalarını sayarak en çok tekrar edenleri bulalım
   const transferPointCount = results.reduce((acc, curr) => {
-    const transferPointId = curr.id;
-    const transferPointName = curr.name;
+    const transferPointId = curr.destinationPointId;
     if (transferPointId) {
       if (!acc[transferPointId]) {
-        acc[transferPointId] = { name: transferPointName, count: 0 };
+        acc[transferPointId] = { ...curr, count: 0 };
       }
       acc[transferPointId].count += 1;
     }
     return acc;
   }, {});
 
-  // Sayımları bir diziye dönüştürelim ve en çok tekrar eden 5 transfer noktasını alalım
   const topTransferPointIds = Object.keys(transferPointCount)
-    .map((id) => ({ id, count: transferPointCount[id].count }))
+    .map((id) => ({ id, ...transferPointCount[id] }))
     .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
+    .slice(0, 4);
 
   return topTransferPointIds;
 };
 
-const getDestinationDetailsByTransferPoints = async (transferPointIds) => {
+const getDestinationDetailsByTransferPoints = async (topTransferPoints) => {
   const query = `*[_type == "destination" && location._ref in $ids]{
     _id,
     title,
@@ -40,15 +47,18 @@ const getDestinationDetailsByTransferPoints = async (transferPointIds) => {
     "imageUrl": image.asset->url
   }`;
 
-  const params = { ids: transferPointIds.map(tp => tp.id) };
+  const params = { ids: topTransferPoints.map(tp => tp.id) };
   const results = await client.fetch(query, params);
 
   // Ekstra bilgileri (sayımlar) ekle
   return results.map(destination => {
-    const transferPointInfo = transferPointIds.find(tp => tp.id === destination.locationId);
+    const transferPointInfo = topTransferPoints.find(tp => tp.id === destination.locationId);
     return {
       ...destination,
-      count: transferPointInfo?.count,
+      ...transferPointInfo,
+      distance: (transferPointInfo.distance / 1000).toFixed(2),
+      minutes: Math.floor(transferPointInfo.duration / 60),
+      minPrice: Math.min(transferPointInfo.vehiclePrices.map(vp => vp.price || Infinity))
     };
   });
 };
