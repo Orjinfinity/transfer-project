@@ -14,6 +14,7 @@ export const WizardProvider = ({
   vehicles,
   additionalServices,
   locale,
+  contact,
 }) => {
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState({});
@@ -68,6 +69,7 @@ export const WizardProvider = ({
   return (
     <WizardContext.Provider
       value={{
+        contact,
         locale,
         gotoNextStep,
         gotoPrevStep,

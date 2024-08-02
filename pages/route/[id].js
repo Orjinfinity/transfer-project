@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { forwardRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useFormatter, useTranslations } from "next-intl";
+import { getContact } from "service";
 import {
   View,
   Title,
@@ -45,7 +46,6 @@ const ServiceItem = ({ service }) => {
     outbound: 0,
     return: 0,
   };
-
   const handleSelectService = (type, tripType) => {
     selectService(service, type, tripType);
   };
@@ -367,7 +367,9 @@ const StepLeft = () => {
     selectedService,
     locale = "tr",
     changeStep,
+    contact
   } = useWizardContext();
+
 
   const {
     adults: passengerAdult,
@@ -702,7 +704,7 @@ const StepLeft = () => {
             <View display="block" pb="5px" fontWeight="bold" as="span">
               {t("questions_about")}
             </View>
-            <View>info@info.com</View>
+            <View>{contact && contact?.emailAddress}</View>
           </View>
           <View>
             <View
@@ -715,7 +717,7 @@ const StepLeft = () => {
               {t("question_about_reservation")}
               </View>
             <View> 24/7 {t("support")}</View>
-            <View>0542 222 11 33</View>
+            <View>{contact && contact?.phoneNumber}</View>
           </View>
         </View>
       </View>
@@ -828,7 +830,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <View background="#ffebc7" p="20px">
           <Title fontSize="20px" fontWeight="regular">
-            Yolcu Karşılama ve İletişim Bilgileri
+            {t("passenger_reception")}
           </Title>
         </View>
         <View
@@ -861,7 +863,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea variant="bordered" error={error}>
                 <Icon icon="user" />
-                <TextField placeholder="Ad" {...field}></TextField>
+                <TextField placeholder={t("name")} {...field}></TextField>
               </FieldArea>
             )}
           />
@@ -886,7 +888,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea variant="bordered" error={error}>
                 <Icon icon="user" />
-                <TextField placeholder="Soyad" {...field}></TextField>
+                <TextField placeholder={t("surname")} {...field}></TextField>
               </FieldArea>
             )}
           />
@@ -911,7 +913,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
             render={({ field, fieldState: { error } }) => (
               <FieldArea variant="bordered" error={error}>
                 <Icon icon="email" />
-                <TextField placeholder="Email" {...field}></TextField>
+                <TextField placeholder={t("email")} {...field}></TextField>
               </FieldArea>
             )}
           />
@@ -933,7 +935,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               <FieldArea variant="bordered" error={error}>
                 <Icon icon="mobile" />
 
-                <TextField type="tel" placeholder="Telefon" {...field} />
+                <TextField type="tel" placeholder={t("phone")} {...field} />
               </FieldArea>
             )}
           />
@@ -951,7 +953,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
               <FieldArea mt="10px" variant="transparent" error={error}>
                 <Checkbox id="check-kvkk" {...field} isChecked={field.value}>
                   <Text fontSize="12px" width="400px">
-                    WhatsApp üzerinden bilgilendirme yapılmasını kabul ediyorum
+                    {t("whatsapp_info")}
                   </Text>
                 </Checkbox>
               </FieldArea>
@@ -1004,10 +1006,9 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
                 flexDirection="column"
                 alignItems="flex-start"
               >
-                <View>Havayolu şirketi</View>
+                <View>{t("air_company")}</View>
                 <View mb="20px" as="p" fontSize="13px" color="gray">
-                  Bilet bilgilerinize göre uçuşu takip edeceğiz ve sizi tam
-                  zamanında karşılayacağız{" "}
+                  {t("ticket_info")}
                 </View>
 
                 <TextField placeholder="Pegasus" {...field}></TextField>
@@ -1035,10 +1036,9 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
                 flexDirection="column"
                 alignItems="flex-start"
               >
-                <View>Bırakma yeri: Otel Adı veya Adres </View>
+                <View>{t("dropoff_location")}</View>
                 <View mb="20px" as="p" fontSize="13px" color="gray">
-                  Sizi bırakacağımız adresi ya da otel ismini yazın veya
-                  listeden seçin
+                  {t("address_name")}
                 </View>
                 <TextField placeholder="Alanya" {...field}></TextField>
               </FieldArea>
@@ -1065,7 +1065,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
                 flexDirection="column"
                 alignItems="flex-start"
               >
-                <View mb="20px">Uçuş No</View>
+                <View mb="20px">{t("flight_no")}</View>
 
                 <TextField placeholder="TK1440" {...field}></TextField>
               </FieldArea>
@@ -1092,10 +1092,10 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
                 flexDirection="column"
                 alignItems="flex-start"
               >
-                <View mb="20px">Şoföre Mesajınız </View>
+                <View mb="20px"> {t("driver_message")} </View>
 
                 <TextField
-                  placeholder="Transferiniz ile ilgili eklemek istediğiniz bilgi"
+                  placeholder={t("transfer_addinfo")}
                   {...field}
                 ></TextField>
               </FieldArea>
@@ -1106,7 +1106,7 @@ const Step3 = forwardRef(({ ...otherProps }, ref) => {
         <Button as="button" disabled={isLoad}>
           {isLoad ? <LoadingIcon /> : null}
           <Text as="span" mx="5px" color="currentColor">
-            Rezervasyon Oluştur
+            {t("create_reservation")}
           </Text>
         </Button>
       </form>
@@ -1136,7 +1136,7 @@ const Wizard = () => {
 };
 
 export default function Home({ pageProps }) {
-  const { transactionSearchResult, vehicles, additionalServices, locale } =
+  const { transactionSearchResult, vehicles, additionalServices, locale, contact } =
     pageProps;
 
   return (
@@ -1157,6 +1157,7 @@ export default function Home({ pageProps }) {
         vehicles={vehicles}
         additionalServices={additionalServices}
         locale={locale}
+        contact={contact} 
       >
         <Section my={["50px", "50px", "150px"]}>
           <Container>
@@ -1181,6 +1182,7 @@ export async function getServerSideProps({ params }) {
       transactionSearchResult,
       vehicles,
       additionalServices,
+      
     },
   };
 }
