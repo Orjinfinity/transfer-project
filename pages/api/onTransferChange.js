@@ -244,17 +244,10 @@ const handler = async (req, res) => {
     return res.status(200).json({ message: "Transfer updated with status", info });
   }
 
-  if (currentTransfer?.type === newStatus) {
+  if (type === newStatus) {
     console.log("Transfer already has status", newStatus);
     return res.status(200).json({ message: "Transfer already has status" });
   }
-
-  await client
-    .patch(_id)
-    .set({ type: newStatus })
-    .commit();
-
-    console.log("newStatus", newStatus);
 
   const info = await transporter.sendMail({
     from: "noreply@victoriatransfers.com",
