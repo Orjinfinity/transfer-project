@@ -1,34 +1,25 @@
-const express = require('express')
+const { createServer } = require('http')
+const { parse } = require('url')
 const next = require('next')
-
 const dev = process.env.NODE_ENV !== 'production'
-const port = process.env.PORT || 7272
-const hostname = 'localhost'
-
-const app = next({ dev, port, hostname })
+const app = next({ dev })
 const handle = app.getRequestHandler()
-
-const init = async () => {
-  try {
-    await app.prepare()
-    const server = express()
-
-    console.log('process.env', process.env)
-
-    server.all('*', (req, res) => {
-      return handle(req, res)
-    })
-
-    server.listen(port, (err) => {
-      if (err) throw err
-      console.log(process.env)
-      console.log(`> Ready on ${hostname}:${port}`)
-    })
-
-  } catch (e) {
-    console.error(e)
-    process.exit(1)
-  }
-}
-
-init()
+const port = process.env.port || 3000
+app.prepare().then(() => {
+  createServer((req, res) => {
+    // Be sure to pass `true` as the second argument to `url.parse`.
+    // This tells it to parse the query portion of the URL.
+    const parsedUrl = parse(req.url, true)
+    const { pathname, query } = parsedUrl
+if (pathname === '/a') {
+      app.render(req, res, '/a', query)
+    } else if (pathname === '/b') {
+      app.render(req, res, '/b', query)
+    } else {
+      handle(req, res, parsedUrl)
+    }
+  }).listen(port, (err) => {
+    if (err) throw err
+    console.log(`> Ready on http://localhost:${port}`)
+  })
+})
