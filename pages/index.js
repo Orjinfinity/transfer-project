@@ -163,8 +163,8 @@ export default function Home({ pageProps }) {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      fromSearch: { value: "" },
-      toSearch: { value: "" },
+      fromSearch: { value: "ff66707f-91e1-497f-b131-1c4615bf2291" },
+      toSearch: { value: "a253850c-0be5-480d-9005-508d28333652" },
       pickupDate: new Date(),
       returnDate: new Date(),
       passengers: {
@@ -228,6 +228,22 @@ export default function Home({ pageProps }) {
     });
 
     router.push(`route/${query._id}`);
+  };
+
+  const getSelectedLocation = (points, id) => {
+    if (!points || typeof points !== "object") return
+  
+    const selectedItem =  Object.values(points).flat?.()?.find?.((point) => point._id === id);
+    if (!selectedItem) return null;
+
+    return (
+      <View display="flex" alignItems="center" color="#747474">
+        {POINT_ICONS[selectedItem?.type || "other"]}
+        <Text as="span" size="sm" ml="10px">
+          {selectedItem?.name}
+        </Text>
+      </View>
+    );
   };
 
   return (
@@ -337,7 +353,6 @@ export default function Home({ pageProps }) {
                       field: { onChange, value },
                       fieldState: { error },
                     }) => {
-                      console.log(error, "error");
                       return (
                         <FieldArea error={error}>
                           <View display="flex" alignItems="center">
@@ -376,8 +391,12 @@ export default function Home({ pageProps }) {
                                       >
                                         <View>{t("from")}</View>
                                         <View color="#747474">
-                                          {selectedOptions?.label ||
-                                            placeholder}
+                                          {selectedOptions?.value ? (
+                                            getSelectedLocation(
+                                              startingPoints,
+                                              value?.value
+                                            )
+                                          ) : placeholder}
                                         </View>
                                       </View>
                                     </View>
@@ -479,7 +498,12 @@ export default function Home({ pageProps }) {
                                         marginLeft="10px"
                                       >
                                         <View>{t("to")}</View>
-                                        {selectedOptions?.label || placeholder}
+                                        {selectedOptions?.value ? (
+                                            getSelectedLocation(
+                                              destinationPoints,
+                                              value?.value
+                                            )
+                                          ) : placeholder}
                                       </View>
                                     </View>
                                   );
@@ -892,11 +916,11 @@ export default function Home({ pageProps }) {
                   justifyContent="space-between"
                 >
                   <LogisticsCard.Desc>
-                      <User />
+                    <User />
                     {vehicle?.passengerCapacity} {t("passengers")}
                   </LogisticsCard.Desc>
                   <LogisticsCard.Desc>
-                      <Auto />
+                    <Auto />
                     {t(vehicle?.transmission)}
                   </LogisticsCard.Desc>
                   {vehicle.features.map((feature, index) => (
@@ -917,9 +941,7 @@ export default function Home({ pageProps }) {
               color="#4E4E4E"
               fontSize="14px"
             >
-             <Link href="/vehicles">
-             Show all vehicles
-             </Link>
+              <Link href="/vehicles">Show all vehicles</Link>
             </View>
           </View>
         </Container>
@@ -1008,9 +1030,7 @@ export default function Home({ pageProps }) {
             gridGap="16px"
           >
             {topDestinations?.map((destination) => (
-              <Destinations key={destination?._id} onClick={() => {
-                router.push(`route/${destination._id}`);
-              }}>
+              <Destinations key={destination?._id}>
                 <View>
                   <Image src={destination?.imageUrl} />
                 </View>
@@ -1053,7 +1073,16 @@ export default function Home({ pageProps }) {
                     </View>
                   </View>
 
-                  <Button mb="25px">Book Now</Button>
+                  <Button
+                    mb="25px"
+                    onClick={() => {
+                      router.push(
+                        `/?from=${destination.startingPointId}&to=${destination.destinationPointId}`
+                      );
+                    }}
+                  >
+                    Book Now
+                  </Button>
                 </View>
               </Destinations>
             ))}
@@ -1213,7 +1242,7 @@ export default function Home({ pageProps }) {
   );
 }
 
-export async function getServerSideProps({ locale }) {
+export async function getServerSideProps({ locale, query }) {
   const [
     vehicles,
     transferPoints,

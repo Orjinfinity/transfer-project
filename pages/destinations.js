@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Head from "next/head";
-import useSWRMutation from "swr/mutation";
+import { useRouter } from "next/router";
 
 import Km from "assets/icons/km.svg";
 import Clock from "assets/icons/clock.svg";
@@ -12,19 +12,16 @@ import {
   Container,
   View,
   Image,
-  Tag,
   Destinations,
   Button,
   Price,
   Text,
 } from "components";
-import { getDestinations, postSearchQuery } from "service";
+import { getDestinations } from "service";
 
 const DestinationsPage = ({ pageProps }) => {
-  const { trigger: postSearchQueryTrigger, isMutating: isMutatingSearchQuery } =
-  useSWRMutation("postSearchQuery", postSearchQuery);
-
   const { destinations } = pageProps;
+  const router = useRouter();
 
   return (
     <>
@@ -63,18 +60,6 @@ const DestinationsPage = ({ pageProps }) => {
             {destinations?.map((destination) => (
               <Destinations
                 key={destination?._id}
-                onClick={async () => {
-                  // const query = await postSearchQueryTrigger({
-                  //   routeId: destination._id,
-                  //   fromDate: pickupDate,
-                  //   toDate: returnDate,
-                  //   adults: passengerAdult,
-                  //   children: passengerChild,
-                  //   baby: passengerBaby,
-                  // });
-
-                  // router.push(`route/${destination._id}`);
-                }}
               >
                 <View>
                   <Image src={destination?.imageUrl} />
@@ -118,7 +103,16 @@ const DestinationsPage = ({ pageProps }) => {
                     </View>
                   </View>
 
-                  <Button mb="25px">Book Now</Button>
+                  <Button
+                    mb="25px"
+                    onClick={() => {
+                      router.push(
+                        `/?from=${destination.startingPointId}&to=${destination.destinationPointId}`
+                      );
+                    }}
+                  >
+                    Book Now
+                  </Button>
                 </View>
               </Destinations>
             ))}

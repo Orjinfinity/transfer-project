@@ -432,7 +432,7 @@ ul.lead-list li + li {
   overflow: hidden;
 }
 
-.whatsapp-open::before {
+/* .whatsapp-open::before {
   content: '';
   display: block;
   position: fixed;
@@ -441,8 +441,8 @@ ul.lead-list li + li {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
-  z-index: 9999;
-}
+  z-index: 9999999;
+} */
 
 #header-content {
   transition: background-color 0.3s;

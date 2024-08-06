@@ -220,9 +220,9 @@ const Header = ({ ...props }) => {
                   avatar="/logo-icon.png"
                   phoneNumber={contact?.phoneNumber}
                   accountName="Victoria Travel"
-                  chatMessage="Merhaba! 🤝 Nasıl yardımcı olabiliriz?"
-                  placeholder="Mesaj"
-                  statusMessage="Genellikle yarım saat içinde yanıt verir"
+                  chatMessage={t("whatsapp_message")}
+                  placeholder={t("wp_message")}
+                  statusMessage={t("wp_info")}
                   notificationSound
                   onClose={() => {
                     document.documentElement.classList.remove("whatsapp-open");
