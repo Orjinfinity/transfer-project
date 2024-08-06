@@ -196,7 +196,7 @@ const handler = async (req, res) => {
   if (typeof body !== "object")
     return res.status(400).json({ message: "Invalid body" });
 
-  const { _id, _type, type = "" } = body;
+  const { _id, _type, type = "", emailAddress } = body;
 
   if (_type !== "transfer") {
     return res.status(200).json({ message: "Not a transfer document, skipping" });
@@ -249,7 +249,7 @@ const handler = async (req, res) => {
 
     const info = await transporter.sendMail({
       from: "noreply@victoriatransfers.com",
-      to: "enes.sefa.k@gmail.com,info@victoriatransfers.com",
+      to: `${emailAddress},info@victoriatransfers.com`,
       subject: "Reservation",
       html: template({ ...req.body, status: "pending", ...currentTransfer }),
     });
@@ -263,7 +263,7 @@ const handler = async (req, res) => {
 
   const info = await transporter.sendMail({
     from: "noreply@victoriatransfers.com",
-    to: "enes.sefa.k@gmail.com,info@victoriatransfers.com",
+    to: `${emailAddress},info@victoriatransfers.com`,
     subject: "Reservation",
     html: template({ ...req.body, status: newStatus, ...currentTransfer }),
   });
