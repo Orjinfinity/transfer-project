@@ -23,12 +23,12 @@ const template = ({ name,surname, phone, email, message }) => {
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
-  host: "ms4.guzel.net.tr",
-  port: 587,
+  host: "mail.victoriatransfers.com",
+  port: 465,
   secure: false,
   auth: {
-    user: "info@victoriatransfers.com", // generated ethereal user
-    pass: "victoriatransfers1234.", // generated ethereal password
+    user: "noreply@victoriatransfers.com", // generated ethereal user
+    pass: "=!q^C-(52;6(", // generated ethereal password
   },
   tls: {
     // do not fail on invalid certs
@@ -39,7 +39,7 @@ const transporter = nodemailer.createTransport({
 export default async function handler(req, res) {
   try {
     const info = await transporter.sendMail({
-      from: "info@victoriatransfers.com", // sender address
+      from: "noreply@victoriatransfers.com", // sender address
       to: "victoriatransfers@gmail.com,info@victoriatransfers.com", // list of receivers
       subject: "iletisim formu", // Subject line
       html: template(req.body), // html body
