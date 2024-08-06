@@ -13,6 +13,8 @@ const init = async () => {
     await app.prepare()
     const server = express()
 
+    console.log('process.env', process.env)
+
     server.all('*', (req, res) => {
       return handle(req, res)
     })
