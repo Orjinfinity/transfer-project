@@ -244,9 +244,8 @@ const handler = async (req, res) => {
     return res.status(200).json({ message: "Transfer updated with status", info });
   }
 
-  if (type === newStatus) {
-    console.log("Transfer already has status", newStatus);
-    return res.status(200).json({ message: "Transfer already has status" });
+  if (type === 'pending') {
+    return res.status(200).json({ message: "Transfer already in pending status" });
   }
 
   const info = await transporter.sendMail({
