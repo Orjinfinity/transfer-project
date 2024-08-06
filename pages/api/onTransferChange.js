@@ -4,27 +4,27 @@ import nodemailer from "nodemailer";
 
 const template = ({
   status,
-  firstName,
-  lastName,
+  user,
+  route,
   transferDateFrom,
   transferDateTo,
-  phoneNumber,
-  emailAddress,
   message = '',
   reservationCode,
   whatsappNotification,
   flightNumber,
   airline,
-  dropOffLocation,
   driverMessage,
   priceDetails,
   additionalServices,
   vehicle
 }) => {
+  const { firstName, lastName, emailAddress, phoneNumber } = user;
+  const { startingPoint, destinationPoint } = route;
+
   const formatAdditionalServices = (services) => {
     return services.map(service => `
       <tr>
-        <td>${service.service?.name?.en || service.service?.name?.tr || service.service?.name?.ru || service.service?.name?.de}</td>
+        <td>${service?.name?.en || service?.name?.tr || service?.name?.ru || service?.name?.de}</td>
         <td>${service.outboundCount}</td>
         <td>${service.returnCount}</td>
       </tr>
@@ -99,20 +99,20 @@ const template = ({
     switch (status) {
       case 'pending':
         return `
-          <p>Rezervasyonunuz alınmıştır. Detaylar aşağıdadır:</p>
+          <p>Your reservation has been received. The details are below:</p>
         `;
       case 'confirmed':
         return `
-          <p>Rezervasyonunuz onaylanmıştır. Detaylar aşağıdadır:</p>
+          <p>Your reservation has been confirmed. The details are below:</p>
         `;
       case 'cancelled':
         return `
-          <p>Rezervasyonunuz onaylanmamıştır. Detaylar aşağıdadır:</p>
+          <p>Your reservation has been cancelled. The details are below:</p>
         `;
       default:
         return '';
     }
-  };
+  };  
 
   return `
     <div style="font-family: Arial, sans-serif; line-height: 1.6;">
@@ -147,8 +147,8 @@ const template = ({
         ${formatWhatsappNotification(whatsappNotification)}
         ${formatFlightDetails(flightNumber, airline)}
         <tr>
-          <td><strong>Drop Off Location:</strong></td>
-          <td>${dropOffLocation}</td>
+          <td><strong>Destination:</strong></td>
+          <td>${startingPoint?.name} - ${destinationPoint?.name}</td>
         </tr>
         <tr>
           <td><strong>Message to Driver:</strong></td>
@@ -205,10 +205,24 @@ const handler = async (req, res) => {
   const query = `*[_type == "transfer" && _id == $id][0]{
     type,
     user->{
-      _id,
-      emailAddress,
-      firstName,
-      lastName
+        _id,
+        emailAddress,
+        firstName,
+        lastName,
+        phoneNumber
+    },
+    route->{
+      startingPoint->{
+        name
+      },
+      destinationPoint->{
+        name
+      }
+    },
+    additionalServices[]{
+      returnCount,
+      outboundCount,
+      "name": service->name
     },
     reservationCode,
     whatsappNotification,
@@ -217,7 +231,6 @@ const handler = async (req, res) => {
     dropOffLocation,
     driverMessage,
     priceDetails,
-    additionalServices,
     vehicle->{
       name
     }
