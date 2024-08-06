@@ -241,6 +241,8 @@ const handler = async (req, res) => {
 
   const newStatus = type || 'pending';
 
+  const emailTo = `${currentTransfer?.user?.emailAddress},info@victoriatransfers.com`
+
   if (!type) {
     await client
       .patch(_id)
@@ -249,7 +251,7 @@ const handler = async (req, res) => {
 
     const info = await transporter.sendMail({
       from: "noreply@victoriatransfers.com",
-      to: `${emailAddress},info@victoriatransfers.com`,
+      to: emailTo,
       subject: "Reservation",
       html: template({ ...req.body, status: "pending", ...currentTransfer }),
     });
@@ -263,7 +265,7 @@ const handler = async (req, res) => {
 
   const info = await transporter.sendMail({
     from: "noreply@victoriatransfers.com",
-    to: `${emailAddress},info@victoriatransfers.com`,
+    to: emailTo,
     subject: "Reservation",
     html: template({ ...req.body, status: newStatus, ...currentTransfer }),
   });
