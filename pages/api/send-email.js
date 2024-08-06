@@ -17,9 +17,10 @@ export default async function handler(req, res) {
     
     transporter.verify(function (error, success) {
       if (error) {
-        res.status(500).json({ status: "ERROR", message: e.message });
+        console.log(error);
+        res.status(500).json({ status: "ERROR", message: error?.message });
       } else {
-        res.status(200).json({ status: "OK", messageId: info.messageId });
+        res.status(200).json({ status: "OK",  success});
       }
     });
   
