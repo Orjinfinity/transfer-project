@@ -196,7 +196,8 @@ const handler = async (req, res) => {
   if (typeof body !== "object")
     return res.status(400).json({ message: "Invalid body" });
 
-  const { _id, _type, type = "", emailAddress } = body;
+  const { _id, _type, type = "" } = body;
+  console.log("body", body);
 
   if (_type !== "transfer") {
     return res.status(200).json({ message: "Not a transfer document, skipping" });
